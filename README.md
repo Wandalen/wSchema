@@ -1,11 +1,10 @@
 
 # wSchema [![Build Status](https://travis-ci.org/Wandalen/wSchema.svg?branch=master)](https://travis-ci.org/Wandalen/wSchema)
 
-___
+Module to define schemas for data structures.
 
 ## Try out
 ```
 npm install
-node sample/Sample.s
+node sample/Sample.js
 ```
-
