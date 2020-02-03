@@ -2,11 +2,6 @@
 
 'use strict';
 
-/**
- * Module to define schemas for data structures.
-  @module Tools/mid/Schema
-*/
-
 if( typeof module !== 'undefined' )
 {
 

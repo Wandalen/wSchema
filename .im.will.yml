@@ -6,6 +6,39 @@ submodule :
     path : npm:///wTools
     enabled : 0 # submodule
 
+  wCopyable :
+    path : npm:///wCopyable
+    enabled : 0 # submodule
+
+  wlooker :
+    path : npm:///wlooker
+    enabled : 0 # submodule
+
+  wlookerextra :
+    path : npm:///wlookerextra
+    enabled : 0 # submodule
+
+  wLogger :
+    path : npm:///wLogger
+    enabled : 0 # submodule
+
+  wstringer :
+    path : npm:///wstringer
+    enabled : 0 # submodule
+
+  wnamemapper :
+    path : npm:///wnamemapper
+    enabled : 0 # submodule
+
+
+    "wTools" : "",
+    "wCopyable" : "",
+    "wLooker" : "",
+    "wLookerExtra" : "",
+    "wLogger" : "",
+    "wStringer" : "",
+    "wNameMapper" : ""
+
 path :
 
   in : '.'
@@ -41,7 +74,7 @@ path :
       content : prime
 
   entry.proto.no.tests :
-    path : proto/dwtools/amid/l1/schema/IncludeMid.s
+    path : proto/dwtools/amid/l1/schema/Include.s
     criterion :
       tests : 'no.tests'
   entry.proto.only.tests :
