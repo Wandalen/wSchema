@@ -30,15 +30,6 @@ submodule :
     path : npm:///wnamemapper
     enabled : 0 # submodule
 
-
-    "wTools" : "",
-    "wCopyable" : "",
-    "wLooker" : "",
-    "wLookerExtra" : "",
-    "wLogger" : "",
-    "wStringer" : "",
-    "wNameMapper" : ""
-
 path :
 
   in : '.'

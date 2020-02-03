@@ -6,8 +6,8 @@ consistency:
     hash: f003d883c022da68b1b5681982dfaf31
     size: 1695
   ../.im.will.yml: &ref_1
-    hash: e4645e935fa3cbffbe4ed21a55c085ac
-    size: 4602
+    hash: 2caebeb44731a5a9b3481827a0819da1
+    size: 5027
 module:
   wSchema.out:
     about:
@@ -106,7 +106,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/amid/l1/schema/IncludeMid.s
+        path: ../proto/dwtools/amid/l1/schema/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -154,6 +154,7 @@ module:
           - ../proto/dwtools/amid
           - ../proto/dwtools/amid/l1
           - ../proto/dwtools/amid/l1/schema
+          - ../proto/dwtools/amid/l1/schema/Include.s
           - ../proto/dwtools/amid/l1/schema/IncludeBase.s
           - ../proto/dwtools/amid/l1/schema/IncludeMid.s
           - ../proto/dwtools/amid/l1/schema/l1
@@ -180,6 +181,30 @@ module:
     submodule:
       wTools:
         path: 'npm:///wTools'
+        autoExporting: 0
+        enabled: 0
+      wCopyable:
+        path: 'npm:///wCopyable'
+        autoExporting: 0
+        enabled: 0
+      wlooker:
+        path: 'npm:///wlooker'
+        autoExporting: 0
+        enabled: 0
+      wlookerextra:
+        path: 'npm:///wlookerextra'
+        autoExporting: 0
+        enabled: 0
+      wLogger:
+        path: 'npm:///wLogger'
+        autoExporting: 0
+        enabled: 0
+      wstringer:
+        path: 'npm:///wstringer'
+        autoExporting: 0
+        enabled: 0
+      wnamemapper:
+        path: 'npm:///wnamemapper'
         autoExporting: 0
         enabled: 0
     reflector:
@@ -876,7 +901,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/amid/l1/schema/IncludeMid.s
+        path: proto/dwtools/amid/l1/schema/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -908,6 +933,30 @@ module:
     submodule:
       wTools:
         path: 'npm:///wTools'
+        autoExporting: 0
+        enabled: 0
+      wCopyable:
+        path: 'npm:///wCopyable'
+        autoExporting: 0
+        enabled: 0
+      wlooker:
+        path: 'npm:///wlooker'
+        autoExporting: 0
+        enabled: 0
+      wlookerextra:
+        path: 'npm:///wlookerextra'
+        autoExporting: 0
+        enabled: 0
+      wLogger:
+        path: 'npm:///wLogger'
+        autoExporting: 0
+        enabled: 0
+      wstringer:
+        path: 'npm:///wstringer'
+        autoExporting: 0
+        enabled: 0
+      wnamemapper:
+        path: 'npm:///wnamemapper'
         autoExporting: 0
         enabled: 0
     reflector:
@@ -1454,5 +1503,5 @@ module:
         hash: f003d883c022da68b1b5681982dfaf31
         size: 1695
       ../.im.will.yml:
-        hash: e4645e935fa3cbffbe4ed21a55c085ac
-        size: 4602
+        hash: 2caebeb44731a5a9b3481827a0819da1
+        size: 5027
