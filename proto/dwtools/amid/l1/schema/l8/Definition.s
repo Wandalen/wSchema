@@ -76,7 +76,11 @@ function preform()
 
   if( def.name !== null )
   {
-    _.sure( sys.definitionsMap[ def.name ] === undefined || sys.definitionsMap[ def.name ] === def );
+    _.sure
+    (
+      sys.definitionsMap[ def.name ] === undefined || sys.definitionsMap[ def.name ] === def,
+      () => `Schema already has ${def.qualifiedName}`
+    );
     sys.definitionsMap[ def.name ] = def;
   }
 
@@ -86,8 +90,8 @@ function preform()
   sys.definitionCounter += 1;
   def.id = sys.definitionCounter;
 
-  if( def.id === 14 )
-  debugger;
+  // if( def.id === 14 )
+  // debugger;
 
   def.formed = 1;
   return def;
@@ -115,8 +119,9 @@ function form2()
   }
 
   def.product = new( def.typeToProductClass() )({ definition : def });
-  def.product.form2();
+  let formed = def.product.form2();
 
+  if( formed )
   def.formed = 2;
   return def;
 }
@@ -132,8 +137,9 @@ function form3()
   return def;
 
   _.assert( def.formed === 2 );
-  def.product.form3();
+  let formed = def.product.form3();
 
+  if( formed )
   def.formed = 3;
   return def;
 }

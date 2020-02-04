@@ -319,6 +319,9 @@ function _elementMakeAct( element, amending )
     _.mapDelete( element, _.mapBut( definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );
   }
 
+  if( element.included === undefined || element.included === null )
+  element.included = true;
+
   _.assertMapHasOnly( element, product.ElementExtendedFields );
   _.assert( _.strIs( element.type ) || _.numberIs( element.type ) );
   _.assert( sys.definition( element.type ) instanceof _.schema.Definition );
@@ -721,11 +724,13 @@ function _qualifiedNameGet()
 let ElementFields =
 {
   type : null,
+  included : true,
 }
 
 let ElementExtendedFields =
 {
   type : null,
+  included : true,
   name : null,
   index : null,
 }

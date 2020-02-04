@@ -461,7 +461,38 @@ makeDefaultCompositionsNamedElementsButOneInner.description =
 
 //
 
-function makeDefaultCompositionsFromString( test )
+function makeDefaultCompositionsFromString1( test )
+{
+  let context = this;
+  let schema = _.schema.system({ name : 'Nodes' });
+  let schemaString =
+`
+  @null := terminal default = null
+  @string := terminal default = ''
+  @number := terminal default = ' 0 '<-js
+  @boolean := terminal default = ' false '<-js
+  @alternative1 := [ @number @string ] default = @string
+`
+
+  schema.fromString( schemaString );
+  schema.form();
+
+  test.case = 'alternative1';
+  var exp = '';
+  var identifier = schema.definition( 'alternative1' ).makeDefault();
+  test.identical( identifier, exp );
+
+  schema.finit();
+}
+
+makeDefaultCompositionsFromString1.description =
+`
+- xxx
+`
+
+//
+
+function makeDefaultCompositionsFromString2( test )
 {
   let context = this;
   let schema = _.schema.system({ name : 'Nodes' });
@@ -499,12 +530,13 @@ function makeDefaultCompositionsFromString( test )
   schema.finit();
 }
 
-makeDefaultCompositionsFromString.description =
+makeDefaultCompositionsFromString2.description =
 `
 - making definitions from string produce the same result as making it manually
 - forming throw no errors
 - both inner and outer compositions put elements in the same array
 - auto determining of type of container determines array because inner map has anonymous element
+- xxx
 `
 
 //
@@ -895,6 +927,275 @@ function logic( test )
 
 logic.description =
 `
+- xxx
+`
+
+//
+
+function parseGrammar( test )
+{
+
+  let schema = _.schema.system({ name : 'Schem.test/parseGrammar' });
+
+  let tokensSyntax = _.tokensSyntaxFrom
+  ({
+    'colon_equal'       : ':=',
+    'equal'             : '=',
+    'left'              : '<-',
+    'right'             : '->',
+    'multiple_optional' : '?',
+    'multiple_any'      : '*',
+    'space'             : /\s+/,
+    'string_single'     : /'(?:\\\n|\\'|[^'\n])*?'/,
+    'name_kind'         : [ 'terminal' ],
+    'name_directive'    : [ 'default', 'container' ],
+    'name_literal'      : [ 'null', 'true', 'false' ],
+    'name_at'           : /@[a-z_\$][0-9a-z_\$]*/i,
+    'name_slash'        : /\/[a-z_\$][0-9a-z_\$]*/i,
+    'name_clean'        : /[a-z_\$][0-9a-z_\$]*/i,
+    'number'            : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
+    'parenthes_open'    : '(',
+    'parenthes_close'   : ')',
+    'square_open'       : '[',
+    'square_close'      : ']',
+  });
+
+  schema.defineFromSyntax( tokensSyntax );
+
+  /* */
+
+  schema.define( 'statement_top' ).container({ container : 'map', type : 'statement_top_' });
+
+  schema.define( 'statement_top_' ).composition()
+  .extend
+  ([
+    { type : 'statement_top_left', included : true },
+  ])
+  .extend
+  ({
+    multiple : { type : 'multiple_maybe' },
+    right : { type : 'statement_top_right' },
+  });
+
+  schema.define( 'statement_top_left' ).composition()
+  .extend
+  ({
+    left : { type : 'name_slash' },
+    included : { type : 'colon_equal' },
+  })
+
+  schema.define( 'statement_top_right' ).alternative().extend([ 'name_kind', 'name_slash', 'block' ]);
+
+  /* */
+
+  schema.define( 'statement_in' ).container({ container : 'map', type : 'statement_in_' });
+
+  schema.define( 'statement_in_' ).composition()
+  .extend
+  ([
+    { type : 'statement_in_left', included : true },
+  ])
+  .extend
+  ({
+    multiple : { type : 'multiple_maybe' },
+    right : { type : 'statement_in_right' },
+  });
+
+  schema.define( 'statement_in_left' ).composition()
+  .extend
+  ({
+    left : { type : 'name_at' },
+    included : { type : 'colon_equal' },
+  })
+
+  schema.define( 'statement_in_right' ).alternative().extend([ 'name_slash', 'block' ]);
+
+  /* */
+
+  schema.define( 'directive' ).container({ type : 'directive_' });
+
+  schema.define( 'directive_' ).composition()
+  .extend
+  ([
+    { type : 'name_directive', included : false },
+    { type : 'equal', included : false },
+  ])
+  .extend
+  ({
+    value : { type : 'directive_value' },
+  });
+
+  schema.define( 'directive_value' ).alternative().extend([ 'literal', 'name_slash' ]);
+
+  /* */
+
+  schema.define( 'string' ).container({ type : 'string_' });
+
+  schema.define( 'string_' ).composition()
+  .extend
+  ({
+    value : { type : 'string_single' },
+    kind : { type : 'string_right' },
+  })
+
+  schema.define( 'string_right' ).multiplier({ multiple : [ 0, 1 ], type : 'string_right_' });
+  schema.define( 'string_right_' ).composition()
+  .extend
+  ([
+    { type : 'left', included : false },
+    { type : 'name_clean', included : true },
+  ])
+
+  /* */
+
+  schema.define( 'composition' ).composition().extend
+  ([
+    { type : 'parenthes_open', included : false },
+    { type : 'block_content', included : true },
+    { type : 'parenthes_open', included : false },
+  ]);
+
+  schema.define( 'alternative' ).composition().extend
+  ([
+    { type : 'square_open', included : false },
+    { type : 'block_content', included : true },
+    { type : 'square_open', included : false },
+  ]);
+
+  schema.define( 'block_content' ).multiplier({ multiple : [ 0, Infinity ], type : 'block_content_' });
+
+  schema.define( 'block_content_' ).alternative().extend
+  ([
+    { type : 'statement_in' },
+    { type : 'directive' }
+  ]);
+
+  schema.define( 'multiple_maybe' ).multiplier({ multiple : [ 0, 1 ], type : 'multiple' });
+
+  schema.define( 'multiple' ).alternative()
+  .extend
+  ({
+    a : { type : 'multiple_optional' },
+    b : { type : 'multiple_any' },
+  })
+
+  schema.define( 'block' ).alternative().extend([ 'alternative', 'composition' ]);
+
+  // schema.define( 'name_kind' ).alternative().extend([ 'name_kind_terminal' ]);
+
+  schema.define( 'literal' ).alternative().extend([ 'name_literal', 'number', 'string' ]);
+
+  debugger;
+  schema.form();
+  debugger;
+
+/*
+
+  /statement_top :=
+  (.
+    :=(
+      @left := /name_slash
+      @included := /colon_equal
+    )
+    @multiple := ?/multiple
+    @right :=
+    [
+      /name_kind
+      /name_slash
+      /block
+    ]
+    container = map
+  )
+
+  /statement_in :=
+  (.
+    := ?(
+      @left := ?/name_at
+      @included := /colon_equal
+    )
+    @multiple := ?/multiple
+    @right :=
+    [
+      /name_slash
+      /block
+    ]
+  )
+
+  /multiple := [ /multiple_optional /multiple_any ]
+
+  /directive :=
+  (.
+    /name_directive
+    /equal
+    @value := [ /literal /name_slash ]
+  )
+
+  /literal :=
+  [
+    /name_literal
+    /number
+    /string
+  ]
+
+  /string :=
+  (.
+    @value := /string_single
+    @kind :=
+    ?(
+      /left
+      := /name_clean
+    )
+  )
+
+  /block := [ /alternative /composition ]
+
+  /alternative :=
+  (
+    /square_open
+    := *[ /statement_in /directive ]
+    /square_close
+  )
+
+  /composition :=
+  (
+    /parenthes_open
+    := *[ /statement_in /directive ]
+    /parenthes_close
+  )
+
+  /grammar := (. * /statement_top root=1 )
+
+*/
+
+//
+
+  // ({
+  //   'colon_equal'       : ':=',
+  //   'equal'             : '=',
+  //   'left'              : '<-',
+  //   'right'             : '->',
+  //   'multiple_optional' : '?',
+  //   'multiple_any'      : '*',
+  //   'space'             : /\s+/,
+  //   'string_single'     : /'(?:\\\n|\\'|[^'\n])*?'/,
+  //   'name_kind'         : [ 'terminal' ],
+  //   'name_directive'    : [ 'default', 'container' ],
+  //   'name_literal'      : [ 'null', 'true', 'false' ],
+  //   'name_at'           : /@[a-z_\$][0-9a-z_\$]*/i,
+  //   'name_slash'        : /\/[a-z_\$][0-9a-z_\$]*/i,
+  //   'name_clean'        : /[a-z_\$][0-9a-z_\$]*/i,
+  //   'number'            : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
+  //   'parenthes_open'    : '(',
+  //   'parenthes_close'   : ')',
+  //   'square_open'       : '[',
+  //   'square_close'      : ']',
+  // });
+
+}
+
+parseGrammar.description =
+`
+- xxx
 `
 
 // --
@@ -923,7 +1224,8 @@ var Proto =
     makeDefaultCompositionsNotNamedElements,
     makeDefaultCompositionsNamedElements,
     makeDefaultCompositionsNamedElementsButOneInner,
-    makeDefaultCompositionsFromString,
+    makeDefaultCompositionsFromString1,
+    makeDefaultCompositionsFromString2,
 
     defineVectorized,
     label,
@@ -934,6 +1236,8 @@ var Proto =
     isTypeOfStructure,
     // isTypeOfDefinition,
     // logic,
+
+    parseGrammar,
 
   },
 

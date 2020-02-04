@@ -26,6 +26,9 @@ function _form2()
   let def = product.definition;
   let sys = def.sys;
 
+  if( product.container === null )
+  product.container = 'auto';
+
   _.mapExtend( product, def.opts );
   _.assert( _.strDefined( product.type ) || _.numberDefined( product.type ), () => `Container should have name of type definition, but ${def.qualifiedName} does not have` );
   _.assert( _.longHas( [ 'auto', 'array', 'map' ], product.container ) );
