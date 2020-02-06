@@ -40,20 +40,6 @@ function _form2()
     product.multipliers.push( element );
   }
 
-  // if( product.multipliers.length > 1 )
-  // throw _.err( `Complex definition can have not more than one * element. ${product.qualifiedName} has ${product.multipliers.length}` );
-  //
-  // if( product.multipliers.length || _.lengthOf( product.elementsMap ) === 0 )
-  // {
-  //   product._makeContainer = product._makeContainerArray;
-  //   product._elementAdd = product._elementAddToArray;
-  // }
-  // else
-  // {
-  //   product._makeContainer = product._makeContainerMap;
-  //   product._elementAdd = product._elementAddToMap;
-  // }
-
   return true;
 }
 
@@ -158,41 +144,6 @@ function _makeDefaultAct( it )
 }
 
 //
-// //
-//
-// function _makeContainerArray()
-// {
-//   return [];
-// }
-//
-// //
-//
-// function _elementAddToArray( elementDefinition, elementDescriptor, container, value )
-// {
-//   container.push( value );
-// }
-//
-// //
-//
-// function _makeContainerMap()
-// {
-//   return Object.create( null );
-// }
-//
-// //
-//
-// function _elementAddToMap( elementDefinition, elementDescriptor, container, value )
-// {
-//   let product = this;
-//   let def = product.definition;
-//   let sys = def.sys;
-//
-//   _.sure( _.strIs( elementDescriptor.name ), `Element should have name to make default, but some elements of ${def.qualifiedName} does not have it` );
-//
-//   container[ elementDescriptor.name ] = value;
-// }
-
-//
 
 function _isTypeOfStructureAct( o )
 {
@@ -275,28 +226,51 @@ exportStructure.defaults =
 
 //
 
-function exportInfo( o )
+function _exportInfo( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( exportInfo, arguments );
+  _.routineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
 
-  let result = Parent.prototype.exportInfo.call( product, o );
-
-  let o2 = _.mapExtend( null, o );
-  o2.structure = product.elementsArray;
-  let result2 = product._elementsExportInfo( o2 );
-  if( result2 )
-  result += `\n  elements\n${result2}`;
-
-  return result;
+  return product._exportInfoComplex( o );
+  // let o2 = _.mapExtend( null, o );
+  // o2.opener = '(';
+  // o2.closer = ')';
+  // return product._exportInfoComplex( o2 );
 }
 
-exportInfo.defaults =
+_exportInfo.defaults =
 {
-  ... Parent.prototype.exportInfo.defaults,
+  ... _.schema.Product.prototype._exportInfo.defaults,
+  // prefix : '',
+  // postfix : '',
+}
+
+//
+
+function _exportInfoComplex( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.routineOptions( _exportInfoComplex, arguments );
+
+  let o2 = _.mapExtend( null, o );
+  o2.opener = '(';
+  o2.closer = ')';
+
+  return Parent.prototype._exportInfoComplex.call( product, o2 );
+}
+
+_exportInfoComplex.defaults =
+{
+  ... _exportInfo.defaults,
+  prefix : '',
+  postfix : '',
 }
 
 // --
@@ -307,6 +281,7 @@ let Fields =
 {
   extend : null,
   supplement : null,
+  bias : null,
 }
 
 let Composes =
@@ -318,6 +293,7 @@ let Aggregates =
   multipliers : _.define.own( [] ),
   elementsMap : null,
   elementsArray : null,
+  bias : null,
 }
 
 let Associates =
@@ -326,8 +302,6 @@ let Associates =
 
 let Restricts =
 {
-  // _makeContainer : null,
-  // _elementAdd : null,
 }
 
 let Statics =
@@ -360,17 +334,13 @@ let Proto =
   // productor
 
   _makeDefaultAct,
-  // _makeContainerArray,
-  // _elementAddToArray,
-  // _makeContainerMap,
-  // _elementAddToMap,
-
   _isTypeOfStructureAct,
 
   // exporter
 
   exportStructure,
-  exportInfo,
+  _exportInfo,
+  _exportInfoComplex,
 
   // relation
 

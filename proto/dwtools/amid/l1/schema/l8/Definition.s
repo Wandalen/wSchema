@@ -162,6 +162,15 @@ function typeToProductClass( kind )
 
 //
 
+function isComplex()
+{
+  let def = this;
+  _.assert( arguments.length === 0 );
+  return def.kind === def.Kind.composition || def.kind === def.Kind.alternation;
+}
+
+//
+
 function firstNonAlias()
 {
   let def = this;
@@ -237,10 +246,13 @@ function fromFields( opts )
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( opts ) );
 
-  // _.assertMapHasOnly( opts, def.FromFields );
   _.assertMapHasOnly( opts, def.typeToProductClass().Fields );
-
   def.opts = _.mapExtend( def.opts, opts );
+
+  // def.opts = def.opts || Object.create( null );
+  // if( opts )
+  // _.mapExtend( def.opts, opts );
+  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
@@ -256,7 +268,6 @@ function fromFieldsTolerant( opts )
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( opts ) );
 
-  // def.opts = _.mapExtend( def.opts, _.mapOnly( opts, def.FromFields ) );
   def.opts = _.mapExtend( def.opts, _.mapOnly( opts, def.typeToProductClass().Fields ) );
 
   return def;
@@ -352,10 +363,11 @@ function _definePrimitive( opts, kind )
 
   def.kind = kind;
   def.opts = def.opts || Object.create( null );
+  // if( opts )
+  // _.mapExtend( def.opts, opts );
+  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
   if( opts )
-  _.mapExtend( def.opts, opts );
-
-  _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  def.fromFields( opts );
 
   return def;
 }
@@ -435,65 +447,50 @@ function _complex()
   def.opts.extend = [];
   def.opts.supplement = [];
 
-  _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
 
 //
 
-function composition()
+function composition( opts )
 {
   let def = this;
   let sys = def.sys;
 
-  _.assert( arguments.length === 0, 'Expects no arguments' );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
   def.kind = def.Kind.composition;
 
   def._complex();
+  if( opts )
+  def.fromFields( opts );
 
-  _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
 
 //
 
-function alternative()
+function alternative( opts )
 {
   let def = this;
   let sys = def.sys;
 
-  _.assert( arguments.length === 0, 'Expects no arguments' );
+  _.assert( arguments.length === 0 || arguments.length === 1 );
 
   def.kind = def.Kind.alternative;
 
   def._complex();
+  if( opts )
+  def.fromFields( opts );
 
-  _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
-
-// {
-//   let def = this;
-//   let sys = def.sys;
-//
-//   _.assert( def.formed === 1 );
-//   _.assert( arguments.length === 0, 'Expects no arguments' );
-//   _.assert( _.mapIs( elements ) || _.longIs( elements ) );
-//   _.assert( def.kind === null );
-//   _.assert( def.opts === null || _.mapIs( def.opts ) );
-//
-//   def.opts = def.opts || Object.create( null );
-//   def.kind = def.Kind.alternative;
-//   def.opts.elements = elements;
-//
-//   _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
-//
-//   return def;
-// }
 
 //
 
@@ -521,6 +518,8 @@ function extend( elements )
   let def = this;
   let sys = def.sys;
 
+  _.assert( arguments.length === 1 );
+
   def._amend( 'extend', elements );
 
   return def;
@@ -532,6 +531,8 @@ function supplement( elements )
 {
   let def = this;
   let sys = def.sys;
+
+  _.assert( arguments.length === 1 );
 
   def._amend( 'supplement', elements );
 
@@ -644,7 +645,7 @@ function exportInfo( o )
   o = _.routineOptions( exportInfo, arguments );
 
   if( o.structure === null )
-  o.structure = def.exportStructure( _.mapBut( o, [ 'structure' ] ) );
+  o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
 
   if( product )
   {
@@ -652,7 +653,7 @@ function exportInfo( o )
   }
   else
   {
-    let result = def._qualifiedName2FromStructure( o.structure );
+    let result = def._longNameFromStructure( o.structure );
     let structure = _.mapBut( o.structure, [ 'name', 'kind', 'id' ] );
     if( _.lengthOf( structure ) )
     result += '\n' + _.toStrNice( structure );
@@ -675,7 +676,25 @@ function _qualifiedNameGet()
 
 //
 
-function _qualifiedName2FromStructure( structure )
+function GrammarNameFor( name )
+{
+  if( _.strIs( name ) )
+  return '/' + name;
+  else
+  return '#' + name;
+}
+
+//
+
+function _grammarNameGet()
+{
+  let def = this;
+  return def.GrammarNameFor( def.name || def.id );
+}
+
+//
+
+function _longNameFromStructure( structure )
 {
   let def = this;
   if( structure.name )
@@ -684,7 +703,7 @@ function _qualifiedName2FromStructure( structure )
   return `definition.${structure.kind} ## ${structure.id}`;
 }
 
-_qualifiedName2FromStructure.defaults =
+_longNameFromStructure.defaults =
 {
   name : null,
   kind : null,
@@ -721,12 +740,6 @@ let KindNameToProduct =
   [ Kind.alternative ] : _.schema.ProductAlternative,
 }
 
-// let FromFields = /* xxx : remove */
-// {
-//   default : null,
-//   multiple : null,
-// }
-
 let Composes =
 {
   name : null,
@@ -760,11 +773,11 @@ let Statics =
   Kind,
   KindNameToId,
   KindNameToProduct,
-  // FromFields,
 
   IsDefinitionString,
   IsValidName,
   IsNameOrId,
+  GrammarNameFor,
 
 }
 
@@ -778,6 +791,7 @@ let Forbids =
 
 let Accessors =
 {
+  grammarName : {},
 }
 
 // --
@@ -796,6 +810,7 @@ let Proto =
   form3,
 
   typeToProductClass,
+  isComplex,
   firstNonAlias,
   IsDefinitionString,
   IsValidName,
@@ -832,7 +847,9 @@ let Proto =
   exportInfo,
 
   _qualifiedNameGet,
-  _qualifiedName2FromStructure,
+  GrammarNameFor,
+  _grammarNameGet,
+  _longNameFromStructure,
 
   // relation
 

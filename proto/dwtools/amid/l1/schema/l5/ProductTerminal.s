@@ -60,6 +60,35 @@ function _isTypeOfStructureAct( o )
   return true;
 }
 
+//
+
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  return Parent.prototype._exportInfo.call( this, o );
+
+  let result;
+
+  if( product.default !== null )
+  result = `${product.grammarName} := ( type = terminal default = ${_.toStr( product.default )} )`;
+  else
+  result = `${product.grammarName} := terminal`;
+
+  return result;
+}
+
+_exportInfo.defaults =
+{
+  ... _.schema.Product.prototype._exportInfo.defaults,
+}
+
 // --
 // relations
 // --
@@ -113,6 +142,8 @@ let Proto =
   _form2,
   _makeDefaultAct,
   _isTypeOfStructureAct,
+
+  _exportInfo,
 
   // relation
 

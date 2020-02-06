@@ -46,6 +46,8 @@ function _form2()
 
   }
 
+  product._formUsingPrimitive();
+
   return true;
 }
 
@@ -106,6 +108,46 @@ function _isTypeOfStructureAct( o )
   return true;
 }
 
+//
+
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  return Parent.prototype._exportInfo.call( this, o );
+
+  let result;
+  let elementDefinition = sys.definition( def.product.type );
+
+  if( product.default === null && product.subtype === null )
+  {
+    result = `${product.grammarName} := ${elementDefinition.product.grammarName}`;
+  }
+  else
+  {
+    _.assert( product.subtype === null, 'not tested' );
+    result = `${product.grammarName} := ( ${elementDefinition.product.grammarName}`;
+    if( product.default !== null )
+    result += ` default = ${_.toStr( product.default )}`;
+    if( product.subtype !== null )
+    result += ` subtype = ${_.toStr( product.subtype )}`;
+    result += ` )`;
+  }
+
+  return result;
+}
+
+_exportInfo.defaults =
+{
+  ... _.schema.Product.prototype._exportInfo.defaults,
+}
+
 // --
 // relations
 // --
@@ -162,6 +204,7 @@ let Proto =
   _form3,
   _makeDefaultAct,
   _isTypeOfStructureAct,
+  _exportInfo,
 
   // relation
 

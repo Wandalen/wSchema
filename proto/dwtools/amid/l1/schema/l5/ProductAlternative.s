@@ -85,30 +85,79 @@ exportStructure.defaults =
   ... Parent.prototype.exportStructure.defaults,
 }
 
+// //
+//
+// function exportInfo( o )
+// {
+//   let product = this;
+//   let def = product.definition;
+//   let sys = def.sys;
+//
+//   o = _.routineOptions( exportInfo, arguments );
+//
+//   let result = Parent.prototype.exportInfo.call( product, o );
+//
+//   let o2 = _.mapExtend( null, o );
+//   o2.structure = product.elementsArray;
+//   let result2 = product._elementsExportInfo( o2 );
+//   if( result2 )
+//   result += `\n  elements\n${result2}`;
+//
+//   return result;
+// }
+//
+// exportInfo.defaults =
+// {
+//   ... Parent.prototype.exportInfo.defaults,
+// }
+
 //
 
-function exportInfo( o )
+function _exportInfo( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( exportInfo, arguments );
+  _.routineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
 
-  let result = Parent.prototype.exportInfo.call( product, o );
-
-  let o2 = _.mapExtend( null, o );
-  o2.structure = product.elementsArray;
-  let result2 = product._elementsExportInfo( o2 );
-  if( result2 )
-  result += `\n  elements\n${result2}`;
-
-  return result;
+  return product._exportInfoComplex( o );
+  // let o2 = _.mapExtend( null, o );
+  // o2.opener = '[';
+  // o2.closer = ']';
+  // return product._exportInfoComplex( o2 );
 }
 
-exportInfo.defaults =
+_exportInfo.defaults =
 {
-  ... Parent.prototype.exportInfo.defaults,
+  ... _.schema.Product.prototype._exportInfo.defaults,
+  // prefix : '',
+  // postfix : '',
+}
+
+//
+
+function _exportInfoComplex( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.routineOptions( _exportInfoComplex, arguments );
+
+  let o2 = _.mapExtend( null, o );
+  o2.opener = '[';
+  o2.closer = ']';
+
+  return Parent.prototype._exportInfoComplex.call( product, o2 );
+}
+
+_exportInfoComplex.defaults =
+{
+  ... _exportInfo.defaults,
+  prefix : '',
+  postfix : '',
 }
 
 // --
@@ -120,6 +169,7 @@ let Fields =
   default : null,
   extend : null,
   supplement : null,
+  bias : null,
 }
 
 let Composes =
@@ -131,6 +181,7 @@ let Aggregates =
   default : null,
   elementsMap : null,
   elementsArray : null,
+  bias : null,
 }
 
 let Associates =
@@ -169,7 +220,8 @@ let Proto =
   // exporter
 
   exportStructure,
-  exportInfo,
+  _exportInfo,
+  _exportInfoComplex,
 
   // relation
 

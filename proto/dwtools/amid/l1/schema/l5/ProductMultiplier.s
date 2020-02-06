@@ -36,6 +36,8 @@ function _form2()
   if( !_.rangeIs( product.multiple ) )
   throw _.err( `Field multiple of ${product.qualifiedName} should be range, but it is not` );
 
+  product._formUsingPrimitive();
+
   return true;
 }
 
@@ -49,7 +51,7 @@ function _makeDefaultAct( it )
   // debugger;
 
   let originalDefinition = sys.definition( def.product.type );
-  _.assert( def.product.isAnyRange(), 'not implemented' );
+  _.assert( def.product.isRangeAny(), 'not implemented' );
 
   // debugger;
   // it.onElementAdd( _.nothing );
@@ -83,7 +85,43 @@ function _isTypeOfStructureAct( o )
 
 //
 
-function isAnyRange()
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  return Parent.prototype._exportInfo.call( this, o );
+
+  let result;
+  let elementDefinition = sys.definition( def.product.type );
+
+  if( product.isRangeAny() )
+  result = `${product.grammarName} := *${elementDefinition.product.grammarName}`;
+  else if( product.isRangeAtLeastOnce() )
+  result = `${product.grammarName} := +${elementDefinition.product.grammarName}`;
+  else if( product.isRangeOptional() )
+  result = `${product.grammarName} := ?${elementDefinition.product.grammarName}`;
+  else if( product.isRangeOnce() )
+  result = `${product.grammarName} := ${elementDefinition.product.grammarName}`;
+  else
+  result = `${product.grammarName} := ( type = ${elementDefinition.product.grammarName} multiple = ${product.multiple[ 0 ]} ${product.multiple[ 1 ]} )`;
+
+  return result;
+}
+
+_exportInfo.defaults =
+{
+  ... _.schema.Product.prototype._exportInfo.defaults,
+}
+
+//
+
+function isRangeAny()
 {
   let product = this;
   let def = product.definition;
@@ -92,6 +130,54 @@ function isAnyRange()
   if( product.multiple[ 0 ] !== 0 )
   return false;
   if( product.multiple[ 1 ] !== Infinity )
+  return false;
+
+  return true;
+}
+
+//
+
+function isRangeAtLeastOnce()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  if( product.multiple[ 0 ] !== 1 )
+  return false;
+  if( product.multiple[ 1 ] !== Infinity )
+  return false;
+
+  return true;
+}
+
+//
+
+function isRangeOptional()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  if( product.multiple[ 0 ] !== 0 )
+  return false;
+  if( product.multiple[ 1 ] !== 1 )
+  return false;
+
+  return true;
+}
+
+//
+
+function isRangeOnce()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  if( product.multiple[ 0 ] !== 1 )
+  return false;
+  if( product.multiple[ 1 ] !== 1 )
   return false;
 
   return true;
@@ -150,8 +236,12 @@ let Proto =
   _form2,
   _makeDefaultAct,
   _isTypeOfStructureAct,
+  _exportInfo,
 
-  isAnyRange,
+  isRangeAny,
+  isRangeAtLeastOnce,
+  isRangeOptional,
+  isRangeOnce,
 
   // relation
 

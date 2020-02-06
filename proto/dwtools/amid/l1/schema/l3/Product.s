@@ -112,6 +112,40 @@ function form3()
 
 //
 
+function _formUsingPrimitive()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  let elementDefinition = sys.definition( product.type );
+  _.arrayAppendOnce( elementDefinition.product.usedByProducts, product );
+  _.arrayAppendOnce( product.usesProducts, elementDefinition.product );
+
+}
+
+//
+
+function _formUsingComplex()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  for( let i = 0 ; i < product.elementsArray.length ; i++ )
+  {
+    let element = product.elementsArray[ i ];
+    let elementDefinition = sys.definition( element.name );
+
+    _.arrayAppendOnce( elementDefinition.product.usedByProducts, product );
+    _.arrayAppendOnce( product.usesProducts, elementDefinition.product );
+
+  }
+
+}
+
+//
+
 function _formComplex()
 {
   let product = this;
@@ -133,7 +167,35 @@ function _formComplex()
     product.elementsArray = [];
   }
 
+  if( done )
+  {
+    includedNormalize();
+    _.assert( _.longHas( [ 'left', 'right', null ], product.bias ) );
+  }
+
   return done;
+
+  /* */
+
+  function includedNormalize()
+  {
+    for( let i = 0 ; i < product.elementsArray.length ; i++ )
+    {
+      let element = product.elementsArray[ i ];
+      if( element.including === null )
+      if( element.name )
+      element.including = true;
+    }
+    let statistics = product.elementsStatistics();
+    if( statistics.unknown )
+    for( let i = 0 ; i < product.elementsArray.length ; i++ )
+    {
+      let element = product.elementsArray[ i ];
+      if( element.including === null )
+      element.including = !statistics.including;
+    }
+
+  }
 
   function amend( amends, amending )
   {
@@ -161,6 +223,7 @@ function _elementsAmmend( elements, amending )
 
   if( def.IsNameOrId( elements ) )
   {
+    debugger;
     elements = sys.definition( elements );
     if( elements.formed < 2 )
     return false;
@@ -201,33 +264,29 @@ function _elementsAmmend( elements, amending )
 
 //
 
-function _containerAutoTypeGetAct()
+function elementsStatistics()
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.assert( def.formed >= 2 );
-  _.assert( arguments.length === 0 );
+  let result = Object.create( null );
+  result.including = 0;
+  result.excluded = 0;
+  result.unknown = 0;
+  for( let i = 0 ; i < product.elementsArray.length ; i++ )
+  {
+    let element = product.elementsArray[ i ];
+    _.assert( _.longHas( [ true, false, null ], element.including ) );
+    if( element.including === true )
+    result.including += 1;
+    else if( element.including === false )
+    result.excluded += 1;
+    else
+    result.unknown += 1;
+  }
 
-  return null;
-}
-
-//
-
-function containerAutoTypeGet()
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-
-  _.assert( def.formed >= 2 );
-  _.assert( arguments.length === 0 );
-
-  if( product._containerAutoTypeGetAct )
-  return product._containerAutoTypeGetAct();
-
-  throw _.err( `Method::_containerAutoTypeGetAct is not implemented for ${product.quotedName}` );
+  return result;
 }
 
 //
@@ -319,8 +378,10 @@ function _elementMakeAct( element, amending )
     _.mapDelete( element, _.mapBut( definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );
   }
 
-  if( element.included === undefined || element.included === null )
-  element.included = true;
+  if( element.including === undefined )
+  element.including = null;
+  if( _.boolLike( element.including ) )
+  element.including = !!element.including;
 
   _.assertMapHasOnly( element, product.ElementExtendedFields );
   _.assert( _.strIs( element.type ) || _.numberIs( element.type ) );
@@ -338,6 +399,37 @@ function _elementMakeAct( element, amending )
   product.elementsArray.push( element );
 
   return element;
+}
+
+//
+
+function _containerAutoTypeGetAct()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assert( def.formed >= 2 );
+  _.assert( arguments.length === 0 );
+
+  return null;
+}
+
+//
+
+function containerAutoTypeGet()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assert( def.formed >= 2 );
+  _.assert( arguments.length === 0 );
+
+  if( product._containerAutoTypeGetAct )
+  return product._containerAutoTypeGetAct();
+
+  throw _.err( `Method::_containerAutoTypeGetAct is not implemented for ${product.quotedName}` );
 }
 
 // --
@@ -586,20 +678,130 @@ function exportInfo( o )
   o = _.routineOptions( exportInfo, arguments );
 
   if( o.structure === null )
-  o.structure = def.exportStructure( _.mapBut( o, [ 'structure' ] ) );
+  o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
 
-  let result = def._qualifiedName2FromStructure( o.structure );
-  let structure = _.mapBut( o.structure, [ 'name', 'kind', 'id', 'elements' ] );
-  if( structure.subtype )
-  structure.subtype = !!structure.subtype;
-  if( _.lengthOf( structure ) )
-  result += '\n' + _.toStrNice( structure );
-  return result;
+  return product._exportInfo( o );
 }
 
 exportInfo.defaults =
 {
   ... _.schema.System.prototype.exportInfo.defaults,
+  name : null,
+}
+
+//
+
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  {
+    let result = o.name ? o.name : def._longNameFromStructure( o.structure );
+    let structure = _.mapBut( o.structure, [ 'name', 'kind', 'id', 'elements' ] );
+    if( structure.subtype )
+    structure.subtype = !!structure.subtype;
+    if( _.lengthOf( structure ) )
+    result += '\n' + _.toStrNice( structure );
+    return result;
+  }
+  else
+  {
+    let result = o.name ? def.GrammarNameFor( o.name ) : product.grammarName;
+    return result;
+  }
+
+}
+
+_exportInfo.defaults =
+{
+  ... exportInfo.defaults,
+}
+
+//
+
+function _exportInfoComplex( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.routineOptions( _exportInfoComplex, arguments );
+  _.assert( o.structure !== null );
+
+  /*
+  optimization gives :
+`
+  /exp_mul
+  (.<
+    @left := exp
+    mul
+    @right := exp
+  )
+`
+  instead of
+`
+  #13 :=
+  (<
+    @left := exp
+    mul
+    @right := exp
+  )
+  /exp_mul := (. #13 )
+`
+  */
+
+  if( o.optimizing && !def.name && !o.name )
+  if( product.usedByProducts.length === 1 && product.usedByProducts[ 0 ].definition.kind === def.Kind.container )
+  {
+    return '';
+  }
+
+  let o2 = _.mapOnly( o, Self.prototype._exportInfo.defaults );
+  let result = Self.prototype._exportInfo.call( this, o2 );
+
+  let o3 = _.mapExtend( null, o2 );
+  o3.structure = product.elementsArray;
+  let result2 = product._elementsExportInfo( o3 );
+
+  if( o.format === 'dump' )
+  {
+    if( result2 )
+    result += `\n  elements\n${result2}`;
+  }
+  else
+  {
+    result += ' :=';
+
+    result += '\n' + o.opener;
+    if( o.prefix )
+    result += o.prefix;
+    if( product.bias === 'left' )
+    result += '>';
+    else if( product.bias === 'right' )
+    result += '<';
+    if( result2 )
+    result += `\n${result2}`;
+    if( o.postfix )
+    result += o.postfix;
+    result += '\n' + o.closer;
+  }
+
+  return result;
+}
+
+_exportInfoComplex.defaults =
+{
+  ... _exportInfo.defaults,
+  opener : null,
+  closer : null,
+  prefix : '',
+  postfix : '',
 }
 
 //
@@ -643,6 +845,10 @@ function _elementsExportInfo( o )
   let def = product.definition;
   let sys = def.sys;
   let result = '';
+  let statistics;
+
+  if( o.format === 'grammar' )
+  statistics = product.elementsStatistics();
 
   o = _.routineOptions( _elementsExportInfo, arguments );
 
@@ -660,9 +866,35 @@ function _elementsExportInfo( o )
   {
     let elementStructure = o.structure[ i ];
     let typeDef = sys.definition( elementStructure.type );
-    if( result )
-    result += '\n';
-    result += `    ${ typeDef.name || typeDef.id } :: ${ elementStructure.name || '' }`;
+
+    if( o.format === 'dump' )
+    {
+      if( result )
+      result += '\n';
+      result += `    ${ typeDef.name || typeDef.id } :: ${ elementStructure.name || '' }`;
+    }
+    else
+    {
+      if( result )
+      result += '\n';
+      let elementName = elementStructure.name;
+      if( elementName )
+      elementName = '@' + elementName + ' ';
+      if( elementStructure.including )
+      {
+        if( statistics.excluded )
+        result += `  ${ elementName || '' }:= ${ typeDef.name || typeDef.id }`;
+        else if( elementName )
+        result += `  ${ elementName || '' }:= ${ typeDef.name || typeDef.id }`;
+        else
+        result += `  ${ typeDef.name || typeDef.id }`;
+      }
+      else
+      {
+        result += `  ${ typeDef.name || typeDef.id }`;
+      }
+    }
+
   }
 
   return result;
@@ -670,8 +902,12 @@ function _elementsExportInfo( o )
 
 _elementsExportInfo.defaults =
 {
-  ... exportStructure.defaults,
-  structure : null,
+  ... _.schema.System.prototype.exportInfo.defaults,
+  name : null,
+  // ... exportStructure.defaults,
+  // structure : null,
+  // format : 'dump',
+  // name : null,
 }
 
 //
@@ -717,6 +953,15 @@ function _qualifiedNameGet()
   return `${product.constructor.shortName}::${def.name || def.id}`;
 }
 
+//
+
+function _grammarNameGet()
+{
+  let product = this;
+  let def = product.definition;
+  return def.grammarName;
+}
+
 // --
 // relations
 // --
@@ -724,13 +969,13 @@ function _qualifiedNameGet()
 let ElementFields =
 {
   type : null,
-  included : true,
+  including : true,
 }
 
 let ElementExtendedFields =
 {
   type : null,
-  included : true,
+  including : true,
   name : null,
   index : null,
 }
@@ -751,6 +996,8 @@ let Associates =
 let Restricts =
 {
   formed : 0,
+  usesProducts : _.define.own( [] ),
+  usedByProducts : _.define.own( [] ),
 }
 
 let Statics =
@@ -765,6 +1012,7 @@ let Forbids =
 
 let Accessors =
 {
+  grammarName : {},
 }
 
 // --
@@ -784,14 +1032,18 @@ let Proto =
   form2,
   form3,
 
+  _formUsingPrimitive,
+  _formUsingComplex, /* xxx : split class Complex */
   _formComplex,
   _elementsAmmend,
+  elementsStatistics,
+  _elementMake,
+  _elementMakeAct,
+
+  // etc
 
   _containerAutoTypeGetAct,
   containerAutoTypeGet,
-
-  _elementMake,
-  _elementMakeAct,
 
   // productor
 
@@ -813,10 +1065,13 @@ let Proto =
 
   exportStructure,
   exportInfo,
+  _exportInfo,
+  _exportInfoComplex,
   _elementsExportStructure,
   _elementsExportInfo,
   fieldsCompact,
   _qualifiedNameGet,
+  _grammarNameGet,
 
   // relation
 

@@ -33,26 +33,65 @@ function _form2()
   _.assert( _.strDefined( product.type ) || _.numberDefined( product.type ), () => `Container should have name of type definition, but ${def.qualifiedName} does not have` );
   _.assert( _.longHas( [ 'auto', 'array', 'map' ], product.container ) );
 
+  product._formUsingPrimitive();
+
+  // _.assert( product.actualContainer === null );
+  //
+  // product.actualContainer = product.container;
+  //
+  // let elementDefinition = sys.definition( product.type );
+  //
+  // if( elementDefinition.formed < 2 )
+  // return false;
+  //
+  // if( product.actualContainer === 'auto' )
+  // {
+  //   product.actualContainer = elementDefinition.product.containerAutoTypeGet();
+  // }
+  //
+  // _.assert( _.longHas( [ 'array', 'map' ], product.actualContainer ) );
+  //
+  // if( product.actualContainer === 'array' )
+  // {
+  //   product._makeContainer = product._makeContainerArray;
+  //   product._elementAdd = product._elementAddToArray;
+  // }
+  // else
+  // {
+  //   product._makeContainer = product._makeContainerMap;
+  //   product._elementAdd = product._elementAddToMap;
+  // }
+
+  return true;
+}
+
+//
+
+function _form3()
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assert( product.actualContainer === null );
+
+  product.actualContainer = product.container;
+
   let elementDefinition = sys.definition( product.type );
 
-  //debugger;
-  if( elementDefinition.formed < 2 )
-  return false;
+  _.assert( elementDefinition.formed >= 2 );
 
-  if( product.container === 'auto' )
+  // if( elementDefinition.formed < 2 )
+  // return false;
+
+  if( product.actualContainer === 'auto' )
   {
-    product.container = elementDefinition.product.containerAutoTypeGet();
+    product.actualContainer = elementDefinition.product.containerAutoTypeGet();
   }
 
-  _.assert( _.longHas( [ 'array', 'map' ], product.container ) );
+  _.assert( _.longHas( [ 'array', 'map' ], product.actualContainer ) );
 
-  // _.assert( product.multipliers.length === 0 );
-  //
-  // if( product.multipliers.length > 1 )
-  // throw _.err( `Complex definition can have not more than one * element. ${product.qualifiedName} has ${product.multipliers.length}` );
-
-  // if( product.multipliers.length || _.lengthOf( product.elementsMap ) === 0 )
-  if( product.container === 'array' )
+  if( product.actualContainer === 'array' )
   {
     product._makeContainer = product._makeContainerArray;
     product._elementAdd = product._elementAddToArray;
@@ -80,9 +119,7 @@ function _makeDefaultAct( it )
   _.assert( product.formed >= 2 );
 
   let elementDefinition = sys.definition( product.type );
-  // debugger;
   let it2 = product._makeDefaultIteration( it );
-  // debugger;
   let container = product._makeContainer();
   it2.onElementAdd = onElementAdd;
   let r = elementDefinition.product._makeDefaultAct( it2 );
@@ -90,8 +127,6 @@ function _makeDefaultAct( it )
 
   it.onElementAdd({ value : container });
 
-  // function onElementAdd( value )
-  // function onElementAdd( elementDefinition, elementDescriptor, result, value )
   function onElementAdd( o )
   {
     _.assert( arguments.length === 1 );
@@ -103,34 +138,7 @@ function _makeDefaultAct( it )
     _.assert( !o.container );
     o.container = container;
     product._elementAdd( o );
-    // product._elementAdd( elementDefinition, elementDescriptor, result, value );
   }
-
-  // for( let i = 0 ; i < product.elementsArray.length ; i++ )
-  // {
-  //   let elementDescriptor = product.elementsArray[ i ];
-  //   let elementDefinition = sys.definition( elementDescriptor.type );
-  //
-  //   _.assert( _.routineIs( elementDefinition.product._makeDefaultAct ), `Definition ${elementDefinition.product.qualifiedName} deos not have method _makeDefaultAct` );
-  //
-  //   let it2 = product._makeDefaultIteration();
-  //   it2.onElementAdd = onElementAdd;
-  //   let r = elementDefinition.product._makeDefaultAct( it2 );
-  //   _.assert( r === undefined );
-  //
-  //   function onElementAdd( value )
-  //   {
-  //     if( value === _.nothing )
-  //     {
-  //       debugger;
-  //       throw _.err( 'Cant add nothing to composition' );
-  //     }
-  //     product._elementAdd( elementDefinition, elementDescriptor, result, value );
-  //   }
-  //
-  // }
-  //
-  // it.onElementAdd( result );
 
 }
 
@@ -143,12 +151,9 @@ function _makeContainerArray()
 
 //
 
-// function _elementAddToArray( elementDefinition, elementDescriptor, container, value )
 function _elementAddToArray( o )
 {
-  // debugger;
   o.container.push( o.value );
-  // container.push( value );
 }
 
 //
@@ -160,7 +165,6 @@ function _makeContainerMap()
 
 //
 
-// function _elementAddToMap( elementDefinition, elementDescriptor, container, value )
 function _elementAddToMap( o )
 {
   let product = this;
@@ -170,6 +174,51 @@ function _elementAddToMap( o )
   _.sure( _.strIs( o.elementDescriptor.name ), `Element should have name to make default, but some elements of ${def.qualifiedName} does not have it` );
 
   o.container[ o.elementDescriptor.name ] = o.value;
+}
+
+//
+
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  return Parent.prototype._exportInfo.call( this, o );
+
+  let result;
+  let elementDefinition = sys.definition( def.product.type );
+
+  let prefix = '';
+  let postfix = '';
+  if( product.container === 'auto' )
+  prefix = '.';
+  else
+  postfix = 'container = ${product.container} ';
+
+  if( o.optimizing && !elementDefinition.name && elementDefinition.isComplex() )
+  {
+    let o2 = _.mapExtend( null, o );
+    o2.prefix = prefix;
+    o2.postfix = postfix ? `${postfix}\n` : postfix;
+    o2.name = def.name || product.id;
+    result = elementDefinition.product._exportInfoComplex( o2 );
+  }
+  else
+  {
+    result = `${product.grammarName} := (${prefix} ${elementDefinition.product.grammarName} ${postfix})`;
+  }
+
+  return result;
+}
+
+_exportInfo.defaults =
+{
+  ... _.schema.Product.prototype._exportInfo.defaults,
 }
 
 // --
@@ -198,6 +247,7 @@ let Associates =
 
 let Restricts =
 {
+  actualContainer : null,
   _makeContainer : null,
   _elementAdd : null,
 }
@@ -233,6 +283,7 @@ let Proto =
   _elementAddToArray,
   _makeContainerMap,
   _elementAddToMap,
+  _exportInfo,
 
   // relation
 

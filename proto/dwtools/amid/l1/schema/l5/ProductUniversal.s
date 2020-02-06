@@ -67,6 +67,35 @@ function _isTypeOfStructureAct( o )
   return false;
 }
 
+//
+
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  return Parent.prototype._exportInfo.call( this, o );
+
+  let result; debugger;
+
+  if( product.symbol === _.anything )
+  result = `${product.grammarName} := ( type = anything )`;
+  else
+  result = `${product.grammarName} := ( type = nothing )`;
+
+  return result;
+}
+
+_exportInfo.defaults =
+{
+  ... _.schema.Product.prototype._exportInfo.defaults,
+}
+
 // --
 // relations
 // --
@@ -125,6 +154,7 @@ let Proto =
   _form2,
   _makeDefaultAct,
   _isTypeOfStructureAct,
+  _exportInfo,
 
   // relation
 
