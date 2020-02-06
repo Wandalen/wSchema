@@ -1004,6 +1004,110 @@ x x 12 02 x
 `
 */
 
+//
+
+/*
+let grammar =
+`
+
+  /mul = terminal
+  /plus = terminal
+  /space = terminal
+  /name = terminal
+  /number = terminal
+  /parenthes_open = terminal
+  /parenthes_close = terminal
+
+  /factor = [ /name /number ]
+  /exp_mul = (<. /exp /mul /exp )
+  /exp_plus = (<. /exp /plus /exp )
+  /exp_parenthes = (. /parenthes_open /exp /parenthes_close ]
+  /exp = [< /factor /exp_mul /exp_plus /exp_parenthes root=true ]
+
+  //
+
+  /mul = #01
+  /plus = #02
+  /space = #03
+  /name = #04
+  /number = #05
+  /parenthes_open = #06
+  /parenthes_close = #07
+  /factor = #08
+  /exp_mul = #09
+  /exp_plus = #10
+  /exp_parenthes = #11
+  /exp = #12
+
+  #01 = #01
+  #02 = #02
+  #03 = #03
+  #04 = #04
+  #05 = #05
+  #06 = #06
+  #07 = #07
+  #08 = [ #04 #05 ]
+  #09 = (<. #12 #01 #12 )
+  #10 = (<. #12 #02 #12 )
+  #11 = (. #06 #12 #07 ]
+  #12 = [< #08 #09 #10 #11 root=true ]
+
+  #10a = (. #12 #02 #12 !&#02 )
+=
+
+  a  +  b  +  c
+  04 02 04 02 04
+   0  1  2  3  4
+
+  |
+  04 02 04 02 04
+  |
+  12 02 12 02 12
+  |
+  12 02 12
+  |
+  12
+
+  x 12 02
+    02 12 x
+x x 12 02 x
+
+=
+
+  (  a  *  (  b  +  c  )  )
+  06 04 01 06 04 02 04 07 07
+   0  1  2  3  4  5  6  7  8
+
+  |                            0 - 3
+  06 04 01 06 04 02 04 07 07
+     |
+  06 08 01 06 04 02 04 07 07
+     |
+  06 10 01 06 04 02 04 07 07
+     |                         1 - 4
+  06 12 01 06 04 02 04 07 07
+        |                      2 - 5
+  06 12 01 06 04 02 04 07 07
+           |                   3 - 6
+  06 12 01 06 04 02 04 07 07
+              |
+  06 12 01 06 08 02 04 07 07
+              |
+  06 12 01 06 12 02 04 07 07
+              |                4 - 7
+  06 12 01 06 12 02 04 07 07
+                 |             5 - 8
+  06 12 01 06 12 02 04 07 07
+                    |
+  06 12 01 06 12 02 08 07 07
+                    |          6 - 9 !
+  06 12 01 06 12 02 12 07 07
+                       |
+  06 12 01 06 12 02 12 07 07
+
+`
+*/
+
 // --
 // export
 // --
