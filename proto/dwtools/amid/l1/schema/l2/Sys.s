@@ -238,8 +238,6 @@ definition.defaults =
 
 //
 
-//
-
 /* let schema/grammar =
 `
 
@@ -1010,100 +1008,245 @@ x x 12 02 x
 let grammar =
 `
 
-  /mul = terminal
-  /plus = terminal
-  /space = terminal
   /name = terminal
-  /number = terminal
-  /parenthes_open = terminal
-  /parenthes_close = terminal
-
-  /factor = [ /name /number ]
-  /exp_mul = (<. /exp /mul /exp )
-  /exp_plus = (<. /exp /plus /exp )
-  /exp_parenthes = (. /parenthes_open /exp /parenthes_close ]
-  /exp = [< /factor /exp_mul /exp_plus /exp_parenthes root=true ]
+  /line_open = terminal
+  /exp_line = (. /line_open /exp /line_open ]
+  /exp = [< /name /exp_line root=true ]
 
   //
 
-  /mul = #01
-  /plus = #02
-  /space = #03
-  /name = #04
-  /number = #05
-  /parenthes_open = #06
-  /parenthes_close = #07
-  /factor = #08
-  /exp_mul = #09
-  /exp_plus = #10
-  /exp_parenthes = #11
-  /exp = #12
+  /name = #1
+  /line_open = #2
+  /exp_line = #3
+  /exp = #4
 
-  #01 = #01
-  #02 = #02
-  #03 = #03
-  #04 = #04
-  #05 = #05
-  #06 = #06
-  #07 = #07
-  #08 = [ #04 #05 ]
-  #09 = (<. #12 #01 #12 )
-  #10 = (<. #12 #02 #12 )
-  #11 = (. #06 #12 #07 ]
-  #12 = [< #08 #09 #10 #11 root=true ]
+  #1 = #1
+  #2 = #2
+  #3 = (<. #2 #4 #2 )
+  #4 = [< #1 #3 root=true ]
 
-  #10a = (. #12 #02 #12 !&#02 )
-=
-
-  a  +  b  +  c
-  04 02 04 02 04
-   0  1  2  3  4
-
-  |
-  04 02 04 02 04
-  |
-  12 02 12 02 12
-  |
-  12 02 12
-  |
-  12
-
-  x 12 02
-    02 12 x
-x x 12 02 x
+  #3a = (. #2 #4 #2 )
 
 =
 
-  (  a  *  (  b  +  c  )  )
-  06 04 01 06 04 02 04 07 07
-   0  1  2  3  4  5  6  7  8
+  '|a|b|'
 
-  |                            0 - 3
-  06 04 01 06 04 02 04 07 07
-     |
-  06 08 01 06 04 02 04 07 07
-     |
-  06 10 01 06 04 02 04 07 07
-     |                         1 - 4
-  06 12 01 06 04 02 04 07 07
-        |                      2 - 5
-  06 12 01 06 04 02 04 07 07
-           |                   3 - 6
-  06 12 01 06 04 02 04 07 07
-              |
-  06 12 01 06 08 02 04 07 07
-              |
-  06 12 01 06 12 02 04 07 07
-              |                4 - 7
-  06 12 01 06 12 02 04 07 07
-                 |             5 - 8
-  06 12 01 06 12 02 04 07 07
-                    |
-  06 12 01 06 12 02 08 07 07
-                    |          6 - 9 !
-  06 12 01 06 12 02 12 07 07
-                       |
-  06 12 01 06 12 02 12 07 07
+`
+*/
+
+//
+
+/*
+let grammar =
+`
+
+  /name = terminal
+  /plus = terminal
+  /exp_plus = (. /exp0 /plus /exp )
+  /term_plus_ = ( /plus /exp )
+  /term_plus = [ /exp term_plus_ ]
+  /exp = [< /name /exp_plus root=true ]
+
+  //
+
+  (. /plus /exp /plus /exp )
+  (. /exp /plus /exp )
+
+  /name = #1
+  /plus = #2
+  /exp_plus = #3
+  /exp0 = #4
+  /exp = #5
+
+  #1 = #1
+  #2 = #2
+  #3 = (. #2 #4 #2 )
+  #4 = ( #5 )
+  #5 = [< #1 #3 root=true ]
+
+  #3a = (. #2 #4 #2 )
+
+=
+
+  '|a|b|'
+
+`
+*/
+
+//
+
+/*
+let grammar =
+`
+
+  nothing := terminal
+  /name := terminal
+  /sign_plus := terminal
+  /sign_minus := terminal
+  /sign_optional := [ /sign_plus /sign_minus nothing ]
+  /exp1 := ( /sign_optional /name )
+  /exp2 := (< /exp3 /sign_optional /exp3 )
+  /exp3 := [ /name /exp2 )
+  /exp := [ /exp1 /exp3 ]
+
+  /exp1x := ( !&exp3 /sign_optional /name )
+  /exp3x := (< /exp3 /sign_optional /exp3 !&/sign_optional )
+
+  /name = #1
+  /sign_plus = #2
+  /sign_minus = #3
+  /sign_optional = #4
+  /exp1 = #5
+  /exp2 = #6
+  /exp3 = #7
+  /exp = #8
+
+  #1 = #1
+  #2 = #2
+  #3 = #3
+  #4 = ?[ #2 #3 ]
+  #5 = ( !&#7 #4 #1 )
+  #6 = ( #1 #4 #1 !&[ #2 #3 #1 ] )
+  #7 = [ #1 #6 ]
+  #8 = [ #5 #7 ]
+
+=
+
+    0 1 2 3 4 5 6 7
+  ' + a - b + c + d '
+    2 1 3 1 2 1 2 1
+
+    4 1 3 1 2 1 2 1
+    4 1 3 1 2 1 2 1
+
+#1 #2 #1
+#1 #3 #1
+#1 #1
+
+`
+*/
+
+//
+
+/*
+let grammar =
+`
+
+  nothing := terminal
+  /name := terminal
+  /sign_plus := terminal
+  /sign_minus := terminal
+  /sign_optional := [ /sign_plus /sign_minus nothing ]
+  /exp2 := (< /exp /sign_optional /exp )
+  /exp := [ /name /exp2 ]
+
+  /name := #1
+  /sign_plus := #2
+  /sign_minus := #3
+  /sign_optional := #4
+  /exp2 := #5
+  /exp := #6
+
+  #1 := #1
+  #2 := #2
+  #3 := #3
+  #4 := ?[ #2 #3 ]
+  #5 := ( #6 ?#4 #6 e )
+  #6 := [ #1 #5 ]
+
+  #5 :=
+  [
+    ( #1 #2 #1 )
+    ( #1 #3 #1 )
+    ( #1 #1 )
+  ]
+
+=
+
+    0 1 2 3
+  ' a b c d '
+    1 1 1 1
+
+= transitions
+
+  01 : e -> e
+  02 : x -> x
+
+  03 : () + #4 -> x
+  04 : () + #6 -> ( #6 )
+  05 : () + e -> x
+  06 : ( #6 ) + e -> e
+
+  07 : ** + #1 -> ** + #6
+  08 : ** + #2 -> ** + #4
+  09 : ** + #3 -> ** + #4
+  10 : ** + #5 -> ** + #6
+  11 : ( ** #4 ) + #4 -> x
+  12 : ( ** #4 ) + #6 -> ( ** #4 #6 )
+  13 : ( ** #4 ) + e -> x
+  14 : ( ** #6 ) + #4 -> ( ** #6 #4 )
+  15 : ( ** #6 ) + #6 -> ( ** #6 #6 )
+  16 : ( ** #6 #4 #6 ) + e -> ( ** ) + #5
+  17 : ( ** #6 #6 ) + e -> ( ** ) + #5
+
+= states
+
+  s1 : e
+  s2 : x
+  s3 : ()
+  s4 : ( #6 )
+  s5 : ( ** #4 )
+  s6 : ( ** #6 )
+  s7 : ( ** #6 #4 #6 )
+  s8 : ( ** #6 #6 )
+
+= states + transitions
+
+  01 : s1 -> s1
+  02 : s2 -> s2
+
+  03 : s3 + #4 -> s2
+  04 : s3 + #6 -> s4
+  05 : s3 + e -> s2
+  06 : s4 + e -> s1
+
+  07 : s* + #1 -> [ s4 s6 s7 s8 ]
+  08 : s* + #2 -> s5
+  09 : s* + #3 -> s5
+  10 : s* + #5 -> [ s4 s6 s7 s8 ]
+  11 : s5 + #4 -> s2
+  12 : s5 + #6 -> [ s4 s6 s7 ]
+  13 : s5 + e -> s2
+  14 : s6 + #4 -> s5
+  15 : s6 + #6 -> s8
+  16 : s7 + e -> [ s4 s6 s7 s8 ]
+  17 : s8 + e -> [ s4 s6 s7 s8 ]
+
+= states + transitions - optimized
+
+  01 : s1 -> s1
+  02 : s2 -> s2
+
+  03 : s3 + #4 -> s2
+  04 : s3 + #6 -> s4
+  05 : s3 + e -> s2
+  06 : s4 + e -> s1
+
+  07 : s* + #1 -> [ s6 s7 ]
+  07b: s3 + #1 -> s4
+  07c: s6 + #1 -> s8
+  08 : s* + #2 -> s5
+  09 : s* + #3 -> s5
+  10 : s* + #5 -> [ s6 s7 ]
+  10b: s3 + #5 -> s5
+  10c: s6 + #5 -> s8
+  11 : s5 + #4 -> s2
+  12 : s5 + #6 -> [ s4 s6 s7 ]
+  13 : s5 + e -> s2
+  14 : s6 + #4 -> s5
+  15 : s6 + #6 -> s8
+  16 : s7 + e -> [ s4 s6 s7 s8 ]
+  17 : s8 + e -> [ s4 s6 s7 s8 ]
 
 `
 */

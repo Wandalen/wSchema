@@ -1,4 +1,4 @@
-( function _ProductContainer_s_( ) {
+( function _Container_s_( ) {
 
 'use strict';
 
@@ -8,7 +8,7 @@ let _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
+let Parent = _.schema.ProductScalar;
 let Self = function wSchemaProductContainer( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -32,35 +32,6 @@ function _form2()
   _.mapExtend( product, def.opts );
   _.assert( _.strDefined( product.type ) || _.numberDefined( product.type ), () => `Container should have name of type definition, but ${def.qualifiedName} does not have` );
   _.assert( _.longHas( [ 'auto', 'array', 'map' ], product.container ) );
-
-  product._formUsingPrimitive();
-
-  // _.assert( product.actualContainer === null );
-  //
-  // product.actualContainer = product.container;
-  //
-  // let elementDefinition = sys.definition( product.type );
-  //
-  // if( elementDefinition.formed < 2 )
-  // return false;
-  //
-  // if( product.actualContainer === 'auto' )
-  // {
-  //   product.actualContainer = elementDefinition.product.containerAutoTypeGet();
-  // }
-  //
-  // _.assert( _.longHas( [ 'array', 'map' ], product.actualContainer ) );
-  //
-  // if( product.actualContainer === 'array' )
-  // {
-  //   product._makeContainer = product._makeContainerArray;
-  //   product._elementAdd = product._elementAddToArray;
-  // }
-  // else
-  // {
-  //   product._makeContainer = product._makeContainerMap;
-  //   product._elementAdd = product._elementAddToMap;
-  // }
 
   return true;
 }
@@ -101,6 +72,9 @@ function _form3()
     product._makeContainer = product._makeContainerMap;
     product._elementAdd = product._elementAddToMap;
   }
+
+  debugger;
+  product._formUsing();
 
   return true;
 }
@@ -176,7 +150,9 @@ function _elementAddToMap( o )
   o.container[ o.elementDescriptor.name ] = o.value;
 }
 
-//
+// --
+// exporter
+// --
 
 function _exportInfo( o )
 {
@@ -206,7 +182,7 @@ function _exportInfo( o )
     o2.prefix = prefix;
     o2.postfix = postfix ? `${postfix}\n` : postfix;
     o2.name = def.name || product.id;
-    result = elementDefinition.product._exportInfoComplex( o2 );
+    result = elementDefinition.product._exportInfoVector( o2 );
   }
   else
   {
@@ -275,6 +251,7 @@ let Proto =
   // inter
 
   _form2,
+  _form3,
 
   // productor
 
@@ -283,6 +260,9 @@ let Proto =
   _elementAddToArray,
   _makeContainerMap,
   _elementAddToMap,
+
+  // exporter
+
   _exportInfo,
 
   // relation

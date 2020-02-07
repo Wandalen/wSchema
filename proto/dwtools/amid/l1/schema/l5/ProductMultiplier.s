@@ -1,4 +1,4 @@
-( function _ProductMultiplier_s_( ) {
+( function _Multiplier_s_( ) {
 
 'use strict';
 
@@ -8,7 +8,7 @@ let _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
+let Parent = _.schema.ProductScalar;
 let Self = function wSchemaProductMultiplier( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -36,90 +36,27 @@ function _form2()
   if( !_.rangeIs( product.multiple ) )
   throw _.err( `Field multiple of ${product.qualifiedName} should be range, but it is not` );
 
-  product._formUsingPrimitive();
+  // product._formUsing();
 
   return true;
 }
 
 //
 
-function _makeDefaultAct( it )
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-  // debugger;
-
-  let originalDefinition = sys.definition( def.product.type );
-  _.assert( def.product.isRangeAny(), 'not implemented' );
-
-  // debugger;
-  // it.onElementAdd( _.nothing );
-
-  // if( originalDefinition.kind !== originalDefinition.Kind.universal || value !== _.nothing )
-  // if( value !== _.nothing )
-  // throw _.err( 'Cant make default for varied-length compisition with not ❮nothing❯ as default element' );
-
-  // debugger;
-  // return _.nothing;
-
-  // _.assert( _.routineIs( elementDefinition.product._makeDefaultAct ), `Definition ${elementDefinition.product.qualifiedName} deos not have method _makeDefaultAct` );
-  // let value = elementDefinition.product._makeDefaultAct();
-
-  // throw _.err( 'Should not be called. Implementation of _makeDefaultAct for the definition of container of it' );
-  // return product._makeDefaultSingletone();
-}
-
-//
-
-function _isTypeOfStructureAct( o )
+function _form3()
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  throw _.err( 'not implemented' );
+  product._formUsing();
 
   return true;
 }
 
-//
-
-function _exportInfo( o )
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-
-  _.assertRoutineOptions( _exportInfo, arguments );
-  _.assert( o.structure !== null );
-
-  if( o.format === 'dump' )
-  return Parent.prototype._exportInfo.call( this, o );
-
-  let result;
-  let elementDefinition = sys.definition( def.product.type );
-
-  if( product.isRangeAny() )
-  result = `${product.grammarName} := *${elementDefinition.product.grammarName}`;
-  else if( product.isRangeAtLeastOnce() )
-  result = `${product.grammarName} := +${elementDefinition.product.grammarName}`;
-  else if( product.isRangeOptional() )
-  result = `${product.grammarName} := ?${elementDefinition.product.grammarName}`;
-  else if( product.isRangeOnce() )
-  result = `${product.grammarName} := ${elementDefinition.product.grammarName}`;
-  else
-  result = `${product.grammarName} := ( type = ${elementDefinition.product.grammarName} multiple = ${product.multiple[ 0 ]} ${product.multiple[ 1 ]} )`;
-
-  return result;
-}
-
-_exportInfo.defaults =
-{
-  ... _.schema.Product.prototype._exportInfo.defaults,
-}
-
-//
+// --
+// helper
+// --
 
 function isRangeAny()
 {
@@ -184,6 +121,70 @@ function isRangeOnce()
 }
 
 // --
+// productor
+// --
+
+function _makeDefaultAct( it )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  let originalDefinition = sys.definition( def.product.type );
+  _.assert( def.product.isRangeAny(), 'not implemented' );
+
+}
+
+//
+
+function _isTypeOfStructureAct( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  throw _.err( 'not implemented' );
+
+  return true;
+}
+
+//
+
+function _exportInfo( o )
+{
+  let product = this;
+  let def = product.definition;
+  let sys = def.sys;
+
+  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assert( o.structure !== null );
+
+  if( o.format === 'dump' )
+  return Parent.prototype._exportInfo.call( this, o );
+
+  let result;
+  let elementDefinition = sys.definition( def.product.type );
+
+  if( product.isRangeAny() )
+  result = `${product.grammarName} := *${elementDefinition.product.grammarName}`;
+  else if( product.isRangeAtLeastOnce() )
+  result = `${product.grammarName} := +${elementDefinition.product.grammarName}`;
+  else if( product.isRangeOptional() )
+  result = `${product.grammarName} := ?${elementDefinition.product.grammarName}`;
+  else if( product.isRangeOnce() )
+  result = `${product.grammarName} := ${elementDefinition.product.grammarName}`;
+  else
+  result = `${product.grammarName} := ( type = ${elementDefinition.product.grammarName} multiple = ${product.multiple[ 0 ]} ${product.multiple[ 1 ]} )`;
+
+  return result;
+}
+
+_exportInfo.defaults =
+{
+  ... _.schema.Product.prototype._exportInfo.defaults,
+}
+
+// --
 // relations
 // --
 
@@ -234,14 +235,20 @@ let Proto =
   // inter
 
   _form2,
-  _makeDefaultAct,
-  _isTypeOfStructureAct,
-  _exportInfo,
+  _form3,
+
+  // helper
 
   isRangeAny,
   isRangeAtLeastOnce,
   isRangeOptional,
   isRangeOnce,
+
+  // productor
+
+  _makeDefaultAct,
+  _isTypeOfStructureAct,
+  _exportInfo,
 
   // relation
 

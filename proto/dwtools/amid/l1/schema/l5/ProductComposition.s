@@ -1,4 +1,4 @@
-( function _ProductComposition_s_( ) {
+( function _Composition_s_( ) {
 
 'use strict';
 
@@ -8,7 +8,7 @@ let _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
+let Parent = _.schema.ProductVector;
 let Self = function wSchemaProductComposition( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -26,11 +26,8 @@ function _form2()
   let def = product.definition;
   let sys = def.sys;
 
-  if( !product._formComplex() )
+  if( !Parent.prototype._form2.apply( product, arguments ) )
   return false;
-
-  _.mapExtend( product, _.mapBut( def.opts, { extend : null, supplement : null } ) );
-  _.assert( product.multipliers.length === 0 );
 
   for( let i = 0 ; i < product.elementsArray.length ; i++ )
   {
@@ -43,7 +40,9 @@ function _form2()
   return true;
 }
 
-//
+// --
+// helper
+// --
 
 function _containerAutoTypeGetAct()
 {
@@ -82,9 +81,6 @@ function _makeDefaultAct( it )
   let product = this;
   let def = product.definition;
   let sys = def.sys;
-  // let result = product._makeContainer();
-  // let result = it.makeContainer;
-  //debugger;
 
   _.assert( arguments.length === 1 );
 
@@ -100,8 +96,6 @@ function _makeDefaultAct( it )
     let r = elementDefinition.product._makeDefaultAct( it2 );
     _.assert( r === undefined );
 
-    // it.onElementAdd( elementDefinition, elementDescriptor, result, value );
-
     function onElementAdd( o )
     {
       if( o.value === _.nothing )
@@ -109,37 +103,14 @@ function _makeDefaultAct( it )
         debugger;
         throw _.err( 'Cant add nothing to composition' );
       }
-      // debugger;
       if( !o.elementDefinition )
       o.elementDefinition = elementDefinition;
       if( !o.elementDescriptor )
       o.elementDescriptor = elementDescriptor;
       it.onElementAdd( o );
-      // product._elementAdd( value, elementDefinition, elementDescriptor, result );
     }
 
-    // let it2 = product._makeDefaultIteration();
-    // it2.onElementAdd = onElementAdd;
-    // let r = elementDefinition.product._makeDefaultAct( it2 );
-
-    // let it2 = product._makeDefaultIteration();
-    // it2.onElementAdd = onElementAdd;
-    // let r = elementDefinition.product._makeDefaultAct( it2 );
-    // _.assert( r === undefined );
-
-    // function onElementAdd( value )
-    // {
-    //   if( value === _.nothing )
-    //   {
-    //     debugger;
-    //     throw _.err( 'Cant add nothing to composition' );
-    //   }
-    //   product._elementAdd( elementDefinition, elementDescriptor, result, value );
-    // }
-
   }
-
-  // it.onElementAdd( result );
 
 }
 
@@ -151,124 +122,60 @@ function _isTypeOfStructureAct( o )
   let def = product.definition;
   let sys = def.sys;
 
-  x
+  _.assert( 0, 'not implemented' );
 
   return true;
 }
-
-// //
-//
-// function _isTypeOfDefinitionVariants( o )
-// {
-//   let product = this;
-//   let def = product.definition;
-//   let sys = def.sys;
-//
-//   let t1 = 0;
-//   let t2 = 0;
-//   let variantsStack = [];
-//
-//   while( t1 < product.elementsArray.length )
-//   {
-//     let sup = product.elementsArray[ t1 ];
-//
-//     let o2 = _.mapExtend( null,  );
-//     o2.sup = element1;
-//     o2.sub = product.elementsArray.slice( t2 );
-//     let variants = element2._isTypeOfDefinitionVariants( o2 );
-//
-//     if( variants.length === 0 )
-//     return false;
-//
-//     variantsStack.push( variantsStack )
-//
-//
-//
-//   }
-//
-// }
-//
-// _isTypeOfDefinitionVariants.default =
-// {
-//   // ... _.schema.Product._isTypeOfDefinitionVariants.defaults,
-//   sup : null,
-//   sub : null,
-// }
 
 // --
 // exporter
 // --
 
-function exportStructure( o )
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-
-  o = _.routineOptions( exportStructure, arguments );
-
-  Parent.prototype.exportStructure.call( product, o );
-
-  o.dst.elements = [];
-
-  let o2 = _.mapExtend( null, o );
-  o2.elements = product.elementsArray;
-  o2.dst = o.dst.elements;
-  product._elementsExportStructure( o2 );
-
-  return o.dst;
-}
-
-exportStructure.defaults =
-{
-  ... Parent.prototype.exportStructure.defaults,
-}
+// function exportStructure( o )
+// {
+//   let product = this;
+//   let def = product.definition;
+//   let sys = def.sys;
+//
+//   o = _.routineOptions( exportStructure, arguments );
+//
+//   Parent.prototype.exportStructure.call( product, o );
+//
+//   o.dst.elements = [];
+//
+//   let o2 = _.mapExtend( null, o );
+//   o2.elements = product.elementsArray;
+//   o2.dst = o.dst.elements;
+//   product._elementsExportStructure( o2 );
+//
+//   return o.dst;
+// }
+//
+// exportStructure.defaults =
+// {
+//   ... Parent.prototype.exportStructure.defaults,
+// }
 
 //
 
-function _exportInfo( o )
+function _exportInfoVector( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportInfo, arguments );
-  _.assert( o.structure !== null );
-
-  return product._exportInfoComplex( o );
-  // let o2 = _.mapExtend( null, o );
-  // o2.opener = '(';
-  // o2.closer = ')';
-  // return product._exportInfoComplex( o2 );
-}
-
-_exportInfo.defaults =
-{
-  ... _.schema.Product.prototype._exportInfo.defaults,
-  // prefix : '',
-  // postfix : '',
-}
-
-//
-
-function _exportInfoComplex( o )
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-
-  _.routineOptions( _exportInfoComplex, arguments );
+  _.routineOptions( _exportInfoVector, arguments );
 
   let o2 = _.mapExtend( null, o );
   o2.opener = '(';
   o2.closer = ')';
 
-  return Parent.prototype._exportInfoComplex.call( product, o2 );
+  return Parent.prototype._exportInfoVector.call( product, o2 );
 }
 
-_exportInfoComplex.defaults =
+_exportInfoVector.defaults =
 {
-  ... _exportInfo.defaults,
+  ... Parent.prototype._exportInfo.defaults,
   prefix : '',
   postfix : '',
 }
@@ -279,9 +186,7 @@ _exportInfoComplex.defaults =
 
 let Fields =
 {
-  extend : null,
-  supplement : null,
-  bias : null,
+  ... Parent.Fields,
 }
 
 let Composes =
@@ -290,10 +195,11 @@ let Composes =
 
 let Aggregates =
 {
+  ... Parent.prototype.Aggregates,
   multipliers : _.define.own( [] ),
-  elementsMap : null,
-  elementsArray : null,
-  bias : null,
+  // elementsMap : null,
+  // elementsArray : null,
+  // bias : null,
 }
 
 let Associates =
@@ -329,6 +235,8 @@ let Proto =
 
   _form2,
 
+  // helper
+
   _containerAutoTypeGetAct,
 
   // productor
@@ -338,9 +246,9 @@ let Proto =
 
   // exporter
 
-  exportStructure,
-  _exportInfo,
-  _exportInfoComplex,
+  // exportStructure,
+  // _exportInfo,
+  _exportInfoVector,
 
   // relation
 

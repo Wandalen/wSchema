@@ -1,4 +1,4 @@
-( function _ProductAlternative_s_( ) {
+( function _Alternative_s_( ) {
 
 'use strict';
 
@@ -8,7 +8,7 @@ let _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
+let Parent = _.schema.ProductVector;
 let Self = function wSchemaProductAlternative( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -26,10 +26,8 @@ function _form2()
   let def = product.definition;
   let sys = def.sys;
 
-  if( !product._formComplex() )
+  if( !Parent.prototype._form2.apply( product, arguments ) )
   return false;
-
-  _.mapExtend( product, _.mapBut( def.opts, { extend : null, supplement : null } ) );
 
   _.assert( product.default === null || !!sys.definition( product.default ) );
 
@@ -60,31 +58,31 @@ function _makeDefaultAct( it )
 // exporter
 // --
 
-function exportStructure( o )
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-
-  o = _.routineOptions( exportStructure, arguments );
-
-  Parent.prototype.exportStructure.call( product, o );
-
-  o.dst.elements = [];
-
-  let o2 = _.mapExtend( null, o );
-  o2.elements = product.elementsArray;
-  o2.dst = o.dst.elements;
-  product._elementsExportStructure( o2 );
-
-  return o.dst;
-}
-
-exportStructure.defaults =
-{
-  ... Parent.prototype.exportStructure.defaults,
-}
-
+// function exportStructure( o )
+// {
+//   let product = this;
+//   let def = product.definition;
+//   let sys = def.sys;
+//
+//   o = _.routineOptions( exportStructure, arguments );
+//
+//   Parent.prototype.exportStructure.call( product, o );
+//
+//   o.dst.elements = [];
+//
+//   let o2 = _.mapExtend( null, o );
+//   o2.elements = product.elementsArray;
+//   o2.dst = o.dst.elements;
+//   product._elementsExportStructure( o2 );
+//
+//   return o.dst;
+// }
+//
+// exportStructure.defaults =
+// {
+//   ... Parent.prototype.exportStructure.defaults,
+// }
+//
 // //
 //
 // function exportInfo( o )
@@ -110,52 +108,52 @@ exportStructure.defaults =
 // {
 //   ... Parent.prototype.exportInfo.defaults,
 // }
+//
+// //
+//
+// function _exportInfo( o )
+// {
+//   let product = this;
+//   let def = product.definition;
+//   let sys = def.sys;
+//
+//   _.routineOptions( _exportInfo, arguments );
+//   _.assert( o.structure !== null );
+//
+//   return product._exportInfoVector( o );
+//   // let o2 = _.mapExtend( null, o );
+//   // o2.opener = '[';
+//   // o2.closer = ']';
+//   // return product._exportInfoVector( o2 );
+// }
+//
+// _exportInfo.defaults =
+// {
+//   ... _.schema.Product.prototype._exportInfo.defaults,
+//   // prefix : '',
+//   // postfix : '',
+// }
 
 //
 
-function _exportInfo( o )
+function _exportInfoVector( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportInfo, arguments );
-  _.assert( o.structure !== null );
-
-  return product._exportInfoComplex( o );
-  // let o2 = _.mapExtend( null, o );
-  // o2.opener = '[';
-  // o2.closer = ']';
-  // return product._exportInfoComplex( o2 );
-}
-
-_exportInfo.defaults =
-{
-  ... _.schema.Product.prototype._exportInfo.defaults,
-  // prefix : '',
-  // postfix : '',
-}
-
-//
-
-function _exportInfoComplex( o )
-{
-  let product = this;
-  let def = product.definition;
-  let sys = def.sys;
-
-  _.routineOptions( _exportInfoComplex, arguments );
+  _.routineOptions( _exportInfoVector, arguments );
 
   let o2 = _.mapExtend( null, o );
   o2.opener = '[';
   o2.closer = ']';
 
-  return Parent.prototype._exportInfoComplex.call( product, o2 );
+  return Parent.prototype._exportInfoVector.call( product, o2 );
 }
 
-_exportInfoComplex.defaults =
+_exportInfoVector.defaults =
 {
-  ... _exportInfo.defaults,
+  ... Parent.prototype._exportInfo.defaults,
   prefix : '',
   postfix : '',
 }
@@ -166,10 +164,11 @@ _exportInfoComplex.defaults =
 
 let Fields =
 {
+  ... Parent.Fields,
   default : null,
-  extend : null,
-  supplement : null,
-  bias : null,
+  // extend : null,
+  // supplement : null,
+  // bias : null,
 }
 
 let Composes =
@@ -178,10 +177,11 @@ let Composes =
 
 let Aggregates =
 {
+  ... Parent.prototype.Aggregates,
   default : null,
-  elementsMap : null,
-  elementsArray : null,
-  bias : null,
+  // elementsMap : null,
+  // elementsArray : null,
+  // bias : null,
 }
 
 let Associates =
@@ -219,9 +219,9 @@ let Proto =
 
   // exporter
 
-  exportStructure,
-  _exportInfo,
-  _exportInfoComplex,
+  // exportStructure,
+  // _exportInfo,
+  _exportInfoVector,
 
   // relation
 

@@ -16,6 +16,340 @@ if( typeof module !== 'undefined' )
 var _ = _global_.wTools;
 
 // --
+// context
+// --
+
+function grammarPalindrom()
+{
+
+  let schema = _.schema.system({ name : 'SchemaTest/grammarPalindrom' });
+  let tokensSyntax = _.tokensSyntaxFrom
+  ({
+    'space'             : /\s+/,
+    'name'              : /[a-z_\$][0-9a-z_\$]*/i,
+    'sign_plus'         : '+',
+    'sign_minus'        : '-',
+  });
+
+  schema.defineFromSyntax( tokensSyntax );
+
+  schema.define( 'sign_optional' ).alternative().extend([ 'sign_plus', 'sign_minus', '❮nothing❯' ]);
+
+  var id = schema.define().composition({ bias : 'right' })
+  .extend
+  ({
+    left : 'exp',
+    sign : 'sign_optional',
+    right : 'exp',
+  })
+  .id
+  ;
+  schema.define( 'exp2' ).container({ type : id });
+
+  schema.define( 'exp' ).alternative({ bias : 'right' })
+  .extend([ 'name', 'exp2' ]);
+
+  schema.form();
+  return schema;
+}
+
+//
+
+function grammarExpression1()
+{
+
+  let schema = _.schema.system({ name : 'SchemaTest/grammarExpression1' });
+  let tokensSyntax = _.tokensSyntaxFrom
+  ({
+    'mul'               : '*',
+    'plus'              : '+',
+    'space'             : /\s+/,
+    'name'              : /[a-z_\$][0-9a-z_\$]*/i,
+    'number'            : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
+    'parenthes_open'    : '(',
+    'parenthes_close'   : ')',
+  });
+
+  schema.defineFromSyntax( tokensSyntax );
+
+  schema.define( 'factor' ).alternative().extend([ 'name', 'number' ]);
+
+  var id = schema.define().composition({ bias : 'right' })
+  .extend({ left : 'exp' })
+  .extend([ 'mul' ])
+  .extend({ right : 'exp' })
+  .id
+  ;
+  schema.define( 'exp_mul' ).container({ type : id });
+
+  var id = schema.define().composition({ bias : 'right' })
+  .extend
+  ({
+    left : 'exp',
+    plus : { type : 'plus', including : 0 },
+    right : 'exp',
+  })
+  .id
+  ;
+  schema.define( 'exp_plus' ).container({ type : id });
+
+  var id = schema.define().composition({ bias : 'right' })
+  .extend
+  ([
+    { type : 'parenthes_open', including : 0 },
+    { type : 'exp', name : 'exp' },
+    { type : 'parenthes_close', including : 0 },
+  ])
+  .id
+  ;
+  schema.define( 'exp_parenthes' ).container({ type : id });
+
+  schema.define( 'exp' ).alternative({ bias : 'right' })
+  .extend([ 'factor', 'exp_mul', 'exp_plus', 'exp_parenthes' ]);
+
+  schema.form();
+  return schema;
+}
+
+//
+
+function grammarOwn()
+{
+  let schema = _.schema.system({ name : 'SchemaTest/grammarOwn' });
+  let tokensSyntax = _.tokensSyntaxFrom
+  ({
+    'colon_equal'       : ':=',
+    'equal'             : '=',
+    'left'              : '<-',
+    'right'             : '->',
+    'multiple_optional' : '?',
+    'multiple_any'      : '*',
+    'space'             : /\s+/,
+    'string_single'     : /'(?:\\\n|\\'|[^'\n])*?'/,
+    'name_kind'         : [ 'terminal' ],
+    'name_directive'    : [ 'default', 'container' ],
+    'name_literal'      : [ 'null', 'true', 'false' ],
+    'name_at'           : /@[a-z_\$][0-9a-z_\$]*/i,
+    'name_slash'        : /\/[a-z_\$][0-9a-z_\$]*/i,
+    'name_clean'        : /[a-z_\$][0-9a-z_\$]*/i,
+    'number'            : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
+    'parenthes_open'    : '(',
+    'parenthes_close'   : ')',
+    'square_open'       : '[',
+    'square_close'      : ']',
+  });
+
+  schema.defineFromSyntax( tokensSyntax );
+
+  /* */
+
+  schema.define( 'statement_top' ).container({ container : 'map', type : 'statement_top_' });
+
+  schema.define( 'statement_top_' ).composition()
+  .extend
+  ([
+    { type : 'statement_top_left', including : true },
+  ])
+  .extend
+  ({
+    multiple : { type : 'multiple_maybe' },
+    right : { type : 'statement_top_right' },
+  });
+
+  schema.define( 'statement_top_left' ).composition()
+  .extend
+  ({
+    left : { type : 'name_slash' },
+    including : { type : 'colon_equal' },
+  })
+
+  schema.define( 'statement_top_right' ).alternative().extend([ 'name_kind', 'name_slash', 'block' ]);
+
+  /* */
+
+  schema.define( 'statement_in' ).container({ container : 'map', type : 'statement_in_' });
+
+  schema.define( 'statement_in_' ).composition()
+  .extend
+  ([
+    { type : 'statement_in_left', including : true },
+  ])
+  .extend
+  ({
+    multiple : { type : 'multiple_maybe' },
+    right : { type : 'statement_in_right' },
+  });
+
+  schema.define( 'statement_in_left' ).composition()
+  .extend
+  ({
+    left : { type : 'name_at' },
+    including : { type : 'colon_equal' },
+  })
+
+  schema.define( 'statement_in_right' ).alternative().extend([ 'name_slash', 'block' ]);
+
+  /* */
+
+  schema.define( 'directive' ).container({ type : 'directive_' });
+
+  schema.define( 'directive_' ).composition()
+  .extend
+  ([
+    { type : 'name_directive', including : false },
+    { type : 'equal', including : false },
+  ])
+  .extend
+  ({
+    value : { type : 'directive_value' },
+  });
+  schema.define( 'directive_value' ).alternative().extend([ 'literal', 'name_slash' ]);
+
+  /* */
+
+  schema.define( 'string' ).container({ type : 'string_' });
+
+  schema.define( 'string_' ).composition()
+  .extend
+  ({
+    value : { type : 'string_single' },
+    kind : { type : 'string_right' },
+  })
+
+  schema.define( 'string_right' ).multiplier({ multiple : [ 0, 1 ], type : 'string_right_' });
+  schema.define( 'string_right_' ).composition()
+  .extend
+  ([
+    { type : 'left', including : false },
+    { type : 'name_clean', including : true },
+  ])
+
+  /* */
+
+  schema.define( 'composition' ).composition().extend
+  ([
+    { type : 'parenthes_open', including : false },
+    { type : 'block_content', including : true },
+    { type : 'parenthes_open', including : false },
+  ]);
+
+  schema.define( 'alternative' ).composition().extend
+  ([
+    { type : 'square_open', including : false },
+    { type : 'block_content', including : true },
+    { type : 'square_open', including : false },
+  ]);
+
+  schema.define( 'block_content' ).multiplier({ multiple : [ 0, Infinity ], type : 'block_content_' });
+
+  schema.define( 'block_content_' ).alternative().extend
+  ([
+    { type : 'statement_in' },
+    { type : 'directive' }
+  ]);
+
+  schema.define( 'multiple_maybe' ).multiplier({ multiple : [ 0, 1 ], type : 'multiple' });
+
+  schema.define( 'multiple' ).alternative()
+  .extend
+  ({
+    a : { type : 'multiple_optional' },
+    b : { type : 'multiple_any' },
+  })
+
+  schema.define( 'block' ).alternative().extend([ 'alternative', 'composition' ]);
+
+  // schema.define( 'name_kind' ).alternative().extend([ 'name_kind_terminal' ]);
+
+  schema.define( 'literal' ).alternative().extend([ 'name_literal', 'number', 'string' ]);
+
+  debugger;
+  schema.form();
+  debugger;
+  // console.log( schema.exportInfo({ format : 'grammar' }) );
+
+/*
+
+  /statement_top :=
+  (.
+    :=(
+      @left := /name_slash
+      @including := /colon_equal
+    )
+    @multiple := ?/multiple
+    @right :=
+    [
+      /name_kind
+      /name_slash
+      /block
+    ]
+    container = map
+  )
+
+  /statement_in :=
+  (.
+    := ?(
+      @left := ?/name_at
+      @including := /colon_equal
+    )
+    @multiple := ?/multiple
+    @right :=
+    [
+      /name_slash
+      /block
+    ]
+  )
+
+  /multiple := [ /multiple_optional /multiple_any ]
+
+  /directive :=
+  (.
+    /name_directive
+    /equal
+    @value := [ /literal /name_slash ]
+  )
+
+  /literal :=
+  [
+    /name_literal
+    /number
+    /string
+  ]
+
+  /string :=
+  (.
+    @value := /string_single
+    @kind :=
+    ?(
+      /left
+      := /name_clean
+    )
+  )
+
+  /block := [ /alternative /composition ]
+
+  /alternative :=
+  (
+    /square_open
+    := *[ /statement_in /directive ]
+    /square_close
+  )
+
+  /composition :=
+  (
+    /parenthes_open
+    := *[ /statement_in /directive ]
+    /parenthes_close
+  )
+
+  /grammar := (. * /statement_top root=1 )
+
+*/
+
+  return schema;
+}
+
+// --
 // tests
 // --
 
@@ -758,7 +1092,7 @@ function isTypeOfStructure( test )
 
 isTypeOfStructure.description =
 `
-xxx
+- xxx
 `
 
 //
@@ -847,7 +1181,7 @@ function isTypeOfDefinition( test )
 
 isTypeOfDefinition.description =
 `
-xxx
+- xxx
 `
 
 //
@@ -896,7 +1230,7 @@ function logic( test )
 
   /* and, or, has, selector, scalar, identical, has */
 
-  let schema = _.schema.system({ name : 'Schem.test/Logic' });
+  let schema = _.schema.system({ name : 'SchemaTest/Logic' });
 
   schema.define( 'complex' ).composition
   ({
@@ -932,169 +1266,353 @@ logic.description =
 
 //
 
-function parseSimple1( test )
+function constructingElements( test )
 {
+  let context = this;
+  let schema = context.grammarExpression1();
 
-  xxx
+  /* */
 
+  test.case = 'exp_mul';
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementsArray.length, 3 );
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementDefinition( 0 ).name, 'exp' );
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementProduct( 0 ).definition.name, 'exp' );
+  var exp =
+  {
+    'type' : 'exp',
+    'name' : 'left',
+    'index' : 0,
+    'including' : true
+  }
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementDescriptor( 0 ), exp );
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementDefinition( 1 ).name, 'mul' );
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementProduct( 1 ).definition.name, 'mul' );
+  var exp =
+  {
+    'type' : 'mul',
+    'name' : null,
+    'index' : 1,
+    'including' : false
+  }
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementDescriptor( 1 ), exp );
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementDefinition( 2 ).name, 'exp' );
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementProduct( 2 ).definition.name, 'exp' );
+  var exp =
+  {
+    'type' : 'exp',
+    'name' : 'right',
+    'index' : 2,
+    'including' : true
+  }
+  test.identical( schema.definition( 'exp_mul' ).product.elementProduct().elementDescriptor( 2 ), exp );
+
+  /* */
+
+  test.case = 'exp_plus';
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementsArray.length, 3 );
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementDefinition( 0 ).name, 'exp' );
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementProduct( 0 ).definition.name, 'exp' );
+  var exp =
+  {
+    'type' : 'exp',
+    'name' : 'left',
+    'index' : 0,
+    'including' : true
+  }
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementDescriptor( 0 ), exp );
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementDefinition( 1 ).name, 'plus' );
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementProduct( 1 ).definition.name, 'plus' );
+  var exp =
+  {
+    'type' : 'plus',
+    'name' : 'plus',
+    'index' : 1,
+    'including' : false
+  }
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementDescriptor( 1 ), exp );
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementDefinition( 2 ).name, 'exp' );
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementProduct( 2 ).definition.name, 'exp' );
+  var exp =
+  {
+    'type' : 'exp',
+    'name' : 'right',
+    'index' : 2,
+    'including' : true
+  }
+  test.identical( schema.definition( 'exp_plus' ).product.elementProduct().elementDescriptor( 2 ), exp );
+
+  /* */
+
+  test.case = 'exp_parenthes';
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementsArray.length, 3 );
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementDefinition( 0 ).name, 'parenthes_open' );
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementProduct( 0 ).definition.name, 'parenthes_open' );
+  var exp =
+  {
+    'type' : 'parenthes_open',
+    'name' : null,
+    'index' : 0,
+    'including' : false
+  }
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementDescriptor( 0 ), exp );
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementDefinition( 1 ).name, 'exp' );
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementProduct( 1 ).definition.name, 'exp' );
+  var exp =
+  {
+    'type' : 'exp',
+    'name' : 'exp',
+    'index' : 1,
+    'including' : true
+  }
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementDescriptor( 1 ), exp );
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementDefinition( 2 ).name, 'parenthes_close' );
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementProduct( 2 ).definition.name, 'parenthes_close' );
+  var exp =
+  {
+    'type' : 'parenthes_close',
+    'name' : null,
+    'index' : 2,
+    'including' : false
+  }
+  test.identical( schema.definition( 'exp_parenthes' ).product.elementProduct().elementDescriptor( 2 ), exp );
+
+  /* */
+
+  schema.finit();
 }
+
+constructingElements.description =
+`
+- several extends create proper elements
+- single extend with map creates proper elements
+- single extend with array creates proper elements
+- several extends, single extend with map and single extend with long produced the same result
+`
 
 //
 
-function parseGrammar1( test )
+function grammarExpression1ExportInfo( test )
 {
-
-  let schema = _.schema.system({ name : 'Schem.test/parseGrammar1' });
-
-  let tokensSyntax = _.tokensSyntaxFrom
-  ({
-    'colon_equal'       : ':=',
-    'equal'             : '=',
-    'left'              : '<-',
-    'right'             : '->',
-    'multiple_optional' : '?',
-    'multiple_any'      : '*',
-    'space'             : /\s+/,
-    'string_single'     : /'(?:\\\n|\\'|[^'\n])*?'/,
-    'name_kind'         : [ 'terminal' ],
-    'name_directive'    : [ 'default', 'container' ],
-    'name_literal'      : [ 'null', 'true', 'false' ],
-    'name_at'           : /@[a-z_\$][0-9a-z_\$]*/i,
-    'name_slash'        : /\/[a-z_\$][0-9a-z_\$]*/i,
-    'name_clean'        : /[a-z_\$][0-9a-z_\$]*/i,
-    'number'            : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
-    'parenthes_open'    : '(',
-    'parenthes_close'   : ')',
-    'square_open'       : '[',
-    'square_close'      : ']',
-  });
-
-  schema.defineFromSyntax( tokensSyntax );
+  let context = this;
+  let schema = context.grammarExpression1();
 
   /* */
 
-  schema.define( 'statement_top' ).container({ container : 'map', type : 'statement_top_' });
+  test.case = 'optimizing : 1';
+  var got = schema.exportInfo({ format : 'grammar', optimizing : 1 });
+  console.log( got );
+  var exp =
+`schema::SchemaTest/grammarExpression1
 
-  schema.define( 'statement_top_' ).composition()
-  .extend
-  ([
-    { type : 'statement_top_left', including : true },
-  ])
-  .extend
-  ({
-    multiple : { type : 'multiple_maybe' },
-    right : { type : 'statement_top_right' },
-  });
+  /mul := terminal
 
-  schema.define( 'statement_top_left' ).composition()
-  .extend
-  ({
-    left : { type : 'name_slash' },
-    including : { type : 'colon_equal' },
-  })
+  /plus := terminal
 
-  schema.define( 'statement_top_right' ).alternative().extend([ 'name_kind', 'name_slash', 'block' ]);
+  /space := terminal
 
-  /* */
+  /name := terminal
 
-  schema.define( 'statement_in' ).container({ container : 'map', type : 'statement_in_' });
+  /number := terminal
 
-  schema.define( 'statement_in_' ).composition()
-  .extend
-  ([
-    { type : 'statement_in_left', including : true },
-  ])
-  .extend
-  ({
-    multiple : { type : 'multiple_maybe' },
-    right : { type : 'statement_in_right' },
-  });
+  /parenthes_open := terminal
 
-  schema.define( 'statement_in_left' ).composition()
-  .extend
-  ({
-    left : { type : 'name_at' },
-    including : { type : 'colon_equal' },
-  })
+  /parenthes_close := terminal
 
-  schema.define( 'statement_in_right' ).alternative().extend([ 'name_slash', 'block' ]);
+  /factor :=
+  [
+    name
+    number
+  ]
 
-  /* */
+  /exp_mul :=
+  (.<
+    @left := exp
+    mul
+    @right := exp
+  )
 
-  schema.define( 'directive' ).container({ type : 'directive_' });
+  /exp_plus :=
+  (.<
+    @left := exp
+    plus
+    @right := exp
+  )
 
-  schema.define( 'directive_' ).composition()
-  .extend
-  ([
-    { type : 'name_directive', including : false },
-    { type : 'equal', including : false },
-  ])
-  .extend
-  ({
-    value : { type : 'directive_value' },
-  });
-  schema.define( 'directive_value' ).alternative().extend([ 'literal', 'name_slash' ]);
+  /exp_parenthes :=
+  (.<
+    parenthes_open
+    @exp := exp
+    parenthes_close
+  )
+
+  /exp :=
+  [<
+    factor
+    exp_mul
+    exp_plus
+    exp_parenthes
+  ]
+`
+  test.equivalent( got, exp );
 
   /* */
 
-  schema.define( 'string' ).container({ type : 'string_' });
+  test.case = 'optimizing : 0';
+  var got = schema.exportInfo({ format : 'grammar', optimizing : 0 });
+  var exp =
+`
+schema::SchemaTest/grammarExpression1
 
-  schema.define( 'string_' ).composition()
-  .extend
-  ({
-    value : { type : 'string_single' },
-    kind : { type : 'string_right' },
-  })
+  /mul := terminal
 
-  schema.define( 'string_right' ).multiplier({ multiple : [ 0, 1 ], type : 'string_right_' });
-  schema.define( 'string_right_' ).composition()
-  .extend
-  ([
-    { type : 'left', including : false },
-    { type : 'name_clean', including : true },
-  ])
+  /plus := terminal
+
+  /space := terminal
+
+  /name := terminal
+
+  /number := terminal
+
+  /parenthes_open := terminal
+
+  /parenthes_close := terminal
+
+  /factor :=
+  [
+    name
+    number
+  ]
+
+  #11 :=
+  (<
+    @left := exp
+    mul
+    @right := exp
+  )
+
+  /exp_mul := (. #11 )
+
+  #13 :=
+  (<
+    @left := exp
+    plus
+    @right := exp
+  )
+
+  /exp_plus := (. #13 )
+
+  #15 :=
+  (<
+    parenthes_open
+    @exp := exp
+    parenthes_close
+  )
+
+  /exp_parenthes := (. #15 )
+
+  /exp :=
+  [<
+    factor
+    exp_mul
+    exp_plus
+    exp_parenthes
+  ]
+`
+  test.equivalent( got, exp );
 
   /* */
 
-  schema.define( 'composition' ).composition().extend
-  ([
-    { type : 'parenthes_open', including : false },
-    { type : 'block_content', including : true },
-    { type : 'parenthes_open', including : false },
-  ]);
+/*
 
-  schema.define( 'alternative' ).composition().extend
-  ([
-    { type : 'square_open', including : false },
-    { type : 'block_content', including : true },
-    { type : 'square_open', including : false },
-  ]);
+  /mul = terminal
+  /plus = terminal
+  /space = terminal
+  /name = terminal
+  /number = terminal
+  /parenthes_open = terminal
+  /parenthes_close = terminal
 
-  schema.define( 'block_content' ).multiplier({ multiple : [ 0, Infinity ], type : 'block_content_' });
+  /factor = [ /name /number ]
+  /exp_mul = (<. left:=/exp /mul right:=/exp )
+  /exp_plus = (<. left:=/exp /plus right:=/exp )
+  /exp_parenthes = (. /parenthes_open exp:=/exp /parenthes_close ]
+  /exp = [< /factor /exp_mul /exp_plus /exp_parenthes root=true ]
 
-  schema.define( 'block_content_' ).alternative().extend
-  ([
-    { type : 'statement_in' },
-    { type : 'directive' }
-  ]);
+*/
 
-  schema.define( 'multiple_maybe' ).multiplier({ multiple : [ 0, 1 ], type : 'multiple' });
+  schema.finit();
+}
 
-  schema.define( 'multiple' ).alternative()
-  .extend
-  ({
-    a : { type : 'multiple_optional' },
-    b : { type : 'multiple_any' },
-  })
+grammarExpression1ExportInfo.description =
+`
+- exportInfo with option format=grammar returns string of grammar
+- option optimizing of exportInfo merge definitions minimizing grammar
+`
 
-  schema.define( 'block' ).alternative().extend([ 'alternative', 'composition' ]);
+//
 
-  // schema.define( 'name_kind' ).alternative().extend([ 'name_kind_terminal' ]);
+function parseGrammarPalindrom( test )
+{
+  let context = this;
+  let schema = context.grammarPalindrom();
 
-  schema.define( 'literal' ).alternative().extend([ 'name_literal', 'number', 'string' ]);
+  /* */
 
-  debugger;
-  schema.form();
+  var got = schema.exportInfo({ format : 'grammar', optimizing : 1 });
+  console.log( got );
+  var exp =
+`
+schema::SchemaTest/grammarPalindrom
+
+  /space := terminal
+
+  /name := terminal
+
+  /sign_plus := terminal
+
+  /sign_minus := terminal
+
+  /sign_optional :=
+  [
+    sign_plus
+    sign_minus
+    ❮nothing❯
+  ]
+
+  /exp2 :=
+  (.<
+    @left := exp
+    @sign := sign_optional
+    @right := exp
+  )
+
+  /exp :=
+  [<
+    name
+    exp2
+  ]
+`
+  test.equivalent( got, exp );
+
+  /* */
+
+  xxx
+
+  schema.finit();
+}
+
+parseGrammarPalindrom.description =
+`
+- xxx
+`
+
+//
+
+function parseGrammarOwn( test )
+{
+  let context = this;
+  let schema = context.grammarOwn();
+
   debugger;
   console.log( schema.exportInfo({ format : 'grammar' }) );
 
@@ -1202,225 +1720,9 @@ function parseGrammar1( test )
 
 }
 
-parseGrammar1.description =
+parseGrammarOwn.description =
 `
 - xxx
-`
-
-//
-
-function grammarExpression1ExportInfo( test )
-{
-
-  let schema = _.schema.system({ name : 'Schem.test/grammarExpression1ExportInfo' });
-  let tokensSyntax = _.tokensSyntaxFrom
-  ({
-    'mul'               : '*',
-    'plus'              : '+',
-    'space'             : /\s+/,
-    'name'              : /[a-z_\$][0-9a-z_\$]*/i,
-    'number'            : /(?:0x(?:\d|[a-f])+|\d+(?:\.\d+)?(?:e[+-]?\d+)?)/i,
-    'parenthes_open'    : '(',
-    'parenthes_close'   : ')',
-  });
-
-  schema.defineFromSyntax( tokensSyntax );
-
-  schema.define( 'factor' ).alternative().extend([ 'name', 'number' ]);
-
-  var id = schema.define().composition({ bias : 'right' })
-  .extend({ left : 'exp' })
-  .extend([ 'mul' ])
-  .extend({ right : 'exp' })
-  .id
-  ;
-  schema.define( 'exp_mul' ).container({ type : id });
-
-  var id = schema.define().composition({ bias : 'right' })
-  .extend
-  ({
-    left : 'exp',
-    plus : { type : 'plus', including : 0 },
-    right : 'exp',
-  })
-  // .extend({ left : 'exp' })
-  // .extend([ 'plus' ])
-  // .extend({ right : 'exp' })
-  .id
-  ;
-  schema.define( 'exp_plus' ).container({ type : id });
-
-  var id = schema.define().composition({ bias : 'right' })
-  .extend
-  ([
-    { type : 'parenthes_open', including : 0 },
-    { type : 'exp', name : 'exp' },
-    { type : 'parenthes_close', including : 0 },
-  ])
-  // .extend([ 'parenthes_open' ])
-  // .extend({ exp : 'exp' })
-  // .extend([ 'parenthes_close' ])
-  .id
-  ;
-  schema.define( 'exp_parenthes' ).container({ type : id });
-
-  schema.define( 'exp' ).alternative({ bias : 'right' })
-  .extend([ 'factor', 'exp_mul', 'exp_plus', 'exp_parenthes' ]);
-
-  schema.form();
-
-  /* */
-
-  test.case = 'optimizing : 1';
-  var got = schema.exportInfo({ format : 'grammar', optimizing : 1 });
-  console.log( got );
-  var exp =
-`
-
-schema::Schem.test/grammarExpression1ExportInfo
-
-  /mul := terminal
-
-  /plus := terminal
-
-  /space := terminal
-
-  /name := terminal
-
-  /number := terminal
-
-  /parenthes_open := terminal
-
-  /parenthes_close := terminal
-
-  /factor :=
-  [
-    name
-    number
-  ]
-
-  /exp_mul :=
-  (.<
-    @left := exp
-    mul
-    @right := exp
-  )
-
-  /exp_plus :=
-  (.<
-    @left := exp
-    plus
-    @right := exp
-  )
-
-  /exp_parenthes :=
-  (.<
-    parenthes_open
-    @exp := exp
-    parenthes_close
-  )
-
-  /exp :=
-  [<
-    factor
-    exp_mul
-    exp_plus
-    exp_parenthes
-  ]
-`
-  test.equivalent( got, exp );
-
-  /* */
-
-  test.case = 'optimizing : 0';
-  var got = schema.exportInfo({ format : 'grammar', optimizing : 0 });
-  var exp =
-`
-schema::Schem.test/grammarExpression1ExportInfo
-
-  /mul := terminal
-
-  /plus := terminal
-
-  /space := terminal
-
-  /name := terminal
-
-  /number := terminal
-
-  /parenthes_open := terminal
-
-  /parenthes_close := terminal
-
-  /factor :=
-  [
-    name
-    number
-  ]
-
-  #11 :=
-  (<
-    @left := exp
-    mul
-    @right := exp
-  )
-
-  /exp_mul := (. #11 )
-
-  #13 :=
-  (<
-    @left := exp
-    plus
-    @right := exp
-  )
-
-  /exp_plus := (. #13 )
-
-  #15 :=
-  (<
-    parenthes_open
-    @exp := exp
-    parenthes_close
-  )
-
-  /exp_parenthes := (. #15 )
-
-  /exp :=
-  [<
-    factor
-    exp_mul
-    exp_plus
-    exp_parenthes
-  ]
-`
-  test.equivalent( got, exp );
-
-  /* */
-
-/*
-
-  /mul = terminal
-  /plus = terminal
-  /space = terminal
-  /name = terminal
-  /number = terminal
-  /parenthes_open = terminal
-  /parenthes_close = terminal
-
-  /factor = [ /name /number ]
-  /exp_mul = (<. left:=/exp /mul right:=/exp )
-  /exp_plus = (<. left:=/exp /plus right:=/exp )
-  /exp_parenthes = (. /parenthes_open exp:=/exp /parenthes_close ]
-  /exp = [< /factor /exp_mul /exp_plus /exp_parenthes root=true ]
-
-*/
-
-}
-
-grammarExpression1ExportInfo.description =
-`
-- several extends, single extend with map and single extend with long produced the same result
-- option optimizing of exportInfo works
 `
 
 // --
@@ -1436,7 +1738,9 @@ var Proto =
 
   context :
   {
-
+    grammarPalindrom,
+    grammarExpression1,
+    grammarOwn,
   },
 
   tests :
@@ -1445,12 +1749,12 @@ var Proto =
     form,
     exportInfo,
     makeDefault,
-    makeDefaultMultiple,
-    makeDefaultCompositionsNotNamedElements,
-    makeDefaultCompositionsNamedElements,
-    makeDefaultCompositionsNamedElementsButOneInner,
-    makeDefaultCompositionsFromString1,
-    makeDefaultCompositionsFromString2,
+    // makeDefaultMultiple,
+    // makeDefaultCompositionsNotNamedElements,
+    // makeDefaultCompositionsNamedElements,
+    // makeDefaultCompositionsNamedElementsButOneInner,
+    // makeDefaultCompositionsFromString1,
+    // makeDefaultCompositionsFromString2,
 
     defineVectorized,
     label,
@@ -1462,9 +1766,11 @@ var Proto =
     // isTypeOfDefinition,
     // logic,
 
-    parseSimple1,
-    parseGrammar1,
+    constructingElements,
     grammarExpression1ExportInfo,
+
+    parseGrammarPalindrom,
+    parseGrammarOwn,
 
   },
 

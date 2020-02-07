@@ -1,4 +1,4 @@
-( function _ProductTerminal_s_( ) {
+( function _Terminal_s_( ) {
 
 'use strict';
 

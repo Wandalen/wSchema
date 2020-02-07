@@ -166,7 +166,7 @@ function isComplex()
 {
   let def = this;
   _.assert( arguments.length === 0 );
-  return def.kind === def.Kind.composition || def.kind === def.Kind.alternation;
+  return def.kind === def.Kind.composition || def.kind === def.Kind.alternative;
 }
 
 //
@@ -621,7 +621,7 @@ function exportStructure( o )
   o.dst.kind = def.KindNameToId.forVal( def.kind );
   o.dst.id = def.id;
 
-  if( !product )
+  if( !product || product.formed < 2 )
   return o.dst;
 
   def.product.exportStructure( o );
@@ -647,7 +647,7 @@ function exportInfo( o )
   if( o.structure === null )
   o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
 
-  if( product )
+  if( product && product.formed >= 2 )
   {
     return product.exportInfo( o );
   }

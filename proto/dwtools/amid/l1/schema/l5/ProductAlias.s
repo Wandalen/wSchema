@@ -1,4 +1,4 @@
-( function _ProductAlias_s_( ) {
+( function _Alias_s_( ) {
 
 'use strict';
 
@@ -8,7 +8,7 @@ let _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
+let Parent = _.schema.ProductScalar;
 let Self = function wSchemaProductAlias( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -46,7 +46,7 @@ function _form2()
 
   }
 
-  product._formUsingPrimitive();
+  // product._formUsing();
 
   return true;
 }
@@ -59,6 +59,9 @@ function _form3()
   let def = product.definition;
   let sys = def.sys;
   let opts = _.mapExtend( null, def.opts );
+
+  // debugger;
+  product._formUsing();
 
   if( product.subtype )
   {
@@ -77,7 +80,9 @@ function _form3()
   return true;
 }
 
-//
+// --
+// productor
+// --
 
 function _makeDefaultAct( it )
 {
@@ -202,6 +207,9 @@ let Proto =
 
   _form2,
   _form3,
+
+  // productor
+
   _makeDefaultAct,
   _isTypeOfStructureAct,
   _exportInfo,
