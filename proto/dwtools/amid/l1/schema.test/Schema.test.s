@@ -1391,7 +1391,7 @@ constructingElements.description =
 
 //
 
-function grammarExpression1ExportInfo( test )
+function exportInfoExpression1( test )
 {
   let context = this;
   let schema = context.grammarExpression1();
@@ -1543,7 +1543,7 @@ schema::SchemaTest/grammarExpression1
   schema.finit();
 }
 
-grammarExpression1ExportInfo.description =
+exportInfoExpression1.description =
 `
 - exportInfo with option format=grammar returns string of grammar
 - option optimizing of exportInfo merge definitions minimizing grammar
@@ -1551,7 +1551,7 @@ grammarExpression1ExportInfo.description =
 
 //
 
-function parseGrammarPalindrom( test )
+function exportInfoPalindrom( test )
 {
   let context = this;
   let schema = context.grammarPalindrom();
@@ -1596,7 +1596,69 @@ schema::SchemaTest/grammarPalindrom
 
   /* */
 
+  var got = schema.exportInfo({ format : 'grammar', optimizing : 0 });
+  console.log( got );
+  var exp =
+`
+schema::SchemaTest/grammarPalindrom
+
+  /space := terminal
+
+  /name := terminal
+
+  /sign_plus := terminal
+
+  /sign_minus := terminal
+
+  /sign_optional :=
+  [
+    sign_plus
+    sign_minus
+    ❮nothing❯
+  ]
+
+  #8 :=
+  (<
+    @left := exp
+    @sign := sign_optional
+    @right := exp
+  )
+
+  /exp2 := (. #8 )
+
+  /exp :=
+  [<
+    name
+    exp2
+  ]
+`
+  test.equivalent( got, exp );
+
+  /* */
+
+  schema.finit();
+}
+
+exportInfoPalindrom.description =
+`
+- exportInfo with option format=grammar returns string of grammar
+- option optimizing of exportInfo merge definitions minimizing grammar
+`
+
+//
+
+function parseGrammarPalindrom( test )
+{
+  let context = this;
+  let schema = context.grammarPalindrom();
+
+  /* */
+
+  console.log( schema.exportInfo({ format : 'grammar', optimizing : 1 }) );
+
   xxx
+
+  /* */
 
   schema.finit();
 }
@@ -1767,7 +1829,8 @@ var Proto =
     // logic,
 
     constructingElements,
-    grammarExpression1ExportInfo,
+    exportInfoExpression1,
+    exportInfoPalindrom,
 
     parseGrammarPalindrom,
     parseGrammarOwn,
