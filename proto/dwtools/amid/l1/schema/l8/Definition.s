@@ -291,7 +291,7 @@ function fromDefinitionString( defStr )
 
   if( _.strBegins( defStr, '(' ) )
   {
-    let isolated = _.strIsolateInsideLeft( defStr, '(', ')' );
+    let isolated = _.strIsolateInside( defStr, '(', ')' );
     if( isolated[ 0 ] !== '' || isolated[ 4 ] !== '' )
     return errThrow();
     if( !isolated[ 1 ] || !isolated[ 3 ] )
@@ -303,7 +303,7 @@ function fromDefinitionString( defStr )
   else if( _.strBegins( defStr, '[' ) )
   {
     _.assert( !_.strHas( defStr, '*' ), 'not implemented' );
-    let isolated = _.strIsolateInsideLeft( defStr, '[', ']' );
+    let isolated = _.strIsolateInside( defStr, '[', ']' );
     if( isolated[ 0 ] !== '' || isolated[ 4 ] !== '' )
     return errThrow();
     if( !isolated[ 1 ] || !isolated[ 3 ] )
