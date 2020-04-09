@@ -1,6 +1,6 @@
 {
   "name" : "wschema", 
-  "version" : "0.3.22", 
+  "version" : "0.3.23", 
   "description" : "Module to define schemas for data structures.", 
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
   "license" : "MIT", 
