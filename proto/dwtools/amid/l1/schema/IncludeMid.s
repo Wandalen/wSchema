@@ -20,13 +20,13 @@ if( typeof module !== 'undefined' )
   require( './l4_product/Scalar.s' );
   require( './l4_product/Vector.s' );
 
-  require( './l5/ProductAlias.s' );
-  require( './l5/ProductAlternative.s' );
-  require( './l5/ProductComposition.s' );
-  require( './l5/ProductContainer.s' );
-  require( './l5/ProductMultiplier.s' );
-  require( './l5/ProductTerminal.s' );
-  require( './l5/ProductUniversal.s' );
+  require( './l5_product/Alias.s' );
+  require( './l5_product/Alternative.s' );
+  require( './l5_product/Composition.s' );
+  require( './l5_product/Container.s' );
+  require( './l5_product/Multiplier.s' );
+  require( './l5_product/Terminal.s' );
+  require( './l5_product/Universal.s' );
 
   require( './l8/Definition.s' );
 
