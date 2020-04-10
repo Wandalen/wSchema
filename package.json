@@ -1,10 +1,10 @@
 {
   "name" : "wschema", 
-  "version" : "0.3.26", 
+  "version" : "0.3.27", 
   "description" : "Module to define schemas for data structures.", 
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
   "license" : "MIT", 
-  "main" : "proto/dwtools/amid/l1/schema/Include.s", 
+  "main" : "proto/dwtools/amid/l1/schema/IncludeMid.s", 
   "files" : [ "proto/dwtools/amid/l1/schema", "proto/dwtools/Tools.s" ], 
   "scripts" : { "test" : "wtest .run proto", "docgen" : "wdocgen .build proto" }, 
   "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wSchema.git" }, 
