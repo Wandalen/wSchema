@@ -157,7 +157,6 @@ module:
           - ../proto/dwtools/amid
           - ../proto/dwtools/amid/l1
           - ../proto/dwtools/amid/l1/schema
-          - ../proto/dwtools/amid/l1/schema/Include.s
           - ../proto/dwtools/amid/l1/schema/IncludeBase.s
           - ../proto/dwtools/amid/l1/schema/IncludeMid.s
           - ../proto/dwtools/amid/l1/schema/l1
@@ -168,14 +167,17 @@ module:
           - ../proto/dwtools/amid/l1/schema/l3/Predefined.s
           - ../proto/dwtools/amid/l1/schema/l3/Product.s
           - ../proto/dwtools/amid/l1/schema/l3/Subtype.s
-          - ../proto/dwtools/amid/l1/schema/l5
-          - ../proto/dwtools/amid/l1/schema/l5/ProductAlias.s
-          - ../proto/dwtools/amid/l1/schema/l5/ProductAlternative.s
-          - ../proto/dwtools/amid/l1/schema/l5/ProductComposition.s
-          - ../proto/dwtools/amid/l1/schema/l5/ProductContainer.s
-          - ../proto/dwtools/amid/l1/schema/l5/ProductMultiplier.s
-          - ../proto/dwtools/amid/l1/schema/l5/ProductTerminal.s
-          - ../proto/dwtools/amid/l1/schema/l5/ProductUniversal.s
+          - ../proto/dwtools/amid/l1/schema/l4_product
+          - ../proto/dwtools/amid/l1/schema/l4_product/Scalar.s
+          - ../proto/dwtools/amid/l1/schema/l4_product/Vector.s
+          - ../proto/dwtools/amid/l1/schema/l5_product
+          - ../proto/dwtools/amid/l1/schema/l5_product/Alias.s
+          - ../proto/dwtools/amid/l1/schema/l5_product/Alternative.s
+          - ../proto/dwtools/amid/l1/schema/l5_product/Composition.s
+          - ../proto/dwtools/amid/l1/schema/l5_product/Container.s
+          - ../proto/dwtools/amid/l1/schema/l5_product/Multiplier.s
+          - ../proto/dwtools/amid/l1/schema/l5_product/Terminal.s
+          - ../proto/dwtools/amid/l1/schema/l5_product/Universal.s
           - ../proto/dwtools/amid/l1/schema/l8
           - ../proto/dwtools/amid/l1/schema/l8/Definition.s
           - ../proto/dwtools/amid/l1/schema.test
