@@ -64,7 +64,7 @@ path :
       content : prime
 
   entry.proto.no.tests :
-    path : proto/dwtools/amid/l1/schema/Include.s
+    path : proto/dwtools/amid/l1/schema/IncludeMid.s
     criterion :
       tests : 'no.tests'
   entry.proto.only.tests :
