@@ -9,7 +9,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  require( './IncludeMid' );
+  require( './IncludeMid.s' );
 }
 
 if( typeof module !== 'undefined' && module !== null )
