@@ -1250,7 +1250,7 @@ function logic( test )
     left : { type : 'element', default : _.null },
   });
 
-  schema.define( 'element' ).alternative([ 'complex', 'simple' ]);
+  schema.define( 'element' ).alternative().extend([ 'complex', 'simple' ]);
 
   var exp = 'abc';
   var identifier = schema.definition( 'def2' ).makeDefault();

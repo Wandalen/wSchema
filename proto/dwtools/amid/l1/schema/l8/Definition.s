@@ -245,8 +245,8 @@ function fromFields( opts )
   _.assert( def.formed === 1 );
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( opts ) );
-
   _.assertMapHasOnly( opts, def.typeToProductClass().Fields );
+
   def.opts = _.mapExtend( def.opts, opts );
 
   // def.opts = def.opts || Object.create( null );
