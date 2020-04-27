@@ -1,6 +1,6 @@
 {
   "name" : "wschema",
-  "version" : "0.3.36",
+  "version" : "0.3.37",
   "description" : "Module to define schemas for data structures.",
   "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
   "license" : "MIT",
@@ -14,14 +14,14 @@
   },
   "dependencies" :
   {
-    "wTools" : "beta",
-    "wCopyable" : "beta",
-    "wlooker" : "beta",
-    "wlookerextra" : "beta",
-    "wLogger" : "beta",
-    "wstringer" : "beta",
-    "wnamemapper" : "beta"
+    "wTools" : "alpha",
+    "wCopyable" : "alpha",
+    "wlooker" : "alpha",
+    "wlookerextra" : "alpha",
+    "wLogger" : "alpha",
+    "wstringer" : "alpha",
+    "wnamemapper" : "alpha"
   },
-  "devDependencies" : { "wschema" : "file:.", "wTesting" : "beta" },
+  "devDependencies" : { "wschema" : "file:.", "wTesting" : "alpha" },
   "keywords" : [ "wTools" ]
 }
