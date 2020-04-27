@@ -1,27 +1,27 @@
 {
-  "name" : "wschema", 
-  "version" : "0.3.34", 
-  "description" : "Module to define schemas for data structures.", 
-  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
-  "license" : "MIT", 
-  "main" : "proto/dwtools/amid/l1/schema/IncludeMid.s", 
-  "files" : [ "proto/dwtools/amid/l1/schema", "proto/dwtools/Tools.s" ], 
-  "scripts" : { "test" : "wtest .run proto", "docgen" : "wdocgen .build proto" }, 
-  "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wSchema.git" }, 
-  "bugs" : 
+  "name" : "wschema",
+  "version" : "0.3.35",
+  "description" : "Module to define schemas for data structures.",
+  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
+  "license" : "MIT",
+  "main" : "proto/dwtools/amid/l1/schema/IncludeMid.s",
+  "files" : [ "proto/dwtools/amid/l1/schema", "proto/dwtools/Tools.s" ],
+  "scripts" : { "test" : "wtest .run proto", "docgen" : "wdocgen .build proto" },
+  "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wSchema.git" },
+  "bugs" :
   {
     "url" : "https ://github.com/Wandalen/wSchema/issues"
-  }, 
-  "dependencies" : 
+  },
+  "dependencies" :
   {
-    "wTools" : "alpha", 
-    "wCopyable" : "alpha", 
-    "wlooker" : "alpha", 
-    "wlookerextra" : "alpha", 
-    "wLogger" : "alpha", 
-    "wstringer" : "alpha", 
-    "wnamemapper" : "alpha"
-  }, 
-  "devDependencies" : { "wschema" : "file:.", "wTesting" : "alpha" }, 
+    "wTools" : "gamma",
+    "wCopyable" : "gamma",
+    "wlooker" : "gamma",
+    "wlookerextra" : "gamma",
+    "wLogger" : "gamma",
+    "wstringer" : "gamma",
+    "wnamemapper" : "gamma"
+  },
+  "devDependencies" : { "wschema" : "file:.", "wTesting" : "gamma" },
   "keywords" : [ "wTools" ]
 }
