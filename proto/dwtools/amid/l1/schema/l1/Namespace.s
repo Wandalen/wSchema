@@ -2,12 +2,12 @@
 
 'use strict';
 
-if( typeof module !== 'undefined' )
-{
-
-  require( '../IncludeBase.s' );
-
-}
+// if( typeof module !== 'undefined' )
+// {
+//
+//   require( '../IncludeBase.s' );
+//
+// }
 
 let _ = _global_.wTools;
 let Self = _.schema = _.schema || Object.create( null );
@@ -53,7 +53,7 @@ _.mapExtend( Self, Extend );
 
 //
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

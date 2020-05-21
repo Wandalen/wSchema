@@ -158,24 +158,24 @@ function _isTypeOfStructureAct( o )
 
 //
 
-function _exportInfoVector( o )
+function _exportStringVector( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportInfoVector, arguments );
+  _.routineOptions( _exportStringVector, arguments );
 
   let o2 = _.mapExtend( null, o );
   o2.opener = '(';
   o2.closer = ')';
 
-  return Parent.prototype._exportInfoVector.call( product, o2 );
+  return Parent.prototype._exportStringVector.call( product, o2 );
 }
 
-_exportInfoVector.defaults =
+_exportStringVector.defaults =
 {
-  ... Parent.prototype._exportInfo.defaults,
+  ... Parent.prototype._exportString.defaults,
   prefix : '',
   postfix : '',
 }
@@ -247,8 +247,8 @@ let Proto =
   // exporter
 
   // exportStructure,
-  // _exportInfo,
-  _exportInfoVector,
+  // _exportString,
+  _exportStringVector,
 
   // relation
 
@@ -270,7 +270,7 @@ _.classDeclare
 });
 
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

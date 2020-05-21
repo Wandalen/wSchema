@@ -7,7 +7,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../../dwtools/Tools.s' );
+  let _ = require( '../../../../../dwtools/Tools.s' );
 
   _.include( 'wCopyable' );
   _.include( 'wLooker' );
@@ -15,6 +15,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wLogger' );
   _.include( 'wStringer' );
   _.include( 'wNameMapper' );
+  _.include( 'wGraphBasic' );
 
 }
 

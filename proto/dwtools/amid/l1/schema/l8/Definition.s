@@ -636,20 +636,20 @@ exportStructure.defaults =
 
 //
 
-function exportInfo( o )
+function exportString( o )
 {
   let def = this;
   let sys = def.sys;
   let product = def.product;
 
-  o = _.routineOptions( exportInfo, arguments );
+  o = _.routineOptions( exportString, arguments );
 
   if( o.structure === null )
   o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
 
   if( product && product.formed >= 2 )
   {
-    return product.exportInfo( o );
+    return product.exportString( o );
   }
   else
   {
@@ -661,9 +661,9 @@ function exportInfo( o )
   }
 }
 
-exportInfo.defaults =
+exportString.defaults =
 {
-  ... _.schema.System.prototype.exportInfo.defaults,
+  ... _.schema.System.prototype.exportString.defaults,
 }
 
 //
@@ -844,7 +844,7 @@ let Proto =
   // exporter
 
   exportStructure,
-  exportInfo,
+  exportString,
 
   _qualifiedNameGet,
   GrammarNameFor,
@@ -872,7 +872,7 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

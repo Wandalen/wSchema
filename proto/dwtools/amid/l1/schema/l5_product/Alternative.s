@@ -85,75 +85,75 @@ function _makeDefaultAct( it )
 //
 // //
 //
-// function exportInfo( o )
+// function exportString( o )
 // {
 //   let product = this;
 //   let def = product.definition;
 //   let sys = def.sys;
 //
-//   o = _.routineOptions( exportInfo, arguments );
+//   o = _.routineOptions( exportString, arguments );
 //
-//   let result = Parent.prototype.exportInfo.call( product, o );
+//   let result = Parent.prototype.exportString.call( product, o );
 //
 //   let o2 = _.mapExtend( null, o );
 //   o2.structure = product.elementsArray;
-//   let result2 = product._elementsExportInfo( o2 );
+//   let result2 = product._elementsExportString( o2 );
 //   if( result2 )
 //   result += `\n  elements\n${result2}`;
 //
 //   return result;
 // }
 //
-// exportInfo.defaults =
+// exportString.defaults =
 // {
-//   ... Parent.prototype.exportInfo.defaults,
+//   ... Parent.prototype.exportString.defaults,
 // }
 //
 // //
 //
-// function _exportInfo( o )
+// function _exportString( o )
 // {
 //   let product = this;
 //   let def = product.definition;
 //   let sys = def.sys;
 //
-//   _.routineOptions( _exportInfo, arguments );
+//   _.routineOptions( _exportString, arguments );
 //   _.assert( o.structure !== null );
 //
-//   return product._exportInfoVector( o );
+//   return product._exportStringVector( o );
 //   // let o2 = _.mapExtend( null, o );
 //   // o2.opener = '[';
 //   // o2.closer = ']';
-//   // return product._exportInfoVector( o2 );
+//   // return product._exportStringVector( o2 );
 // }
 //
-// _exportInfo.defaults =
+// _exportString.defaults =
 // {
-//   ... _.schema.Product.prototype._exportInfo.defaults,
+//   ... _.schema.Product.prototype._exportString.defaults,
 //   // prefix : '',
 //   // postfix : '',
 // }
 
 //
 
-function _exportInfoVector( o )
+function _exportStringVector( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportInfoVector, arguments );
+  _.routineOptions( _exportStringVector, arguments );
 
   let o2 = _.mapExtend( null, o );
   o2.opener = '[';
   o2.closer = ']';
 
-  return Parent.prototype._exportInfoVector.call( product, o2 );
+  return Parent.prototype._exportStringVector.call( product, o2 );
 }
 
-_exportInfoVector.defaults =
+_exportStringVector.defaults =
 {
-  ... Parent.prototype._exportInfo.defaults,
+  ... Parent.prototype._exportString.defaults,
   prefix : '',
   postfix : '',
 }
@@ -220,8 +220,8 @@ let Proto =
   // exporter
 
   // exportStructure,
-  // _exportInfo,
-  _exportInfoVector,
+  // _exportString,
+  _exportStringVector,
 
   // relation
 
@@ -243,7 +243,7 @@ _.classDeclare
 });
 
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

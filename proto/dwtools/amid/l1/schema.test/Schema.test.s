@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
 
   let _ = require( '../../../../dwtools/Tools.s' );
   _.include( 'wTesting' );
-  require( '../schema/IncludeMid.s' );
+  require( '../schema/Include.s' );
 
 }
 
@@ -106,6 +106,45 @@ function grammarExpression1()
 
   schema.define( 'exp' ).alternative({ bias : 'right' })
   .extend([ 'factor', 'exp_mul', 'exp_plus', 'exp_parenthes' ]);
+
+  schema.form();
+  return schema;
+}
+
+//
+
+function grammarExpression2()
+{
+
+/*
+
+  e : = terminal
+  nothing := special
+  /name := terminal
+  /sign_plus := terminal
+  /sign_minus := terminal
+  /sign_optional := [ /sign_plus /sign_minus nothing ]
+  /exp2 := (< /exp /sign_optional /exp )
+  /exp := [ /name /exp2 ]
+
+*/
+
+  let schema = _.schema.system({ name : 'SchemaTest/grammarExpression2' });
+  let tokensSyntax = _.tokensSyntaxFrom
+  ({
+    'name'              : /[a-z_\$][0-9a-z_\$]*/i,
+    'sign_plus'         : '+',
+    'sign_minus'        : '-',
+  });
+
+  schema.defineFromSyntax( tokensSyntax );
+
+  schema.define( 'sign_optional' ).alternative().extend([ 'sign_plus', 'sign_minus' ]);
+
+  schema.define( 'exp2' ).composition({ bias : 'right' })
+  .extend([ 'exp', 'sign_optional', 'exp' ]);
+
+  schema.define( 'exp' ).alternative().extend([ 'name', 'exp2' ]);
 
   schema.form();
   return schema;
@@ -266,7 +305,7 @@ function grammarOwn()
   debugger;
   schema.form();
   debugger;
-  // console.log( schema.exportInfo({ format : 'grammar' }) );
+  // console.log( schema.exportString({ format : 'grammar' }) );
 
 /*
 
@@ -402,7 +441,7 @@ finit destroys definitions
 
 //
 
-function exportInfo( test )
+function exportString( test )
 {
   let context = this;
   let schema = _.schema.system({ name : 'Nodes' });
@@ -523,16 +562,16 @@ schema::Nodes
     type : string
     default :
 `
-  var got = schema.exportInfo();
+  var got = schema.exportString();
   test.equivalent( got, exp );
   logger.log( got );
 
   schema.finit();
 }
 
-exportInfo.description =
+exportString.description =
 `
-exportInfo produce nice output
+exportString produce nice output
 `
 
 //
@@ -889,7 +928,7 @@ function defineVectorized( test )
   var identifier = schema.definition( 'FunctionExpression' ).makeDefault();
   test.identical( identifier, exp );
 
-  /* logger.log( schema.exportInfo() ); */
+  /* logger.log( schema.exportString() ); */
   schema.finit();
 }
 
@@ -1032,7 +1071,7 @@ function compositionSpecification( test )
   var identifier = schema.definition( 'scalar' ).makeDefault();
   test.identical( identifier, exp );
 
-  logger.log( schema.exportInfo() );
+  logger.log( schema.exportString() );
   schema.finit();
   debugger;
 }
@@ -1085,7 +1124,7 @@ function isTypeOfStructure( test )
   var identifier = schema.definition( 'simple' ).isTypeOf( structure );
   test.identical( identifier, exp );
 
-  logger.log( schema.exportInfo() );
+  logger.log( schema.exportString() );
   schema.finit();
   debugger;
 }
@@ -1174,7 +1213,7 @@ function isTypeOfDefinition( test )
   // var identifier = schema.definition( 'scalar' ).isTypeOf( schema.definition( 'simple' ) );
   // test.identical( identifier, exp );
 
-  logger.log( schema.exportInfo() );
+  logger.log( schema.exportString() );
   schema.finit();
   debugger;
 }
@@ -1391,7 +1430,7 @@ constructingElements.description =
 
 //
 
-function exportInfoExpression1( test )
+function exportStringExpression1( test )
 {
   let context = this;
   let schema = context.grammarExpression1();
@@ -1399,7 +1438,7 @@ function exportInfoExpression1( test )
   /* */
 
   test.case = 'optimizing : 1';
-  var got = schema.exportInfo({ format : 'grammar', optimizing : 1 });
+  var got = schema.exportString({ format : 'grammar', optimizing : 1 });
   console.log( got );
   var exp =
 `schema::SchemaTest/grammarExpression1
@@ -1458,7 +1497,7 @@ function exportInfoExpression1( test )
   /* */
 
   test.case = 'optimizing : 0';
-  var got = schema.exportInfo({ format : 'grammar', optimizing : 0 });
+  var got = schema.exportString({ format : 'grammar', optimizing : 0 });
   var exp =
 `
 schema::SchemaTest/grammarExpression1
@@ -1543,22 +1582,153 @@ schema::SchemaTest/grammarExpression1
   schema.finit();
 }
 
-exportInfoExpression1.description =
+exportStringExpression1.description =
 `
-- exportInfo with option format=grammar returns string of grammar
-- option optimizing of exportInfo merge definitions minimizing grammar
+- exportString with option format=grammar returns string of grammar
+- option optimizing of exportString merge definitions minimizing grammar
 `
 
 //
 
-function exportInfoPalindrom( test )
+function exportStringGrammarExpression2( test )
+{
+  let context = this;
+  let schema = context.grammarExpression2();
+
+  /* */
+
+  test.case = 'optimizing : 1';
+  var got = schema.exportString({ format : 'grammar', optimizing : 1 });
+  console.log( got );
+  var exp =
+`
+schema::SchemaTest/grammarExpression2
+
+  /name := terminal
+
+  /sign_plus := terminal
+
+  /sign_minus := terminal
+
+  /sign_optional :=
+  [
+    sign_plus
+    sign_minus
+  ]
+
+  /exp2 :=
+  (<
+    exp
+    sign_optional
+    exp
+  )
+
+  /exp :=
+  [
+    name
+    exp2
+  ]
+`
+  test.equivalent( got, exp );
+
+  /* */
+
+  test.case = 'optimizing : 0';
+  var got = schema.exportString({ format : 'grammar', optimizing : 0 });
+  console.log( got );
+  var exp =
+`
+schema::SchemaTest/grammarExpression2
+
+  /name := terminal
+
+  /sign_plus := terminal
+
+  /sign_minus := terminal
+
+  /sign_optional :=
+  [
+    sign_plus
+    sign_minus
+  ]
+
+  /exp2 :=
+  (<
+    exp
+    sign_optional
+    exp
+  )
+
+  /exp :=
+  [
+    name
+    exp2
+  ]
+`
+  test.equivalent( got, exp );
+
+  /* */
+
+/*
+
+*/
+
+  schema.finit();
+}
+
+exportStringGrammarExpression2.description =
+`
+- exported expression2 as string.grammar looks good
+`
+
+//
+
+function exportStringIdExpression2( test )
+{
+  let context = this;
+  let schema = context.grammarExpression2();
+
+  /* */
+
+  test.case = 'basic';
+  var got = schema.exportString({ format : 'id', withUniversal : 1 });
+  console.log( got );
+  var exp =
+`
+schema::SchemaTest/grammarExpression2
+  Universal::/❮singularity❯ := #1
+  Universal::/❮edge❯ := #2
+  Universal::/❮nothing❯ := #3
+  Universal::/❮anything❯ := #4
+  Terminal::/name := #5
+  Terminal::/sign_plus := #6
+  Terminal::/sign_minus := #7
+  Alternative::/sign_optional := #8
+  Composition::/exp2 := #9
+  Alternative::/exp := #10
+`
+  test.equivalent( got, exp );
+
+  /* */
+
+  schema.finit();
+}
+
+exportStringIdExpression2.description =
+`
+- exported expression2 as string.id looks good
+`
+
+//
+
+function exportStringPalindrom( test )
 {
   let context = this;
   let schema = context.grammarPalindrom();
 
   /* */
 
-  var got = schema.exportInfo({ format : 'grammar', optimizing : 1 });
+  var got = schema.exportString({ format : 'grammar', optimizing : 1 });
   console.log( got );
   var exp =
 `
@@ -1596,7 +1766,7 @@ schema::SchemaTest/grammarPalindrom
 
   /* */
 
-  var got = schema.exportInfo({ format : 'grammar', optimizing : 0 });
+  var got = schema.exportString({ format : 'grammar', optimizing : 0 });
   console.log( got );
   var exp =
 `
@@ -1639,10 +1809,10 @@ schema::SchemaTest/grammarPalindrom
   schema.finit();
 }
 
-exportInfoPalindrom.description =
+exportStringPalindrom.description =
 `
-- exportInfo with option format=grammar returns string of grammar
-- option optimizing of exportInfo merge definitions minimizing grammar
+- exportString with option format=grammar returns string of grammar
+- option optimizing of exportString merge definitions minimizing grammar
 `
 
 //
@@ -1654,7 +1824,7 @@ function parseGrammarPalindrom( test )
 
   /* */
 
-  console.log( schema.exportInfo({ format : 'grammar', optimizing : 1 }) );
+  console.log( schema.exportString({ format : 'grammar', optimizing : 1 }) );
 
   xxx
 
@@ -1676,7 +1846,7 @@ function parseGrammarOwn( test )
   let schema = context.grammarOwn();
 
   debugger;
-  console.log( schema.exportInfo({ format : 'grammar' }) );
+  console.log( schema.exportString({ format : 'grammar' }) );
 
 /*
 
@@ -1802,6 +1972,7 @@ var Proto =
   {
     grammarPalindrom,
     grammarExpression1,
+    grammarExpression2,
     grammarOwn,
   },
 
@@ -1809,7 +1980,7 @@ var Proto =
   {
 
     form,
-    exportInfo,
+    exportString,
     makeDefault,
     // makeDefaultMultiple,
     // makeDefaultCompositionsNotNamedElements,
@@ -1829,8 +2000,10 @@ var Proto =
     // logic,
 
     constructingElements,
-    exportInfoExpression1,
-    exportInfoPalindrom,
+    exportStringExpression1,
+    exportStringGrammarExpression2,
+    exportStringIdExpression2,
+    exportStringPalindrom,
 
     parseGrammarPalindrom,
     parseGrammarOwn,

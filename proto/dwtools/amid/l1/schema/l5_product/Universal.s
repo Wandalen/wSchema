@@ -69,31 +69,35 @@ function _isTypeOfStructureAct( o )
 
 //
 
-function _exportInfo( o )
+function _exportString( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assertRoutineOptions( _exportString, arguments );
   _.assert( o.structure !== null );
 
-  if( o.format === 'dump' )
-  return Parent.prototype._exportInfo.call( this, o );
+  if( o.format === 'dump' || o.format === 'id' )
+  {
+    return Parent.prototype._exportString.call( this, o );
+  }
+  else if( o.format === 'grammar' )
+  {
+    let result; debugger;
+    if( product.symbol === _.anything )
+    result = `${product.grammarName} := ( type = anything )`;
+    else
+    result = `${product.grammarName} := ( type = nothing )`;
+    return result;
+  }
+  else _.assert( 0 );
 
-  let result; debugger;
-
-  if( product.symbol === _.anything )
-  result = `${product.grammarName} := ( type = anything )`;
-  else
-  result = `${product.grammarName} := ( type = nothing )`;
-
-  return result;
 }
 
-_exportInfo.defaults =
+_exportString.defaults =
 {
-  ... _.schema.Product.prototype._exportInfo.defaults,
+  ... _.schema.Product.prototype._exportString.defaults,
 }
 
 // --
@@ -154,7 +158,7 @@ let Proto =
   _form2,
   _makeDefaultAct,
   _isTypeOfStructureAct,
-  _exportInfo,
+  _exportString,
 
   // relation
 
@@ -176,7 +180,7 @@ _.classDeclare
 });
 
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

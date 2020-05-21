@@ -154,17 +154,17 @@ function _elementAddToMap( o )
 // exporter
 // --
 
-function _exportInfo( o )
+function _exportString( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( _exportInfo, arguments );
+  _.assertRoutineOptions( _exportString, arguments );
   _.assert( o.structure !== null );
 
   if( o.format === 'dump' )
-  return Parent.prototype._exportInfo.call( this, o );
+  return Parent.prototype._exportString.call( this, o );
 
   let result;
   let elementDefinition = sys.definition( def.product.type );
@@ -182,7 +182,7 @@ function _exportInfo( o )
     o2.prefix = prefix;
     o2.postfix = postfix ? `${postfix}\n` : postfix;
     o2.name = def.name || product.id;
-    result = elementDefinition.product._exportInfoVector( o2 );
+    result = elementDefinition.product._exportStringVector( o2 );
   }
   else
   {
@@ -192,9 +192,9 @@ function _exportInfo( o )
   return result;
 }
 
-_exportInfo.defaults =
+_exportString.defaults =
 {
-  ... _.schema.Product.prototype._exportInfo.defaults,
+  ... _.schema.Product.prototype._exportString.defaults,
 }
 
 // --
@@ -263,7 +263,7 @@ let Proto =
 
   // exporter
 
-  _exportInfo,
+  _exportString,
 
   // relation
 
@@ -285,7 +285,7 @@ _.classDeclare
 });
 
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

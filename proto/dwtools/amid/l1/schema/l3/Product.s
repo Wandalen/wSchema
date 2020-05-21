@@ -566,35 +566,35 @@ exportStructure.defaults =
 
 //
 
-function exportInfo( o )
+function exportString( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( exportInfo, arguments );
+  o = _.routineOptions( exportString, arguments );
 
   if( o.structure === null )
   o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
 
-  return product._exportInfo( o );
+  return product._exportString( o );
 }
 
-exportInfo.defaults =
+exportString.defaults =
 {
-  ... _.schema.System.prototype.exportInfo.defaults,
+  ... _.schema.System.prototype.exportString.defaults,
   name : null,
 }
 
 //
 
-function _exportInfo( o )
+function _exportString( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( exportInfo, arguments );
+  _.assertRoutineOptions( exportString, arguments );
   _.assert( o.structure !== null );
 
   if( o.format === 'dump' )
@@ -607,205 +607,52 @@ function _exportInfo( o )
     result += '\n' + _.toStrNice( structure );
     return result;
   }
-  else
+  else if( o.format === 'grammar' )
   {
-    let result = o.name ? def.GrammarNameFor( o.name ) : product.grammarName;
+    // let result = o.name ? def.GrammarNameFor( o.name ) : product.grammarName; // xxx : replace other
+    // return result;
+    return product.categorizedNameGet( o.name );
+  }
+  else if( o.format === 'id' )
+  {
+    // let result = o.name ? def.GrammarNameFor( o.name ) : product.grammarName;
+    let result = product.qualifiedNameGet( o.name );
+    result += ' := ' + def.GrammarNameFor( o.structure.id );
     return result;
   }
+  else _.assert( 0 );
 
 }
 
-_exportInfo.defaults =
+_exportString.defaults =
 {
-  ... exportInfo.defaults,
+  ... exportString.defaults,
 }
 
-// //
 //
-// function _exportInfoVector( o )
-// {
-//   let product = this;
-//   let def = product.definition;
-//   let sys = def.sys;
+
+function qualifiedNameGet( name )
+{
+  let product = this;
+  let def = product.definition;
+  let result = product.categorizedNameGet( name );
+
+  result = `${_.strRemoveBegin( product.constructor.shortName, 'Product' )}::${result}`
+
+  return result;
+}
+
 //
-//   _.routineOptions( _exportInfoVector, arguments );
-//   _.assert( o.structure !== null );
-//
-//   /*
-//   optimization gives :
-// `
-//   /exp_mul
-//   (.<
-//     @left := exp
-//     mul
-//     @right := exp
-//   )
-// `
-//   instead of
-// `
-//   #13 :=
-//   (<
-//     @left := exp
-//     mul
-//     @right := exp
-//   )
-//   /exp_mul := (. #13 )
-// `
-//   */
-//
-//   if( o.optimizing && !def.name && !o.name )
-//   if( product.usedByProducts.length === 1 && product.usedByProducts[ 0 ].definition.kind === def.Kind.container )
-//   {
-//     return '';
-//   }
-//
-//   let o2 = _.mapOnly( o, Self.prototype._exportInfo.defaults );
-//   let result = Self.prototype._exportInfo.call( this, o2 );
-//
-//   let o3 = _.mapExtend( null, o2 );
-//   o3.structure = product.elementsArray;
-//   let result2 = product._elementsExportInfo( o3 );
-//
-//   if( o.format === 'dump' )
-//   {
-//     if( result2 )
-//     result += `\n  elements\n${result2}`;
-//   }
-//   else
-//   {
-//     result += ' :=';
-//
-//     result += '\n' + o.opener;
-//     if( o.prefix )
-//     result += o.prefix;
-//     if( product.bias === 'left' )
-//     result += '>';
-//     else if( product.bias === 'right' )
-//     result += '<';
-//     if( result2 )
-//     result += `\n${result2}`;
-//     if( o.postfix )
-//     result += o.postfix;
-//     result += '\n' + o.closer;
-//   }
-//
-//   return result;
-// }
-//
-// _exportInfoVector.defaults =
-// {
-//   ... _exportInfo.defaults,
-//   opener : null,
-//   closer : null,
-//   prefix : '',
-//   postfix : '',
-// }
-//
-// //
-//
-// function _elementsExportStructure( o )
-// {
-//   let product = this;
-//   let def = product.definition;
-//   let sys = def.sys;
-//
-//   o = _.routineOptions( _elementsExportStructure, arguments );
-//   _.assert( !!product.elementsArray );
-//
-//   if( o.dst === null )
-//   o.dst = [];
-//   if( o.elements === null )
-//   o.elements = product.elementsArray;
-//
-//   for( let i = 0 ; i < o.elements.length ; i++ )
-//   {
-//     let element = o.elements[ i ];
-//     let elementStructure = Object.create( null );
-//     elementStructure.type = element.type;
-//     elementStructure.name = element.name;
-//     o.dst.push( elementStructure );
-//   }
-//
-//   return o.dst;
-// }
-//
-// _elementsExportStructure.defaults =
-// {
-//   ... exportStructure.defaults,
-//   elements : null,
-// }
-//
-// //
-//
-// function _elementsExportInfo( o )
-// {
-//   let product = this;
-//   let def = product.definition;
-//   let sys = def.sys;
-//   let result = '';
-//   let statistics;
-//
-//   if( o.format === 'grammar' )
-//   statistics = product.elementsStatistics();
-//
-//   o = _.routineOptions( _elementsExportInfo, arguments );
-//
-//   if( o.dst === null )
-//   o.dst = [];
-//   if( o.structure === null )
-//   {
-//     debugger;
-//     let o2 = _.mapOnly( o, product._elementsExportStructure.defaults );
-//     o.structure = product._elementsExportStructure( o2 );
-//   }
-//
-//   for( let i = 0 ; i < o.structure.length ; i++ )
-//   {
-//     let elementStructure = o.structure[ i ];
-//     let typeDef = sys.definition( elementStructure.type );
-//
-//     if( o.format === 'dump' )
-//     {
-//       if( result )
-//       result += '\n';
-//       result += `    ${ typeDef.name || typeDef.id } :: ${ elementStructure.name || '' }`;
-//     }
-//     else
-//     {
-//       if( result )
-//       result += '\n';
-//       let elementName = elementStructure.name;
-//       if( elementName )
-//       elementName = '@' + elementName + ' ';
-//       if( elementStructure.including )
-//       {
-//         if( statistics.excluded )
-//         result += `  ${ elementName || '' }:= ${ typeDef.name || typeDef.id }`;
-//         else if( elementName )
-//         result += `  ${ elementName || '' }:= ${ typeDef.name || typeDef.id }`;
-//         else
-//         result += `  ${ typeDef.name || typeDef.id }`;
-//       }
-//       else
-//       {
-//         result += `  ${ typeDef.name || typeDef.id }`;
-//       }
-//     }
-//
-//   }
-//
-//   return result;
-// }
-//
-// _elementsExportInfo.defaults =
-// {
-//   ... _.schema.System.prototype.exportInfo.defaults,
-//   name : null,
-//   // ... exportStructure.defaults,
-//   // structure : null,
-//   // format : 'dump',
-//   // name : null,
-// }
+
+function categorizedNameGet( name )
+{
+  let product = this;
+  let def = product.definition;
+  if( name === undefined )
+  name = product.name;
+  let result = name ? def.GrammarNameFor( name ) : product.grammarName;
+  return result;
+}
 
 //
 
@@ -959,11 +806,12 @@ let Proto =
   // exporter
 
   exportStructure,
-  exportInfo,
-  _exportInfo,
-  // _exportInfoVector,
-  // _elementsExportStructure,
-  // _elementsExportInfo,
+  exportString,
+  _exportString,
+
+  qualifiedNameGet,
+  categorizedNameGet,
+
   fieldsCompact,
   _qualifiedNameGet,
   _grammarNameGet,
@@ -989,7 +837,7 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

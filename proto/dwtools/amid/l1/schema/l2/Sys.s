@@ -29,6 +29,8 @@ function init( o )
   if( o )
   sys.copy( o );
 
+  sys.define( '❮singularity❯' ).universal({ symbol : Symbol.for( 'singularity' ) });
+  sys.define( '❮edge❯' ).universal({ symbol : Symbol.for( 'edge' ) });
   sys.define( '❮nothing❯' ).universal({ symbol : _.nothing });
   sys.define( '❮anything❯' ).universal({ symbol : _.anything });
 
@@ -68,7 +70,7 @@ function form()
   }
   catch( err )
   {
-    throw _.err( err, `\nFailed to form ${sys.qualifiedName}`, '\n', sys.exportInfo() );
+    throw _.err( err, `\nFailed to form ${sys.qualifiedName}`, '\n', sys.exportString() );
   }
 
   sys.formed = 1;
@@ -102,7 +104,7 @@ function _form()
     {
 
       /* xxx : this condition is not enough.
-              gives false positive if was added exactly same number of definitions as delete
+              gives false positive if was added exactly same number of definitions as deleted
       */
       if( wasLength === definitionsToFormArray.length )
       {
@@ -1128,11 +1130,13 @@ let grammar =
 
 //
 
-/*
+/* xxx : implement!
+
 let grammar =
 `
 
-  nothing := terminal
+  e : = terminal
+  nothing := special
   /name := terminal
   /sign_plus := terminal
   /sign_minus := terminal
@@ -1169,31 +1173,31 @@ let grammar =
 
 = transitions
 
-  01 : e -> e
-  02 : x -> x
+  t01 : e -> e
+  t02 : x -> x
 
-  03 : () + #4 -> x
-  04 : () + #6 -> ( #6 )
-  05 : () + e -> x
-  06 : ( #6 ) + e -> e
+  t03 : ( b ) + #4 -> x
+  t04 : ( b ) + #6 -> ( #6 )
+  t05 : ( b ) + e -> x
+  t06 : ( #6 ) + e -> e
 
-  07 : ** + #1 -> ** + #6
-  08 : ** + #2 -> ** + #4
-  09 : ** + #3 -> ** + #4
-  10 : ** + #5 -> ** + #6
-  11 : ( ** #4 ) + #4 -> x
-  12 : ( ** #4 ) + #6 -> ( ** #4 #6 )
-  13 : ( ** #4 ) + e -> x
-  14 : ( ** #6 ) + #4 -> ( ** #6 #4 )
-  15 : ( ** #6 ) + #6 -> ( ** #6 #6 )
-  16 : ( ** #6 #4 #6 ) + e -> ( ** ) + #5
-  17 : ( ** #6 #6 ) + e -> ( ** ) + #5
+  t07 : ** + #1 -> ** + #6
+  t08 : ** + #2 -> ** + #4
+  t09 : ** + #3 -> ** + #4
+  t10 : ** + #5 -> ** + #6
+  t11 : ( ** #4 ) + #4 -> x
+  t12 : ( ** #4 ) + #6 -> ( ** #4 #6 )
+  t13 : ( ** #4 ) + e -> x
+  t14 : ( ** #6 ) + #4 -> ( ** #6 #4 )
+  t15 : ( ** #6 ) + #6 -> ( ** #6 #6 )
+  t16 : ( ** #6 #4 #6 ) + e -> ( ** ) + #5
+  t17 : ( ** #6 #6 ) + e -> ( ** ) + #5
 
 = states
 
   s1 : e
   s2 : x
-  s3 : ()
+  s3 : ( b )
   s4 : ( #6 )
   s5 : ( ** #4 )
   s6 : ( ** #6 )
@@ -1202,51 +1206,51 @@ let grammar =
 
 = states + transitions
 
-  01 : s1 -> s1
-  02 : s2 -> s2
+  t01 : s1 -> s1
+  t02 : s2 -> s2
 
-  03 : s3 + #4 -> s2
-  04 : s3 + #6 -> s4
-  05 : s3 + e -> s2
-  06 : s4 + e -> s1
+  t03 : s3 + #4 -> s2
+  t04 : s3 + #6 -> s4
+  t05 : s3 + e -> s2
+  t06 : s4 + e -> s1
 
-  07 : s* + #1 -> [ s4 s6 s7 s8 ]
-  08 : s* + #2 -> s5
-  09 : s* + #3 -> s5
-  10 : s* + #5 -> [ s4 s6 s7 s8 ]
-  11 : s5 + #4 -> s2
-  12 : s5 + #6 -> [ s4 s6 s7 ]
-  13 : s5 + e -> s2
-  14 : s6 + #4 -> s5
-  15 : s6 + #6 -> s8
-  16 : s7 + e -> [ s4 s6 s7 s8 ]
-  17 : s8 + e -> [ s4 s6 s7 s8 ]
+  t07 : s* + #1 -> [ s4 s6 s7 s8 ]
+  t08 : s* + #2 -> s5
+  t09 : s* + #3 -> s5
+  t10 : s* + #5 -> [ s4 s6 s7 s8 ]
+  t11 : s5 + #4 -> s2
+  t12 : s5 + #6 -> [ s4 s6 s7 ]
+  t13 : s5 + e -> s2
+  t14 : s6 + #4 -> s5
+  t15 : s6 + #6 -> s8
+  t16 : s7 + e -> [ s4 s6 s7 s8 ]
+  t17 : s8 + e -> [ s4 s6 s7 s8 ]
 
 = states + transitions - optimized
 
-  01 : s1 -> s1
-  02 : s2 -> s2
+  t01 : s1 -> s1
+  t02 : s2 -> s2
 
-  03 : s3 + #4 -> s2
-  04 : s3 + #6 -> s4
-  05 : s3 + e -> s2
-  06 : s4 + e -> s1
+  t03 : s3 + #4 -> s2
+  t04 : s3 + #6 -> s4
+  t05 : s3 + e -> s2
+  t06 : s4 + e -> s1
 
-  07 : s* + #1 -> [ s6 s7 ]
-  07b: s3 + #1 -> s4
-  07c: s6 + #1 -> s8
-  08 : s* + #2 -> s5
-  09 : s* + #3 -> s5
-  10 : s* + #5 -> [ s6 s7 ]
-  10b: s3 + #5 -> s5
-  10c: s6 + #5 -> s8
-  11 : s5 + #4 -> s2
-  12 : s5 + #6 -> [ s4 s6 s7 ]
-  13 : s5 + e -> s2
-  14 : s6 + #4 -> s5
-  15 : s6 + #6 -> s8
-  16 : s7 + e -> [ s4 s6 s7 s8 ]
-  17 : s8 + e -> [ s4 s6 s7 s8 ]
+  t07 : s* + #1 -> [ s6 s7 ]
+  t07b: s3 + #1 -> s4
+  t07c: s6 + #1 -> s8
+  t08 : s* + #2 -> s5
+  t09 : s* + #3 -> s5
+  t10 : s* + #5 -> [ s6 s7 ]
+  t10b: s3 + #5 -> s5
+  t10c: s6 + #5 -> s8
+  t11 : s5 + #4 -> s2
+  t12 : s5 + #6 -> [ s4 s6 s7 ]
+  t13 : s5 + e -> s2
+  t14 : s6 + #4 -> s5
+  t15 : s6 + #6 -> s8
+  t16 : s7 + e -> [ s4 s6 s7 s8 ]
+  t17 : s8 + e -> [ s4 s6 s7 s8 ]
 
 `
 */
@@ -1292,11 +1296,11 @@ exportStructure.defaults =
 
 //
 
-function exportInfo( o )
+function exportString( o )
 {
   let sys = this;
-  o = _.routineOptions( exportInfo, arguments );
-  _.assert( _.longHas( [ 'dump', 'grammar' ], o.format ) )
+  o = _.routineOptions( exportString, arguments );
+  _.assert( _.longHas( [ 'dump', 'grammar', 'id' ], o.format ) )
 
   if( o.structure === null )
   o.structure = sys.exportStructure( _.mapOnly( o, sys.exportStructure.defaults ) );
@@ -1310,21 +1314,26 @@ function exportInfo( o )
     let o2 = _.mapExtend( null, o );
     o2.structure = defStructure;
     delete o2.dst;
-    let info = def.exportInfo( o2 );
+    let info = def.exportString( o2 );
 
     if( !info )
     continue;
 
     if( result )
-    result += '\n\n';
-    result += '  ' + _.strLinesIndentation( info, '  ' );
+    {
+      if( o.format === 'id' )
+      result += '\n';
+      else
+      result += '\n\n';
+    }
 
+    result += '  ' + _.strLinesIndentation( info, '  ' );
   }
 
   return result;
 }
 
-exportInfo.defaults =
+exportString.defaults =
 {
   ... _.mapBut( exportStructure.defaults, [ 'dst' ] ),
   structure : null,
@@ -1404,7 +1413,7 @@ let Proto =
   // export
 
   exportStructure,
-  exportInfo,
+  exportString,
   _qualifiedNameGet,
 
   // relation
@@ -1428,7 +1437,7 @@ _.classDeclare
 
 _.Copyable.mixin( Self );
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();

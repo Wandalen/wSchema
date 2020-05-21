@@ -423,7 +423,7 @@ _elementsExportStructure.defaults =
 
 //
 
-function _elementsExportInfo( o )
+function _elementsExportString( o )
 {
   let product = this;
   let def = product.definition;
@@ -434,7 +434,7 @@ function _elementsExportInfo( o )
   if( o.format === 'grammar' )
   statistics = product.elementsStatistics();
 
-  o = _.routineOptions( _elementsExportInfo, arguments );
+  o = _.routineOptions( _elementsExportString, arguments );
 
   if( o.dst === null )
   o.dst = [];
@@ -456,7 +456,7 @@ function _elementsExportInfo( o )
       result += '\n';
       result += `    ${ typeDef.name || typeDef.id } :: ${ elementStructure.name || '' }`;
     }
-    else
+    else if( o.format === 'grammar' )
     {
       if( result )
       result += '\n';
@@ -477,15 +477,16 @@ function _elementsExportInfo( o )
         result += `  ${ typeDef.name || typeDef.id }`;
       }
     }
+    else _.assert( 0 );
 
   }
 
   return result;
 }
 
-_elementsExportInfo.defaults =
+_elementsExportString.defaults =
 {
-  ... _.schema.System.prototype.exportInfo.defaults,
+  ... _.schema.System.prototype.exportString.defaults,
   name : null,
 }
 
@@ -518,32 +519,39 @@ exportStructure.defaults =
 
 //
 
-function _exportInfo( o )
+function _exportString( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportInfo, arguments );
+  _.routineOptions( _exportString, arguments );
   _.assert( o.structure !== null );
 
-  return product._exportInfoVector( o );
+  // if( o.format === 'id' )
+  // {
+  //   let result = o.name ? def.GrammarNameFor( o.name ) : product.grammarName;
+  //   result += ' := ' + def.GrammarNameFor( o.structure.id );
+  //   return result;
+  // }
+
+  return product._exportStringVector( o );
 }
 
-_exportInfo.defaults =
+_exportString.defaults =
 {
-  ... _.schema.Product.prototype._exportInfo.defaults,
+  ... _.schema.Product.prototype._exportString.defaults,
 }
 
 //
 
-function _exportInfoVector( o )
+function _exportStringVector( o )
 {
   let product = this;
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportInfoVector, arguments );
+  _.routineOptions( _exportStringVector, arguments );
   _.assert( o.structure !== null );
 
   /*
@@ -575,12 +583,15 @@ function _exportInfoVector( o )
     return '';
   }
 
-  let o2 = _.mapOnly( o, Parent.prototype._exportInfo.defaults );
-  let result = Parent.prototype._exportInfo.call( this, o2 );
+  let o2 = _.mapOnly( o, Parent.prototype._exportString.defaults );
+  let result = Parent.prototype._exportString.call( this, o2 );
+
+  if( o.format === 'id' )
+  return result;
 
   let o3 = _.mapExtend( null, o2 );
   o3.structure = product.elementsArray;
-  let result2 = product._elementsExportInfo( o3 );
+  let result2 = product._elementsExportString( o3 );
 
   if( o.format === 'dump' )
   {
@@ -608,9 +619,9 @@ function _exportInfoVector( o )
   return result;
 }
 
-_exportInfoVector.defaults =
+_exportStringVector.defaults =
 {
-  ... _exportInfo.defaults,
+  ... _exportString.defaults,
   opener : null,
   closer : null,
   prefix : '',
@@ -689,11 +700,11 @@ let Proto =
   // exporter
 
   _elementsExportStructure,
-  _elementsExportInfo,
+  _elementsExportString,
 
   exportStructure,
-  _exportInfo,
-  _exportInfoVector,
+  _exportString,
+  _exportStringVector,
 
   // relation
 
@@ -715,7 +726,7 @@ _.classDeclare
 });
 
 _.schema[ Self.shortName ] = Self;
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _global_.wTools;
 
 })();
