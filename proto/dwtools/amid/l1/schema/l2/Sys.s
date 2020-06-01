@@ -1158,12 +1158,49 @@ let grammar =
   #5 := ( #6 ?#4 #6 e )
   #6 := [ #1 #5 ]
 
+=
+
   #5 :=
   [
     ( #1 #2 #1 )
     ( #1 #3 #1 )
     ( #1 #1 )
   ]
+
+= diff detection algorithm
+
+  (< /exp /sign_optional /exp )
+  (< /exp /sign_optional /name ) - first terminal /exp
+
+  (< /exp /sign_optional /exp )
+  (< /exp /sign_optional /exp /sign_optional /exp ) - recurse /exp
+  (< /exp /sign_optional /name /sign_optional /exp ) - first terminal /exp
+  (< /exp /sign_optional /name [ /sign_plus /sgin_minus nothing ] /exp ) - first terminal /sign_optional
+  (< /exp /sign_optional /name [ /sign_plus /sgin_minus /name ] ) - first terminal /exp
+
+= diff detection algorithm
+
+  (< /name /sign_optional /exp )
+  (< /name /sign_optional /name ) - first terminal /exp
+
+  (< /name /sign_optional /exp )
+  (< /name /sign_optional /name /sign_optional /exp ) - recurse /exp
+  (< /name /sign_optional /name [ /sign_plus /sgin_minus nothing ] /exp ) - first terminal /sign_optional
+  (< /name /sign_optional /name [ /sign_plus /sgin_minus /name ] ) - first terminal /exp
+
+= diff detection algorithm
+
+  (< /exp /sign_optional /exp /sign_optional /exp )
+  (< /exp /sign_optional /exp /sign_optional /name ) - first terminal /exp
+
+  (< /exp /sign_optional /exp /sign_optional /exp )
+  (< /exp /sign_optional /exp /sign_optional /exp /sign_optional /exp /sign_optional /exp ) - recurse /exp
+  (< /exp /sign_optional /exp /sign_optional /name /sign_optional /exp /sign_optional /exp ) - first terminal /exp
+  (< /exp /sign_optional /exp /sign_optional /name [ /sign_plus /sign_minus nothing ] /exp /sign_optional /exp ) - first terminal /sign_optional
+  (< /exp /sign_optional /exp /sign_optional /name [ /sign_plus /sign_minus /name ] /sign_optional /exp ) - first terminal /exp
+
+  ( /exp /sign_optional /exp /sign_optional /exp /sign_optional /exp )
+  3, 5, 7, 9
 
 =
 
