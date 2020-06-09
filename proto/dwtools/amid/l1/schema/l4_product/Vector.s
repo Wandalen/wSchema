@@ -9,7 +9,8 @@ let _ = _global_.wTools;
 //
 
 let Parent = _.schema.Product;
-let Self = function wSchemaProductVector( o )
+let Self = wSchemaProductVector;
+function wSchemaProductVector( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

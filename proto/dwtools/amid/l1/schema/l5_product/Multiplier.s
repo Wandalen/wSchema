@@ -9,7 +9,8 @@ let _ = _global_.wTools;
 //
 
 let Parent = _.schema.ProductScalar;
-let Self = function wSchemaProductMultiplier( o )
+let Self = wSchemaProductMultiplier;
+function wSchemaProductMultiplier( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

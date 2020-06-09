@@ -9,7 +9,8 @@ let _ = _global_.wTools;
 //
 
 let Parent = null;
-let Self = function wSchemaProduct( o )
+let Self = wSchemaProduct;
+function wSchemaProduct( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

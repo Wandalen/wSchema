@@ -9,7 +9,8 @@ let _ = _global_.wTools;
 //
 
 let Parent = _.schema.Product;
-let Self = function wSchemaProductTerminal( o )
+let Self = wSchemaProductTerminal;
+function wSchemaProductTerminal( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }

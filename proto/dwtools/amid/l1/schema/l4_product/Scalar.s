@@ -9,7 +9,8 @@ let _ = _global_.wTools;
 //
 
 let Parent = _.schema.Product;
-let Self = function wSchemaProductScalar( o )
+let Self = wSchemaProductScalar;
+function wSchemaProductScalar( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
