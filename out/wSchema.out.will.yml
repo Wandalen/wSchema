@@ -109,7 +109,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/amid/l1/schema/IncludeMid.s
+        path: ../proto/dwtools/amid/l1/schema/include/Mid.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -158,7 +158,7 @@ module:
           - ../proto/dwtools/amid/l1
           - ../proto/dwtools/amid/l1/-schema
           - ../proto/dwtools/amid/l1/-schema/IncludeBase.s
-          - ../proto/dwtools/amid/l1/-schema/IncludeMid.s
+          - ../proto/dwtools/amid/l1/-schema/include/Mid.s
           - ../proto/dwtools/amid/l1/-schema/l1
           - ../proto/dwtools/amid/l1/-schema/l1/Namespace.s
           - ../proto/dwtools/amid/l1/-schema/l2
@@ -953,7 +953,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/amid/l1/schema/IncludeMid.s
+        path: proto/dwtools/amid/l1/schema/include/Mid.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
