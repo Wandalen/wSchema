@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wSchema.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wSchema.out.will.yml: &ref_0
+    hash: 1e6b4ab5ec2e3c2f1cb32f091532f787
+    size: 39325
+  ../.ex.will.yml: &ref_1
     hash: 0688f74535554ce6c703fa2b81e5f567
     size: 1696
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: b8acdfca41bbbae0646ad1d8173bee4c
     size: 5029
 module:
@@ -16,19 +19,19 @@ module:
       description: Module to define schemas for data structures.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - tools
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wschema
-      npm.scripts: &ref_5
+      npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -153,9 +156,37 @@ module:
           - ../proto/dwtools/abase
           - ../proto/dwtools/amid
           - ../proto/dwtools/amid/l1
+          - ../proto/dwtools/amid/l1/-schema
+          - ../proto/dwtools/amid/l1/-schema/IncludeBase.s
+          - ../proto/dwtools/amid/l1/-schema/IncludeMid.s
+          - ../proto/dwtools/amid/l1/-schema/l1
+          - ../proto/dwtools/amid/l1/-schema/l1/Namespace.s
+          - ../proto/dwtools/amid/l1/-schema/l2
+          - ../proto/dwtools/amid/l1/-schema/l2/Sys.s
+          - ../proto/dwtools/amid/l1/-schema/l3
+          - ../proto/dwtools/amid/l1/-schema/l3/Predefined.s
+          - ../proto/dwtools/amid/l1/-schema/l3/Product.s
+          - ../proto/dwtools/amid/l1/-schema/l3/Subtype.s
+          - ../proto/dwtools/amid/l1/-schema/l4_product
+          - ../proto/dwtools/amid/l1/-schema/l4_product/Scalar.s
+          - ../proto/dwtools/amid/l1/-schema/l4_product/Vector.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Alias.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Alternative.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Composition.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Container.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Multiplier.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Terminal.s
+          - ../proto/dwtools/amid/l1/-schema/l5_product/Universal.s
+          - ../proto/dwtools/amid/l1/-schema/l8
+          - ../proto/dwtools/amid/l1/-schema/l8/Definition.s
+          - ../proto/dwtools/amid/l1/-schema.test
+          - ../proto/dwtools/amid/l1/-schema.test/Schema.test.s
           - ../proto/dwtools/amid/l1/schema
-          - ../proto/dwtools/amid/l1/schema/IncludeBase.s
-          - ../proto/dwtools/amid/l1/schema/IncludeMid.s
+          - ../proto/dwtools/amid/l1/schema/Include.s
+          - ../proto/dwtools/amid/l1/schema/include
+          - ../proto/dwtools/amid/l1/schema/include/Base.s
+          - ../proto/dwtools/amid/l1/schema/include/Mid.s
           - ../proto/dwtools/amid/l1/schema/l1
           - ../proto/dwtools/amid/l1/schema/l1/Namespace.s
           - ../proto/dwtools/amid/l1/schema/l2
@@ -716,6 +747,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -804,8 +853,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wSchema.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wSchema
@@ -813,13 +863,21 @@ module:
       description: Module to define schemas for data structures.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - tools
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wschema
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: wtest .run proto/**
+        docgen: wdocgen .build proto
     path:
       module.willfiles:
         criterion:
@@ -1315,7 +1373,7 @@ module:
           debug: release
       reflect.proto.debug.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.raw'
         criterion:
           tests: no.tests
           debug: debug
@@ -1325,7 +1383,7 @@ module:
           - files.reflect
       reflect.proto.release.raw:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.raw'
         criterion:
           tests: no.tests
           debug: release
@@ -1335,7 +1393,7 @@ module:
           - files.reflect
       reflect.proto.debug.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.debug.compiled'
         criterion:
           tests: no.tests
           debug: debug
@@ -1345,7 +1403,7 @@ module:
           - files.reflect
       reflect.proto.release.compiled:
         opts:
-          filePath: 'reflector::reflect.proto*'
+          filePath: 'reflector::reflect.proto.release.compiled'
         criterion:
           tests: no.tests
           debug: release
@@ -1356,7 +1414,7 @@ module:
       transpile.proto.raw:
         opts:
           entry: 'path::entry.proto.no.tests'
-          filePath: 'reflector::transpile.proto.raw*'
+          filePath: 'reflector::transpile.proto.raw'
         criterion:
           raw: raw
           debug: release
@@ -1366,7 +1424,7 @@ module:
       transpile.proto.no.tests.compiled.debug:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.debug'
         criterion:
           tests: no.tests
           raw: compiled
@@ -1377,7 +1435,7 @@ module:
       transpile.proto.no.tests.compiled.release:
         opts:
           entry: 'path::entry.proto.*=1'
-          filePath: 'reflector::transpile.proto.no.tests.compiled*'
+          filePath: 'reflector::transpile.proto.no.tests.compiled.release'
         criterion:
           tests: no.tests
           raw: compiled
@@ -1389,7 +1447,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.debug'
         criterion:
           tests: only.tests
           raw: compiled
@@ -1401,7 +1459,7 @@ module:
         opts:
           entry: 'path::entry.proto.*=1'
           external.before: '{path::out.*=1}/Main.s'
-          filePath: 'reflector::transpile.proto.only.tests.compiled*'
+          filePath: 'reflector::transpile.proto.only.tests.compiled.release'
         criterion:
           tests: only.tests
           raw: compiled
@@ -1490,3 +1548,6 @@ module:
       ../.im.will.yml:
         hash: b8acdfca41bbbae0646ad1d8173bee4c
         size: 5029
+      wSchema.out.will.yml:
+        hash: 1e6b4ab5ec2e3c2f1cb32f091532f787
+        size: 39325
