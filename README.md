@@ -1,5 +1,5 @@
 
-# wSchema [![Build Status](https://travis-ci.org/Wandalen/wSchema.svg?branch=master)](https://travis-ci.org/Wandalen/wSchema)
+# module::Schema [![Status](https://github.com/Wandalen/wSchema/workflows/Test/badge.svg)](https://github.com/Wandalen/wSchema}/actions?query=workflow%3ATest)
 
 Module to define schemas for data structures.
 
