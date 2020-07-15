@@ -6,5 +6,5 @@ Module to define schemas for data structures.
 ## Try out
 ```
 npm install
-node sample/Sample.js
+node sample/Sample.s
 ```
