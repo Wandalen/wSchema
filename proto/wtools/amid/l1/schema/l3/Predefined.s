@@ -66,7 +66,7 @@ let bigInt =
   is : bigIntIs,
 }
 
-let Extend =
+let Extension =
 {
 
   string,
@@ -76,7 +76,7 @@ let Extend =
 
 }
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 
 //
 

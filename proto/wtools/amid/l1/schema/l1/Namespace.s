@@ -40,7 +40,7 @@ let Restricts =
 
 }
 
-let Extend =
+let Extension =
 {
 
   system,
@@ -49,7 +49,7 @@ let Extend =
 
 }
 
-_.mapExtend( Self, Extend );
+_.mapExtend( Self, Extension );
 
 //
 
