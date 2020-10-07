@@ -15,7 +15,7 @@ if( typeof module !== 'undefined' )
   _.include( 'wLogger' );
   _.include( 'wStringer' );
   _.include( 'wNameMapper' );
-  _.include( 'wgraphbasic' );
+  _.include( 'wGraphBasic' );
 
 }
 
