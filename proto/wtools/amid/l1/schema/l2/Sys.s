@@ -400,10 +400,10 @@ function fromString( src )
 
       if( left && elements.length >= 2 )
       {
-        let pre = elements[ elements.length-2 ];
+        let head = elements[ elements.length-2 ];
         let cur = elements[ elements.length-1 ];
         if( cur.tokenId === tokensSyntax.nameToId[ 'name_at' ] || cur.kind === 'statement' )
-        if( pre.tokenId !== tokensSyntax.nameToId.equal )
+        if( head.tokenId !== tokensSyntax.nameToId.equal )
         {
           statementAddButOne();
         }
@@ -755,10 +755,10 @@ function _parse1()
 
       if( left && elements.length >= 2 )
       {
-        let pre = elements[ elements.length-2 ];
+        let head = elements[ elements.length-2 ];
         let cur = elements[ elements.length-1 ];
         if( cur.tokenId === tokensSyntax.nameToId[ 'name_at' ] || cur.kind === 'statement' )
-        if( pre.tokenId !== tokensSyntax.nameToId.equal )
+        if( head.tokenId !== tokensSyntax.nameToId.equal )
         {
           statementAddButOne();
         }
