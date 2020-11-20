@@ -34,7 +34,7 @@ function _form2()
   if( product.multiple === '*' )
   product.multiple = [ 0, Infinity ];
 
-  if( !_.rangeIs( product.multiple ) )
+  if( !_.intervalIs( product.multiple ) )
   throw _.err( `Field multiple of ${product.qualifiedName} should be range, but it is not` );
 
   // product._formUsing();

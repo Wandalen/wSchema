@@ -415,7 +415,7 @@ function form( test )
   {
     let def = schema.definitionsArray[ d ];
     test.identical( def.formed, 3 );
-    test.is( def.product instanceof _.schema.Product );
+    test.true( def.product instanceof _.schema.Product );
   }
 
   test.description = 'expected number of definitions';
