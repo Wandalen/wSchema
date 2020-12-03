@@ -332,7 +332,7 @@ function fromDefinitionString( defStr )
     });
     result = result.filter( ( e ) => !/\s+/.test( e ) );
 
-    result = _.filter( result, ( e, k ) =>
+    result = _.filter_( null, result, ( e, k ) =>
     {
       if( e !== '*' )
       return e;
