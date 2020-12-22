@@ -20,8 +20,9 @@
     "wlookerextra" : "",
     "wLogger" : "",
     "wstringer" : "",
-    "wnamemapper" : ""
+    "wnamemapper" : "",
+    "wgraphbasic" : "alpha"
   },
-  "devDependencies" : { "wTesting" : "", "wschema" : "file:." },
+  "devDependencies" : { "wTesting" : "", "wschema" : "file:.", "eslint" : "7.1.0" },
   "keywords" : [ "wTools" ]
 }

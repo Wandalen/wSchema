@@ -1,4 +1,5 @@
-( function _Product_s_( ) {
+( function _Product_s_( )
+{
 
 'use strict';
 
@@ -435,7 +436,11 @@ function _isTypeOfStructure( o )
   _.assertRoutineOptions( isTypeOfStructure, arguments );
 
   _.assert( o.src !== _.null );
-  _.assert( _.routineIs( product._isTypeOfStructureAct ), `${product.qualifiedName} does not have implemented method _isTypeOfStructureAct` );
+  _.assert
+  (
+    _.routineIs( product._isTypeOfStructureAct ),
+    `${product.qualifiedName} does not have implemented method _isTypeOfStructureAct`
+  );
   let result = product._isTypeOfStructureAct( o );
   _.assert( _.boolIs( result ) );
 
@@ -491,7 +496,11 @@ function _isTypeOfDefinition( o )
 
   _.assertRoutineOptions( isTypeOfDefinition, arguments );
   _.assert( o.src !== _.null );
-  _.assert( _.routineIs( product._isTypeOfDefinitionAct ), `${product.qualifiedName} does not have implemented method _isTypeOfDefinitionAct` );
+  _.assert
+  (
+    _.routineIs( product._isTypeOfDefinitionAct ),
+    `${product.qualifiedName} does not have implemented method _isTypeOfDefinitionAct`
+  );
   let result = product._isTypeOfDefinitionAct( o );
   _.assert( _.boolIs( result ) );
   return result;

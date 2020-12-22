@@ -29,6 +29,16 @@ submodule :
     path : npm:///wnamemapper
     enabled : 0 # submodule
 
+  wgraphbasic :
+    path : npm:///wgraphbasic
+    enabled : 0 # submodule
+
+  eslint :
+    path : npm:///eslint#7.1.0
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+
 path :
 
   in : '.'

@@ -20,7 +20,8 @@
     "wlookerextra" : "alpha",
     "wLogger" : "alpha",
     "wstringer" : "alpha",
-    "wnamemapper" : "alpha"
+    "wnamemapper" : "alpha",
+    "wgraphbasic" : "alpha"
   },
   "devDependencies" : { "wschema" : "file:.", "wTesting" : "alpha" },
   "keywords" : [ "wTools" ]

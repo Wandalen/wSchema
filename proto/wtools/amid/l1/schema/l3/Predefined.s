@@ -1,4 +1,5 @@
-( function _Predefined_s_( ) {
+( function _Predefined_s_( )
+{
 
 'use strict';
 

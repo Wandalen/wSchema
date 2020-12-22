@@ -1,4 +1,5 @@
-( function _Alternative_s_( ) {
+( function _Alternative_s_( )
+{
 
 'use strict';
 
