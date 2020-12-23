@@ -1,4 +1,5 @@
-( function _Terminal_s_( ) {
+( function _Terminal_s_( )
+{
 
 'use strict';
 
@@ -29,7 +30,11 @@ function _form2()
   let opts = _.mapExtend( null, def.opts );
 
   _.mapExtend( product, def.opts );
-  _.assert( product.onCheck === null || _.routineIs( product.onCheck ), () => `${product.qualifiedName} should have null or routine {- onCheck -}, but has ${_.strType( product.onCheck )}` );
+  _.assert
+  (
+    product.onCheck === null || _.routineIs( product.onCheck ),
+    () => `${product.qualifiedName} should have null or routine {- onCheck -}, but has ${_.strType( product.onCheck )}`
+  );
 
   return true;
 }

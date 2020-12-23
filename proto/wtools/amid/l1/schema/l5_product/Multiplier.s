@@ -1,4 +1,5 @@
-( function _Multiplier_s_( ) {
+( function _Multiplier_s_( )
+{
 
 'use strict';
 
@@ -29,7 +30,11 @@ function _form2()
   let opts = _.mapExtend( null, def.opts );
 
   _.mapExtend( product, def.opts );
-  _.assert( _.strDefined( product.type ) || _.numberDefined( product.type ), () => `Multiplier should have name of type definition, but ${def.qualifiedName} does not have` );
+  _.assert
+  (
+    _.strDefined( product.type ) || _.numberDefined( product.type ),
+    () => `Multiplier should have name of type definition, but ${def.qualifiedName} does not have`
+  );
 
   if( product.multiple === '*' )
   product.multiple = [ 0, Infinity ];
@@ -175,7 +180,8 @@ function _exportString( o )
   else if( product.isRangeOnce() )
   result = `${product.grammarName} := ${elementDefinition.product.grammarName}`;
   else
-  result = `${product.grammarName} := ( type = ${elementDefinition.product.grammarName} multiple = ${product.multiple[ 0 ]} ${product.multiple[ 1 ]} )`;
+  result = `${product.grammarName} := ( type = ${elementDefinition.product.grammarName} `
+  + `multiple = ${product.multiple[ 0 ]} ${product.multiple[ 1 ]} )`;
 
   return result;
 }

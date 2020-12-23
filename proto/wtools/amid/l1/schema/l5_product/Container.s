@@ -1,4 +1,5 @@
-( function _Container_s_( ) {
+( function _Container_s_( )
+{
 
 'use strict';
 
@@ -31,7 +32,11 @@ function _form2()
   product.container = 'auto';
 
   _.mapExtend( product, def.opts );
-  _.assert( _.strDefined( product.type ) || _.numberDefined( product.type ), () => `Container should have name of type definition, but ${def.qualifiedName} does not have` );
+  _.assert
+  (
+    _.strDefined( product.type ) || _.numberDefined( product.type ),
+    () => `Container should have name of type definition, but ${def.qualifiedName} does not have`
+  );
   _.assert( _.longHas( [ 'auto', 'array', 'map' ], product.container ) );
 
   return true;
@@ -146,7 +151,11 @@ function _elementAddToMap( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.sure( _.strIs( o.elementDescriptor.name ), `Element should have name to make default, but some elements of ${def.qualifiedName} does not have it` );
+  _.sure
+  (
+    _.strIs( o.elementDescriptor.name ),
+    `Element should have name to make default, but some elements of ${def.qualifiedName} does not have it`
+  );
 
   o.container[ o.elementDescriptor.name ] = o.value;
 }

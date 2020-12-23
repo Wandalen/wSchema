@@ -1,4 +1,5 @@
-( function _Subtype_s_( ) {
+( function _Subtype_s_( )
+{
 
 'use strict';
 

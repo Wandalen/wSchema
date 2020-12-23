@@ -1,4 +1,5 @@
-( function _Universal_s_( ) {
+( function _Universal_s_( )
+{
 
 'use strict';
 

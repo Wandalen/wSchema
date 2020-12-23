@@ -1,4 +1,5 @@
-( function _Composition_s_( ) {
+( function _Composition_s_( )
+{
 
 'use strict';
 
@@ -90,27 +91,33 @@ function _makeDefaultAct( it )
     let elementDescriptor = product.elementsArray[ i ];
     let elementDefinition = sys.definition( elementDescriptor.type );
 
-    _.assert( _.routineIs( elementDefinition.product._makeDefaultAct ), `Definition ${elementDefinition.product.qualifiedName} deos not have method _makeDefaultAct` );
+    _.assert
+    (
+      _.routineIs( elementDefinition.product._makeDefaultAct ),
+      `Definition ${elementDefinition.product.qualifiedName} deos not have method _makeDefaultAct`
+    );
 
     let it2 = product._makeDefaultIteration();
     it2.onElementAdd = onElementAdd;
     let r = elementDefinition.product._makeDefaultAct( it2 );
     _.assert( r === undefined );
 
-    function onElementAdd( o )
-    {
-      if( o.value === _.nothing )
-      {
-        debugger;
-        throw _.err( 'Cant add nothing to composition' );
-      }
-      if( !o.elementDefinition )
-      o.elementDefinition = elementDefinition;
-      if( !o.elementDescriptor )
-      o.elementDescriptor = elementDescriptor;
-      it.onElementAdd( o );
-    }
+  }
 
+  /* - */
+
+  function onElementAdd( o )
+  {
+    if( o.value === _.nothing )
+    {
+      debugger;
+      throw _.err( 'Cant add nothing to composition' );
+    }
+    if( !o.elementDefinition )
+    o.elementDefinition = elementDefinition;
+    if( !o.elementDescriptor )
+    o.elementDescriptor = elementDescriptor;
+    it.onElementAdd( o );
   }
 
 }

@@ -1,4 +1,5 @@
-( function _Alias_s_( ) {
+( function _Alias_s_( )
+{
 
 'use strict';
 
@@ -29,7 +30,11 @@ function _form2()
   let opts = _.mapExtend( null, def.opts );
 
   _.mapExtend( product, def.opts );
-  _.assert( _.strDefined( product.type ) || _.numberDefined( product.type ), () => `Alias should have name of type definition, but ${def.qualifiedName} does not have` );
+  _.assert
+  (
+    _.strDefined( product.type ) || _.numberDefined( product.type ),
+    () => `Alias should have name of type definition, but ${def.qualifiedName} does not have`
+  );
 
   if( product.subtype )
   {
