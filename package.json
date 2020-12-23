@@ -1,6 +1,6 @@
 {
   "name" : "wschema",
-  "version" : "0.3.81",
+  "version" : "0.3.82",
   "description" : "Module to define schemas for data structures.",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
@@ -20,8 +20,9 @@
     "wlookerextra" : "alpha",
     "wLogger" : "alpha",
     "wstringer" : "alpha",
-    "wnamemapper" : "alpha"
+    "wnamemapper" : "alpha",
+    "wgraphbasic" : "alpha"
   },
-  "devDependencies" : { "wschema" : "file:.", "wTesting" : "alpha" },
+  "devDependencies" : { "wschema" : "file:.", "eslint" : "7.1.0", "wTesting" : "alpha" },
   "keywords" : [ "wTools" ]
 }
