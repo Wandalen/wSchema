@@ -1,4 +1,5 @@
-( function _Scalar_s_( ) {
+( function _Scalar_s_( )
+{
 
 'use strict';
 

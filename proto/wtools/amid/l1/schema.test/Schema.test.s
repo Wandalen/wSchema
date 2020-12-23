@@ -1,4 +1,5 @@
-( function _Schema_test_s_( ) {
+( function _Schema_test_s_( )
+{
 
 'use strict';
 
@@ -33,7 +34,10 @@ function grammarPalindrom()
 
   schema.defineFromSyntax( tokensSyntax );
 
-  schema.define( 'sign_optional' ).alternative().extend([ 'sign_plus', 'sign_minus', '❮nothing❯' ]);
+  schema
+  .define( 'sign_optional' )
+  .alternative()
+  .extend([ 'sign_plus', 'sign_minus', '❮nothing❯' ]);
 
   var id = schema.define().composition({ bias : 'right' })
   .extend
@@ -42,8 +46,7 @@ function grammarPalindrom()
     sign : 'sign_optional',
     right : 'exp',
   })
-  .id
-  ;
+  .id;
   schema.define( 'exp2' ).container({ type : id });
 
   schema.define( 'exp' ).alternative({ bias : 'right' })
@@ -72,14 +75,16 @@ function grammarExpression1()
 
   schema.defineFromSyntax( tokensSyntax );
 
-  schema.define( 'factor' ).alternative().extend([ 'name', 'number' ]);
+  schema
+  .define( 'factor' )
+  .alternative()
+  .extend([ 'name', 'number' ]);
 
   var id = schema.define().composition({ bias : 'right' })
   .extend({ left : 'exp' })
   .extend([ 'mul' ])
   .extend({ right : 'exp' })
-  .id
-  ;
+  .id;
   schema.define( 'exp_mul' ).container({ type : id });
 
   var id = schema.define().composition({ bias : 'right' })
@@ -89,8 +94,7 @@ function grammarExpression1()
     plus : { type : 'plus', including : 0 },
     right : 'exp',
   })
-  .id
-  ;
+  .id;
   schema.define( 'exp_plus' ).container({ type : id });
 
   var id = schema.define().composition({ bias : 'right' })
@@ -100,8 +104,7 @@ function grammarExpression1()
     { type : 'exp', name : 'exp' },
     { type : 'parenthes_close', including : 0 },
   ])
-  .id
-  ;
+  .id;
   schema.define( 'exp_parenthes' ).container({ type : id });
 
   schema.define( 'exp' ).alternative({ bias : 'right' })
@@ -116,18 +119,18 @@ function grammarExpression1()
 function grammarExpression2()
 {
 
-/*
+  /*
 
-  e : = terminal
-  nothing := special
-  /name := terminal
-  /sign_plus := terminal
-  /sign_minus := terminal
-  /sign_optional := [ /sign_plus /sign_minus nothing ]
-  /exp2 := (< /exp /sign_optional /exp )
-  /exp := [ /name /exp2 ]
+    e : = terminal
+    nothing := special
+    /name := terminal
+    /sign_plus := terminal
+    /sign_minus := terminal
+    /sign_optional := [ /sign_plus /sign_minus nothing ]
+    /exp2 := (< /exp /sign_optional /exp )
+    /exp := [ /name /exp2 ]
 
-*/
+  */
 
   let schema = _.schema.system({ name : 'SchemaTest/grammarExpression2' });
   let tokensSyntax = _.tokensSyntaxFrom
@@ -139,12 +142,18 @@ function grammarExpression2()
 
   schema.defineFromSyntax( tokensSyntax );
 
-  schema.define( 'sign_optional' ).alternative().extend([ 'sign_plus', 'sign_minus' ]);
+  schema
+  .define( 'sign_optional' )
+  .alternative()
+  .extend([ 'sign_plus', 'sign_minus' ]);
 
   schema.define( 'exp2' ).composition({ bias : 'right' })
   .extend([ 'exp', 'sign_optional', 'exp' ]);
 
-  schema.define( 'exp' ).alternative().extend([ 'name', 'exp2' ]);
+  schema
+  .define( 'exp' )
+  .alternative()
+  .extend([ 'name', 'exp2' ]);
 
   schema.form();
   return schema;
@@ -185,10 +194,7 @@ function grammarOwn()
   schema.define( 'statement_top' ).container({ container : 'map', type : 'statement_top_' });
 
   schema.define( 'statement_top_' ).composition()
-  .extend
-  ([
-    { type : 'statement_top_left', including : true },
-  ])
+  .extend([ { type : 'statement_top_left', including : true } ])
   .extend
   ({
     multiple : { type : 'multiple_maybe' },
@@ -202,17 +208,17 @@ function grammarOwn()
     including : { type : 'colon_equal' },
   })
 
-  schema.define( 'statement_top_right' ).alternative().extend([ 'name_kind', 'name_slash', 'block' ]);
+  schema
+  .define( 'statement_top_right' )
+  .alternative()
+  .extend([ 'name_kind', 'name_slash', 'block' ]);
 
   /* */
 
   schema.define( 'statement_in' ).container({ container : 'map', type : 'statement_in_' });
 
   schema.define( 'statement_in_' ).composition()
-  .extend
-  ([
-    { type : 'statement_in_left', including : true },
-  ])
+  .extend([ { type : 'statement_in_left', including : true } ])
   .extend
   ({
     multiple : { type : 'multiple_maybe' },
@@ -226,7 +232,10 @@ function grammarOwn()
     including : { type : 'colon_equal' },
   })
 
-  schema.define( 'statement_in_right' ).alternative().extend([ 'name_slash', 'block' ]);
+  schema
+  .define( 'statement_in_right' )
+  .alternative()
+  .extend([ 'name_slash', 'block' ]);
 
   /* */
 
@@ -242,7 +251,10 @@ function grammarOwn()
   ({
     value : { type : 'directive_value' },
   });
-  schema.define( 'directive_value' ).alternative().extend([ 'literal', 'name_slash' ]);
+  schema
+  .define( 'directive_value' )
+  .alternative()
+  .extend([ 'literal', 'name_slash' ]);
 
   /* */
 
@@ -265,14 +277,20 @@ function grammarOwn()
 
   /* */
 
-  schema.define( 'composition' ).composition().extend
+  schema
+  .define( 'composition' )
+  .composition()
+  .extend
   ([
     { type : 'parenthes_open', including : false },
     { type : 'block_content', including : true },
     { type : 'parenthes_open', including : false },
   ]);
 
-  schema.define( 'alternative' ).composition().extend
+  schema
+  .define( 'alternative' )
+  .composition()
+  .extend
   ([
     { type : 'square_open', including : false },
     { type : 'block_content', including : true },
@@ -281,7 +299,10 @@ function grammarOwn()
 
   schema.define( 'block_content' ).multiplier({ multiple : [ 0, Infinity ], type : 'block_content_' });
 
-  schema.define( 'block_content_' ).alternative().extend
+  schema
+  .define( 'block_content_' )
+  .alternative()
+  .extend
   ([
     { type : 'statement_in' },
     { type : 'directive' }
@@ -296,18 +317,24 @@ function grammarOwn()
     b : { type : 'multiple_any' },
   })
 
-  schema.define( 'block' ).alternative().extend([ 'alternative', 'composition' ]);
+  schema
+  .define( 'block' )
+  .alternative()
+  .extend([ 'alternative', 'composition' ]);
 
   // schema.define( 'name_kind' ).alternative().extend([ 'name_kind_terminal' ]);
 
-  schema.define( 'literal' ).alternative().extend([ 'name_literal', 'number', 'string' ]);
+  schema
+  .define( 'literal' )
+  .alternative()
+  .extend([ 'name_literal', 'number', 'string' ]);
 
   debugger;
   schema.form();
   debugger;
   // console.log( schema.exportString({ format : 'grammar' }) );
 
-/*
+  /*
 
   /statement_top :=
   (.
@@ -402,7 +429,10 @@ function form( test )
 
   schema.define( 'string' ).terminal({ default : '' });
 
-  schema.define( 'simple' ).composition().extend
+  schema
+  .define( 'simple' )
+  .composition()
+  .extend
   ({
     kind : { type : 'string', default : '' },
     value : { type : 'string', default : '' },
@@ -450,29 +480,46 @@ function exportString( test )
   schema.define( 'string' ).terminal({ default : '' });
   schema.define( 'number' ).terminal({ default : 0 });
   schema.define( 'boolean' ).terminal({ default : false });
-  schema.define( 'Identifier' ).composition().extend
+  schema
+  .define( 'Identifier' )
+  .composition()
+  .extend
   ({
     type : { type : 'string' },
     name : { type : 'string' },
   });
-  schema.define( 'Literal' ).composition().extend
+  schema
+  .define( 'Literal' )
+  .composition()
+  .extend
   ({
     type : { type : 'string', default : '' },
     value : { type : '[ boolean number string null ]', default : 'null' },
     raw : { type : 'string', default : '' },
   });
-  schema.define( 'Literal2' ).composition().extend
+  schema
+  .define( 'Literal2' )
+  .composition()
+  .extend
   ({
     type : { type : 'string', default : '' },
     value : '[ boolean number string null ]',
     raw : { type : 'string', default : '' },
   });
-  schema.define( 'ArrayExpressionElement2' ).alternative().fromFields({ default : 'Expression' }).extend
+  schema
+  .define( 'ArrayExpressionElement2' )
+  .alternative()
+  .fromFields({ default : 'Expression' })
+  .extend
   ([
     'Expression',
     _.nothing,
   ]);
-  schema.define({ name : 'Expression' }).alternative().fromFields({ default : 'Identifier' }).extend
+  schema
+  .define({ name : 'Expression' })
+  .alternative()
+  .fromFields({ default : 'Identifier' })
+  .extend
   ([
     'Identifier',
     'Literal',
@@ -585,29 +632,46 @@ function makeDefault( test )
   schema.define( 'string' ).terminal({ default : '' });
   schema.define( 'number' ).terminal({ default : 0 });
   schema.define( 'boolean' ).terminal({ default : false });
-  schema.define( 'Identifier' ).composition().extend
+  schema
+  .define( 'Identifier' )
+  .composition()
+  .extend
   ({
     type : { type : 'string' },
     name : { type : 'string' },
   });
-  schema.define( 'Literal' ).composition().extend
+  schema
+  .define( 'Literal' )
+  .composition()
+  .extend
   ({
     type : { type : 'string', default : '' },
     value : { type : '[ boolean number string null ]', default : 'null' },
     raw : { type : 'string', default : '' },
   });
-  schema.define( 'Literal2' ).composition().extend
+  schema
+  .define( 'Literal2' )
+  .composition()
+  .extend
   ({
     type : { type : 'string', default : '' },
     value : '[ boolean number string null ]',
     raw : { type : 'string', default : '' },
   });
-  schema.define( 'ArrayExpressionElement2' ).alternative().fromFields({ default : 'Expression' }).extend
+  schema
+  .define( 'ArrayExpressionElement2' )
+  .alternative()
+  .fromFields({ default : 'Expression' })
+  .extend
   ([
     'Expression',
     _.nothing,
   ]);
-  schema.define({ name : 'Expression' }).alternative().fromFields({ default : 'Identifier' }).extend
+  schema
+  .define({ name : 'Expression' })
+  .alternative()
+  .fromFields({ default : 'Identifier' })
+  .extend
   ([
     'Identifier',
     'Literal',
@@ -655,28 +719,45 @@ function makeDefaultMultiple( test )
   schema.define( 'string' ).terminal({ default : '' });
   schema.define( 'number' ).terminal({ default : 0 });
   schema.define( 'boolean' ).terminal({ default : false });
-  schema.define( 'Identifier' ).composition().extend
+  schema
+  .define( 'Identifier' )
+  .composition()
+  .extend
   ({
     type : { type : 'string' },
     name : { type : 'string' },
   });
-  schema.define( 'Literal' ).composition().extend
+  schema
+  .define( 'Literal' )
+  .composition()
+  .extend
   ({
     type : { type : 'string', default : '' },
     value : { type : '[ boolean number string null ]', default : 'null' },
     raw : { type : 'string', default : '' },
   });
-  schema.define( 'ArrayExpression' ).composition().extend
+  schema
+  .define( 'ArrayExpression' )
+  .composition()
+  .extend
   ({
     type : { type : 'string', default : '' },
     elements : { type : '( *ArrayExpressionElement )' },
   });
-  schema.define( 'ArrayExpressionElement' ).alternative().fromFields({ default : _.nothing }).extend
+  schema
+  .define( 'ArrayExpressionElement' )
+  .alternative()
+  .fromFields({ default : _.nothing })
+  .extend
   ([
     'Expression',
     _.nothing,
   ]);
-  schema.define({ name : 'Expression' }).alternative().fromFields({ default : 'Identifier' }).extend
+  schema
+  .define({ name : 'Expression' })
+  .alternative()
+  .fromFields({ default : 'Identifier' })
+  .extend
   ([
     'Identifier',
     'Literal',
@@ -710,14 +791,20 @@ function makeDefaultCompositionsNotNamedElements( test )
   schema.define( 'number' ).terminal({ default : 0 });
   schema.define( 'boolean' ).terminal({ default : false });
 
-  schema.define( 'composition1' ).composition().extend
+  schema
+  .define( 'composition1' )
+  .composition()
+  .extend
   ([
     { type : 'string' },
     { type : 'null' },
     { type : 'string' },
   ]);
 
-  schema.define( 'composition2' ).composition().extend
+  schema
+  .define( 'composition2' )
+  .composition()
+  .extend
   ([
     { type : 'number' },
     { type : 'composition1' },
@@ -754,14 +841,20 @@ function makeDefaultCompositionsNamedElements( test )
   schema.define( 'number' ).terminal({ default : 0 });
   schema.define( 'boolean' ).terminal({ default : false });
 
-  schema.define( 'composition1' ).composition().extend
+  schema
+  .define( 'composition1' )
+  .composition()
+  .extend
   ([
     { name : 'name', type : 'string' },
     { name : 'n', type : 'null' },
     { name : 'value', type : 'string' },
   ]);
 
-  schema.define( 'composition2' ).composition().extend
+  schema
+  .define( 'composition2' )
+  .composition()
+  .extend
   ([
     { name : 'id', type : 'number' },
     { name : 'comp1', type : 'composition1' },
@@ -799,14 +892,20 @@ function makeDefaultCompositionsNamedElementsButOneInner( test )
   schema.define( 'number' ).terminal({ default : 0 });
   schema.define( 'boolean' ).terminal({ default : false });
 
-  schema.define( 'composition1' ).composition().extend
+  schema
+  .define( 'composition1' )
+  .composition()
+  .extend
   ([
     { name : 'name', type : 'string' },
     { type : 'null' },
     { name : 'value', type : 'string' },
   ]);
 
-  schema.define( 'composition2' ).composition().extend
+  schema
+  .define( 'composition2' )
+  .composition()
+  .extend
   ([
     { name : 'id', type : 'number' },
     { name : 'comp1', type : 'composition1' },
@@ -920,7 +1019,10 @@ function defineVectorized( test )
 
   let schema = _.schema.system({ name : 'Nodes' });
 
-  schema.define([ 'FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression' ]).terminal().fromFields({ default : 'abc' });
+  schema
+  .define([ 'FunctionDeclaration', 'FunctionExpression', 'ArrowFunctionExpression' ])
+  .terminal()
+  .fromFields({ default : 'abc' });
   schema.form();
 
   test.case = 'FunctionExpression';
@@ -945,9 +1047,17 @@ function label( test )
 
   let schema = _.schema.system({ name : 'Nodes' });
 
-  schema.define( 'def1' ).label( 'native' ).terminal();
-  schema.define( 'def2' ).label({ 'native' : false }).terminal({ default : 'abc' });
-  schema.define( 'def3' ).label([ 'native' ]).terminal();
+  schema
+  .define( 'def1' )
+  .label( 'native' )
+  .terminal();
+  schema
+  .define( 'def2' )
+  .label({ 'native' : false })
+  .terminal({ default : 'abc' });
+  schema.define( 'def3' )
+  .label([ 'native' ])
+  .terminal();
   schema.define( 'def4' ).terminal();
   schema.form();
 
@@ -977,7 +1087,10 @@ function subtype( test )
 
   schema.define( 'string' ).terminal({ default : '', onCheck : _.schema.predefined.string.is });
 
-  schema.define( 'simple' ).composition().extend
+  schema
+  .define( 'simple' )
+  .composition()
+  .extend
   ({
     kind : { type : 'string', default : '' },
     value : { type : 'string', default : '' },
@@ -1009,7 +1122,10 @@ function subtypeWrongDefault( test )
 
   schema.define( 'string' ).terminal({ default : '', onCheck : _.schema.predefined.string.is });
 
-  schema.define( 'simple' ).composition().extend
+  schema
+  .define( 'simple' )
+  .composition()
+  .extend
   ({
     kind : { type : 'string', default : '' },
     value : { type : 'string', default : '' },
@@ -1037,19 +1153,30 @@ function compositionSpecification( test )
   schema.define( 'string' ).terminal({ default : '', onCheck : _.schema.predefined.string.is });
   schema.define( 'float' ).terminal({ default : '', onCheck : _.schema.predefined.float.is });
 
-  schema.define( 'simple' ).composition().extend
+  schema
+  .define( 'simple' )
+  .composition()
+  .extend
   ({
     kind : { type : 'string', default : '' },
     value : { type : 'string', default : '' },
     comments : { type : 'string', subtype : { identical : 'constant' }, default : 'constant' },
   });
 
-  schema.define( 'selector' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'selector' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { subtype : { identical : 'sel' } },
   });
 
-  schema.define( 'scalar' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'scalar' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { type : 'float', subtype : { identical : 13 } },
   });
@@ -1093,24 +1220,39 @@ function isTypeOfStructure( test )
   schema.define( 'string' ).terminal({ default : '', onCheck : _.schema.predefined.string.is });
   schema.define( 'float' ).terminal({ default : '', onCheck : _.schema.predefined.float.is });
 
-  schema.define( 'simple' ).composition().extend
+  schema
+  .define( 'simple' )
+  .composition()
+  .extend
   ({
     kind : { type : 'string', default : '' },
     value : { type : 'string', default : '' },
     comments : { type : 'string', subtype : { identical : 'constant' }, default : 'constant' },
   });
 
-  schema.define( 'selector1' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'selector1' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { subtype : { identical : 'sel1' } },
   });
 
-  schema.define( 'selector2' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'selector2' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { subtype : { identical : 'sel2' } },
   });
 
-  schema.define( 'scalar' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'scalar' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { type : 'float', subtype : { identical : 13 } },
   });
@@ -1144,24 +1286,39 @@ function isTypeOfDefinition( test )
   schema.define( 'string' ).terminal({ default : '', onCheck : _.schema.predefined.string.is });
   schema.define( 'float' ).terminal({ default : '', onCheck : _.schema.predefined.float.is });
 
-  schema.define( 'simple' ).composition().extend
+  schema
+  .define( 'simple' )
+  .composition()
+  .extend
   ({
     kind : { type : 'string', default : '' },
     value : { type : 'string', default : '' },
     comments : { type : 'string', subtype : { identical : 'constant' }, default : 'constant' },
   });
 
-  schema.define( 'selector1' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'selector1' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { subtype : { identical : 'sel1' } },
   });
 
-  schema.define( 'selector2' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'selector2' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { subtype : { identical : 'sel2' } },
   });
 
-  schema.define( 'scalar' ).composition().supplement( 'simple' ).extend
+  schema
+  .define( 'scalar' )
+  .composition()
+  .supplement( 'simple' )
+  .extend
   ({
     kind : { type : 'float', subtype : { identical : 13 } },
   });
@@ -1252,17 +1409,21 @@ function logic( test )
       {
         kind : 'identical',
         left : { kind : 'selector', value : '.../@type' },
-        right : { kind : 'or', elements :
-        [
-          {
-            kind : 'scalar',
-            value : 'call_expression',
-          },
-          {
-            kind : 'scalar',
-            value : 'expression_statement',
-          },
-        ]},
+        right :
+        {
+          kind : 'or',
+          elements :
+          [
+            {
+              kind : 'scalar',
+              value : 'call_expression',
+            },
+            {
+              kind : 'scalar',
+              value : 'expression_statement',
+            },
+          ]
+        },
       },
     ],
   }
@@ -1289,7 +1450,10 @@ function logic( test )
     left : { type : 'element', default : _.null },
   });
 
-  schema.define( 'element' ).alternative().extend([ 'complex', 'simple' ]);
+  schema
+  .define( 'element' )
+  .alternative()
+  .extend([ 'complex', 'simple' ]);
 
   var exp = 'abc';
   var identifier = schema.definition( 'def2' ).makeDefault();
@@ -1561,23 +1725,23 @@ schema::SchemaTest/grammarExpression1
 
   /* */
 
-/*
+  /*
 
-  /mul = terminal
-  /plus = terminal
-  /space = terminal
-  /name = terminal
-  /number = terminal
-  /parenthes_open = terminal
-  /parenthes_close = terminal
+    /mul = terminal
+    /plus = terminal
+    /space = terminal
+    /name = terminal
+    /number = terminal
+    /parenthes_open = terminal
+    /parenthes_close = terminal
 
-  /factor = [ /name /number ]
-  /exp_mul = (<. left:=/exp /mul right:=/exp )
-  /exp_plus = (<. left:=/exp /plus right:=/exp )
-  /exp_parenthes = (. /parenthes_open exp:=/exp /parenthes_close ]
-  /exp = [< /factor /exp_mul /exp_plus /exp_parenthes root=true ]
+    /factor = [ /name /number ]
+    /exp_mul = (<. left:=/exp /mul right:=/exp )
+    /exp_plus = (<. left:=/exp /plus right:=/exp )
+    /exp_parenthes = (. /parenthes_open exp:=/exp /parenthes_close ]
+    /exp = [< /factor /exp_mul /exp_plus /exp_parenthes root=true ]
 
-*/
+  */
 
   schema.finit();
 }
@@ -1669,9 +1833,9 @@ schema::SchemaTest/grammarExpression2
 
   /* */
 
-/*
+  /*
 
-*/
+  */
 
   schema.finit();
 }
@@ -1826,7 +1990,7 @@ function parseGrammarPalindrom( test )
 
   console.log( schema.exportString({ format : 'grammar', optimizing : 1 }) );
 
-  xxx
+  /* xxx */
 
   /* */
 
@@ -1848,7 +2012,7 @@ function parseGrammarOwn( test )
   debugger;
   console.log( schema.exportString({ format : 'grammar' }) );
 
-/*
+  /*
 
   /statement_top :=
   (.
@@ -1926,7 +2090,7 @@ function parseGrammarOwn( test )
 
 */
 
-//
+  //
 
   // ({
   //   'colon_equal'       : ':=',

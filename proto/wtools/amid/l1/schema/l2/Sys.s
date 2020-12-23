@@ -1,4 +1,5 @@
-( function _Sys_s_( ) {
+( function _Sys_s_( )
+{
 
 'use strict';
 
@@ -169,7 +170,13 @@ function defineFromSyntax( syntax )
 
   for( let name in syntax.alternatives )
   {
-    result.push( sys.define( name ).alternative().extend( syntax.alternatives[ name ] ) );
+    result.push
+    (
+      sys
+      .define( name )
+      .alternative()
+      .extend( syntax.alternatives[ name ] )
+    );
   }
 
   return sys._definedVectorized( result );
@@ -337,16 +344,14 @@ function fromString( src )
 
   let tokens = _.strFindAll
   ({
-    src : src,
+    src,
     ins : tokensSyntax,
     tokenizingUnknown : 1,
   });
 
   tokens = tokens.filter( ( token ) => token.tokenId !== nameToId.space );
 
-  let statements;
-  let elements;
-  let left;
+  let statements, elements, left;
 
   varInit();
 
@@ -372,7 +377,7 @@ function fromString( src )
   statementsParse();
   debugger;
 
-  return xxx;
+  // return xxx;
 
   /* */
 
@@ -440,7 +445,7 @@ function fromString( src )
 
   function tokenParenthesCloseEncounter()
   {
-    _.sure( parenthes >= 1, `Parentheses mismatch at ${codeOf([ statementLeftestToken() , tokens[ index ] ])}` );
+    _.sure( parenthes >= 1, `Parentheses mismatch at ${codeOf([ statementLeftestToken(), tokens[ index ] ])}` );
     statementAddRemainder();
     _.arrayAppendArray( elementsStack[ elementsStack.length - 1 ], statements );
     parenthes -= 1;
@@ -456,7 +461,7 @@ function fromString( src )
 
   function tokenSquareCloseEncounter()
   {
-    _.sure( square >= 1, `Square mismatch at ${codeOf([ statementLeftestToken() , tokens[ index ] ])}` );
+    _.sure( square >= 1, `Square mismatch at ${codeOf([ statementLeftestToken(), tokens[ index ] ])}` );
     statementAddRemainder();
     _.arrayAppendArray( elementsStack[ elementsStack.length - 1 ], statements );
     square -= 1;
@@ -468,7 +473,7 @@ function fromString( src )
     _.sure
     (
       elements[ elements.length-1 ] && elements[ elements.length-1 ].tokenId === nameToId[ 'name_directive/default' ],
-      `Expects "default =" at ${codeOf([ statementLeftestToken() , tokens[ index ] ])}`
+      `Expects "default =" at ${codeOf([ statementLeftestToken(), tokens[ index ] ])}`
     );
 
   }
@@ -545,7 +550,11 @@ function fromString( src )
 
   function statementLeft( tokens )
   {
-    _.sure( tokens.length === 0 || tokens.length === 1, () => `Expects single token on the left of statement, but got ${codeOf( tokens )}` );
+    _.sure
+    (
+      tokens.length === 0 || tokens.length === 1,
+      () => `Expects single token on the left of statement, but got ${codeOf( tokens )}`
+    );
     _.sure( tokens.length === 0 || tokens[ 0 ].tokenId === tokensSyntax.nameToId[ 'name_at' ], () => `Expects defined name, but got ${codeOf( tokens )}` );
     if( tokens.length )
     return src.substring( tokens[ 0 ].range[ 0 ]+1, tokens[ 0 ].range[ 1 ]+1 );
@@ -694,16 +703,14 @@ function _parse1()
 
   let tokens = _.strFindAll
   ({
-    src : src,
+    src,
     ins : tokensSyntax,
     tokenizingUnknown : 1,
   });
 
   tokens = tokens.filter( ( token ) => token.tokenId !== nameToId.space );
 
-  let terms;
-  let elements;
-  let left;
+  let terms, elements, left;
 
   varInit();
 
@@ -727,7 +734,7 @@ function _parse1()
   termsParse();
   debugger;
 
-  return xxx;
+  // return xxx;
 
   /* */
 
@@ -795,7 +802,7 @@ function _parse1()
 
   function tokenParenthesCloseEncounter()
   {
-    _.sure( parenthes >= 1, `Parentheses mismatch at ${codeOf([ statementLeftestToken() , tokens[ index ] ])}` );
+    _.sure( parenthes >= 1, `Parentheses mismatch at ${codeOf([ statementLeftestToken(), tokens[ index ] ])}` );
     statementAddRemainder();
     _.arrayAppendArray( elementsStack[ elementsStack.length - 1 ], terms );
     parenthes -= 1;
@@ -807,7 +814,7 @@ function _parse1()
     _.sure
     (
       elements[ elements.length-1 ] && elements[ elements.length-1 ].tokenId === nameToId[ 'name_directive/default' ],
-      `Expects "default =" at ${codeOf([ statementLeftestToken() , tokens[ index ] ])}`
+      `Expects "default =" at ${codeOf([ statementLeftestToken(), tokens[ index ] ])}`
     );
 
   }
@@ -884,7 +891,11 @@ function _parse1()
 
   function statementLeft( tokens )
   {
-    _.sure( tokens.length === 0 || tokens.length === 1, () => `Expects single token on the left of statement, but got ${codeOf( tokens )}` );
+    _.sure
+    (
+      tokens.length === 0 || tokens.length === 1,
+      () => `Expects single token on the left of statement, but got ${codeOf( tokens )}`
+    );
     _.sure( tokens.length === 0 || tokens[ 0 ].tokenId === tokensSyntax.nameToId[ 'name_at' ], () => `Expects defined name, but got ${codeOf( tokens )}` );
     if( tokens.length )
     return src.substring( tokens[ 0 ].range[ 0 ]+1, tokens[ 0 ].range[ 1 ]+1 );

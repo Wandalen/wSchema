@@ -1,4 +1,5 @@
-( function _Definition_s_( ) {
+( function _Definition_s_( )
+{
 
 'use strict';
 
@@ -322,7 +323,7 @@ function fromDefinitionString( defStr )
   {
     let result = _.strSplit
     ({
-      src : src,
+      src,
       preservingEmpty : 0,
       preservingQuoting : 0,
       preservingDelimeters : 1,
@@ -598,9 +599,9 @@ function isTypeOf( src )
   _.assert( arguments.length === 1, 'Expects no arguments' );
 
   if( src && src instanceof _.schema.Definition )
-  return product.isTypeOfDefinition({ src : src });
+  return product.isTypeOfDefinition({ src });
   else
-  return product.isTypeOfStructure({ src : src });
+  return product.isTypeOfStructure({ src });
 }
 
 // --

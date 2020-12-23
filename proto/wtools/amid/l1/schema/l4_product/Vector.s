@@ -1,4 +1,5 @@
-( function _Vector_s_( ) {
+( function _Vector_s_( )
+{
 
 'use strict';
 
@@ -231,8 +232,13 @@ function elementsStatistics()
 
 //
 
-function _elementMake( elementOptions, name, index, amending )
+function _elementMake( /* elementOptions, name, index, amending */ )
 {
+  let elementOptions = arguments[ 0 ];
+  let name = arguments[ 1 ];
+  let index = arguments[ 2 ];
+  let amending = arguments[ 3 ];
+
   let product = this;
   let def = product.definition;
   let sys = def.sys;
@@ -241,7 +247,11 @@ function _elementMake( elementOptions, name, index, amending )
   _.assert( arguments.length === 4 );
   _.assert( name === null || _.strDefined( name ) );
   _.assert( _.numberIs( index ) );
-  _.assert( _.strIs( elementOptions ) || _.numberIs( elementOptions ) || _.mapIs( elementOptions ) || elementOptions === _.nothing || elementOptions === _.anything );
+  _.assert
+  (
+    _.strIs( elementOptions ) || _.numberIs( elementOptions )
+    || _.mapIs( elementOptions ) || elementOptions === _.nothing || elementOptions === _.anything
+  );
   _.assert( _.longHas( [ 'extend', 'supplement' ], amending ) );
 
   let element = Object.create( null );
@@ -290,7 +300,10 @@ function _elementMakeAct( element, amending )
   }
   else if( def.IsDefinitionString( element.type ) )
   {
-    let definition2 = sys.define().fromDefinitionString( element.type ).fromFieldsTolerant( element );
+    let definition2 = sys
+    .define()
+    .fromDefinitionString( element.type )
+    .fromFieldsTolerant( element );
     _.assert( definition2.id >= 1 );
     _.mapDelete( element, definition2.typeToProductClass().Fields );
     element.type = definition2.id;
