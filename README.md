@@ -8,7 +8,7 @@ Module to define schemas for data structures.
 git clone https://github.com/Wandalen/wSchema
 cd wSchema
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 ```
 
 ## To add to your project
