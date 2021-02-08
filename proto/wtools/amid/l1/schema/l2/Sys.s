@@ -425,14 +425,14 @@ function fromString( src )
 
   function tokenColonEqualEncounter()
   {
-    if( !left )
+    if( left )
     {
-      left = elements;
-      elements = [];
+      statementAddButOne();
     }
     else
     {
-      statementAddButOne();
+      left = elements;
+      elements = [];
     }
   }
 
@@ -782,14 +782,14 @@ function _parse1()
 
   function tokenColonEqualEncounter()
   {
-    if( !left )
+    if( left )
     {
-      left = elements;
-      elements = [];
+      statementAddButOne();
     }
     else
     {
-      statementAddButOne();
+      left = elements;
+      elements = [];
     }
   }
 

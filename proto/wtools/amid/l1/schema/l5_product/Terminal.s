@@ -90,10 +90,10 @@ function _exportString( o )
   else if( o.format === 'grammar' )
   {
     let result;
-    if( product.default !== null )
-    result = `${product.grammarName} := ( type = terminal default = ${_.toStr( product.default )} )`;
-    else
+    if( product.default === null )
     result = `${product.grammarName} := terminal`;
+    else
+    result = `${product.grammarName} := ( type = terminal default = ${_.toStr( product.default )} )`;
     return result;
   }
   else _.assert( 0 );
