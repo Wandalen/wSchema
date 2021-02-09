@@ -278,7 +278,7 @@ function _elementMakeAct( element, amending )
   let product = this;
   let def = product.definition;
   let sys = def.sys;
-  let hadElement = element.name !== null ? product.elementsMap[ element.name ] : undefined;
+  let hadElement = element.name === null ? undefined : product.elementsMap[ element.name ];
 
   _.assert( def.formed === 1 );
   _.assert( arguments.length === 2 );
@@ -322,10 +322,11 @@ function _elementMakeAct( element, amending )
     redundant.type = element.type;
     _.assert( redundant.name === undefined );
     let definition2 = sys.define();
-    if( redundant.multiple !== undefined )
-    definition2.multiplier( redundant );
-    else
+    if( redundant.multiple === undefined )
     definition2.alias( redundant );
+    else
+    definition2.multiplier( redundant );
+
     _.assert( definition2.id >= 1 );
     element.type = definition2.id;
     _.mapDelete( element, _.mapBut( definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );

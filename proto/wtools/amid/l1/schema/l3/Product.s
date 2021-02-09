@@ -52,7 +52,7 @@ function form1()
   if( product.formed )
   return true
 
-  let result = product._form1 !== null ? product._form1() : undefined;
+  let result = product._form1 === null ? undefined : product._form1();
   _.assert( result === undefined );
 
   product.formed = 1;
@@ -100,7 +100,7 @@ function form3()
   if( product.formed >= 3 )
   return true
 
-  let result = product._form3 !== null ? product._form3() : true;
+  let result = product._form3 === null ? true : product._form3();
   _.assert( _.boolIs( result ) );
 
   if( result )
