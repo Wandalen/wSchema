@@ -78,7 +78,7 @@ function _form3()
     if( !product.isTypeOfStructure({ src : defaultValue }) )
     {
       debugger;
-      throw _.err( `Default ${ _.toStrShort( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition` );
+      throw _.err( `Default ${ _.entity.exportStringShort( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition` );
     }
 
   }
@@ -145,9 +145,9 @@ function _exportString( o )
     _.assert( product.subtype === null, 'not tested' );
     result = `${product.grammarName} := ( ${elementDefinition.product.grammarName}`;
     if( product.default !== null )
-    result += ` default = ${_.toStr( product.default )}`;
+    result += ` default = ${_.entity.exportString( product.default )}`;
     if( product.subtype !== null )
-    result += ` subtype = ${_.toStr( product.subtype )}`;
+    result += ` subtype = ${_.entity.exportString( product.subtype )}`;
     result += ` )`;
   }
 

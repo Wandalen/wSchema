@@ -658,7 +658,7 @@ function exportString( o )
     let result = def._longNameFromStructure( o.structure );
     let structure = _.mapBut( o.structure, [ 'name', 'kind', 'id' ] );
     if( _.lengthOf( structure ) )
-    result += '\n' + _.toStrNice( structure );
+    result += '\n' + _.entity.exportStringNice( structure );
     return result;
   }
 }

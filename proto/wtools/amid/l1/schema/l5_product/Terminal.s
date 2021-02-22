@@ -33,7 +33,7 @@ function _form2()
   _.assert
   (
     product.onCheck === null || _.routineIs( product.onCheck ),
-    () => `${product.qualifiedName} should have null or routine {- onCheck -}, but has ${_.strType( product.onCheck )}`
+    () => `${product.qualifiedName} should have null or routine {- onCheck -}, but has ${_.entity.strType( product.onCheck )}`
   );
 
   return true;
@@ -93,7 +93,7 @@ function _exportString( o )
     if( product.default === null )
     result = `${product.grammarName} := terminal`;
     else
-    result = `${product.grammarName} := ( type = terminal default = ${_.toStr( product.default )} )`;
+    result = `${product.grammarName} := ( type = terminal default = ${_.entity.exportString( product.default )} )`;
     return result;
   }
   else _.assert( 0 );

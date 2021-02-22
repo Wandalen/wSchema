@@ -614,7 +614,7 @@ function _exportString( o )
     if( structure.subtype )
     structure.subtype = !!structure.subtype;
     if( _.lengthOf( structure ) )
-    result += '\n' + _.toStrNice( structure );
+    result += '\n' + _.entity.exportStringNice( structure );
     return result;
   }
   else if( o.format === 'grammar' )
