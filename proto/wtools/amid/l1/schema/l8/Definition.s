@@ -666,6 +666,7 @@ function exportString( o )
 exportString.defaults =
 {
   ... _.schema.System.prototype.exportString.defaults,
+  it : null,
 }
 
 //

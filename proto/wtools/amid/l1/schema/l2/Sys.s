@@ -1388,6 +1388,7 @@ exportString.defaults =
   structure : null,
   format : 'dump',
   optimizing : 1,
+  it : null,
 }
 
 //
