@@ -56,12 +56,10 @@ function _isTypeOfStructureAct( o )
 
   if( product.symbol === product.Symbol.anything )
   {
-    debugger;
     return true;
   }
   else if( product.symbol === product.Symbol.nothing )
   {
-    debugger;
     return false;
   }
   else _.assert( 0 );
@@ -86,7 +84,7 @@ function _exportString( o )
   }
   else if( o.format === 'grammar' )
   {
-    let result; debugger;
+    let result;
     if( product.symbol === _.anything )
     result = `${product.grammarName} := ( type = anything )`;
     else

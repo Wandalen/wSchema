@@ -79,7 +79,6 @@ function _form3()
     product._elementAdd = product._elementAddToMap;
   }
 
-  debugger;
   product._formUsing();
 
   return true;
@@ -112,7 +111,6 @@ function _makeDefaultAct( it )
     _.assert( arguments.length === 1 );
     if( o.value === _.nothing )
     {
-      debugger;
       throw _.err( 'Cant add nothing to composition' );
     }
     _.assert( !o.container );

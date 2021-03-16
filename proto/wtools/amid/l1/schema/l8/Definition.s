@@ -181,7 +181,6 @@ function firstNonAlias()
 
   while( result.kind === result.Kind.alias && result.type )
   {
-    debugger;
     result = sys.definition( result.type );
   }
 

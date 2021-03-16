@@ -111,7 +111,6 @@ function _form()
       if( wasLength === definitionsToFormArray.length )
       {
         let names = definitionsToFormArray.map( ( def ) => def.name || def.id );
-        debugger;
         throw _.err( `Cyclyc dependencies of definitions :: [ ${ names.join( ' ' ) } ]` );
       }
 
@@ -373,9 +372,7 @@ function fromString( src )
     [ nameToId[ 'square_close' ] ] : tokenSquareCloseEncounter,
   }
 
-  debugger;
   statementsParse();
-  debugger;
 
   // return xxx;
 
@@ -416,7 +413,6 @@ function fromString( src )
 
       index += 1;
     }
-    debugger;
 
     statementAddRemainder();
 
@@ -730,9 +726,7 @@ function _parse1()
     [ nameToId[ 'parenthes_close' ] ] : tokenParenthesCloseEncounter,
   }
 
-  debugger;
   termsParse();
-  debugger;
 
   // return xxx;
 
@@ -773,7 +767,6 @@ function _parse1()
 
       index += 1;
     }
-    debugger;
 
     statementAddRemainder();
 

@@ -72,13 +72,13 @@ function _form3()
   if( product.subtype )
   {
 
-    debugger;
     let defaultValue = product.makeDefault();
-    debugger;
     if( !product.isTypeOfStructure({ src : defaultValue }) )
     {
-      debugger;
-      throw _.err( `Default ${ _.entity.exportStringShort( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition` );
+      throw _.err
+      (
+        `Default ${ _.entity.exportStringShort( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition`
+      );
     }
 
   }

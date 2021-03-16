@@ -57,7 +57,6 @@ function _isTypeOfStructureAct( o )
   let def = product.definition;
   let sys = def.sys;
 
-  debugger;
   _.assert( _.routineIs( product.onCheck ), `Terminal ${product.qualifiedName} does not have defined callback onCheck` );
   _.assert( o.definition === def );
   if( !product.onCheck( o ) )
