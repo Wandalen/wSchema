@@ -164,7 +164,6 @@ function _elementsAmmend( elements, amending )
 
   if( def.IsNameOrId( elements ) )
   {
-    debugger;
     elements = sys.definition( elements );
     if( elements.formed < 2 )
     return false;
@@ -312,7 +311,6 @@ function _elementMakeAct( element, amending )
   if( element.type === undefined || element.type === null )
   if( hadElement && hadElement.type )
   {
-    debugger;
     element.type = hadElement.type;
   }
 
@@ -455,7 +453,6 @@ function _elementsExportString( o )
   o.dst = [];
   if( o.structure === null )
   {
-    debugger;
     let o2 = _.mapOnly( o, product._elementsExportStructure.defaults );
     o.structure = product._elementsExportStructure( o2 );
   }
@@ -591,7 +588,6 @@ function _exportStringVector( o )
 `
   */
 
-  debugger;
   if( o.optimizing && !def.name && !o.name )
   if( product.usedByProducts.length === 1 && product.usedByProducts[ 0 ].definition.kind === def.Kind.container )
   {

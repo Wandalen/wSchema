@@ -345,7 +345,6 @@ function _makeDefaultFromDefault( it )
 
   if( product.default === undefined || product.default === null )
   {
-    debugger;
     throw _.err( `${product.qualifiedName} does not have defined {- default -}` );
   }
 

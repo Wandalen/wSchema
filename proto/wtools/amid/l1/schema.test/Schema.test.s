@@ -329,9 +329,7 @@ function grammarOwn()
   .alternative()
   .extend([ 'name_literal', 'number', 'string' ]);
 
-  debugger;
   schema.form();
-  debugger;
   // console.log( schema.exportString({ format : 'grammar' }) );
 
   /*
@@ -1105,7 +1103,6 @@ function subtype( test )
   test.identical( got, exp );
 
   schema.finit();
-  debugger;
 }
 
 subtype.description =
@@ -1135,7 +1132,6 @@ function subtypeWrongDefault( test )
   test.shouldThrowErrorSync( () => schema.form() );
 
   schema.finit();
-  debugger;
 }
 
 subtypeWrongDefault.description =
@@ -1200,7 +1196,6 @@ function compositionSpecification( test )
 
   logger.log( schema.exportString() );
   schema.finit();
-  debugger;
 }
 
 compositionSpecification.description =
@@ -1262,13 +1257,11 @@ function isTypeOfStructure( test )
   test.case = 'cehck definition::simple definition::selector1';
   var exp = true;
   var structure = { kind : 'sel1', value : 'some value', comments : 'constant' };
-  debugger;
   var identifier = schema.definition( 'simple' ).isTypeOf( structure );
   test.identical( identifier, exp );
 
   logger.log( schema.exportString() );
   schema.finit();
-  debugger;
 }
 
 isTypeOfStructure.description =
@@ -1372,7 +1365,6 @@ function isTypeOfDefinition( test )
 
   logger.log( schema.exportString() );
   schema.finit();
-  debugger;
 }
 
 isTypeOfDefinition.description =
@@ -2009,7 +2001,6 @@ function parseGrammarOwn( test )
   let context = this;
   let schema = context.grammarOwn();
 
-  debugger;
   console.log( schema.exportString({ format : 'grammar' }) );
 
   /*

@@ -44,10 +44,8 @@ function _makeDefaultAct( it )
   let def = product.definition;
   let sys = def.sys;
 
-  debugger;
   if( product.default === undefined || product.default === null )
   {
-    debugger;
     throw _.err( `${product.qualifiedName} does not have defined {- default -}` );
   }
 

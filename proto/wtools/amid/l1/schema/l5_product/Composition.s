@@ -110,7 +110,6 @@ function _makeDefaultAct( it )
   {
     if( o.value === _.nothing )
     {
-      debugger;
       throw _.err( 'Cant add nothing to composition' );
     }
     if( !o.elementDefinition )
