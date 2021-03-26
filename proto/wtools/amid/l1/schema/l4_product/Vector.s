@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
-let Self = wSchemaProductVector;
+const Parent = _.schema.Product;
+const Self = wSchemaProductVector;
 function wSchemaProductVector( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -42,7 +42,7 @@ function _form2()
 
   product._formUsing();
 
-  _.mapExtend( product, _.mapBut( def.opts, { extend : null, supplement : null } ) );
+  _.mapExtend( product, _.mapBut_( null, def.opts, { extend : null, supplement : null } ) );
 
   return true;
 }
@@ -314,7 +314,7 @@ function _elementMakeAct( element, amending )
     element.type = hadElement.type;
   }
 
-  let redundant = _.mapBut( element, product.ElementExtendedFields );
+  let redundant = _.mapBut_( null, element, product.ElementExtendedFields );
   if( _.lengthOf( redundant ) > 0 )
   {
     redundant.type = element.type;
@@ -327,7 +327,7 @@ function _elementMakeAct( element, amending )
 
     _.assert( definition2.id >= 1 );
     element.type = definition2.id;
-    _.mapDelete( element, _.mapBut( definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );
+    _.mapDelete( element, _.mapBut_( null, definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );
   }
 
   if( element.including === undefined )
@@ -335,7 +335,7 @@ function _elementMakeAct( element, amending )
   if( _.boolLike( element.including ) )
   element.including = !!element.including;
 
-  // _.assertMapHasOnly( element, product.ElementExtendedFields );
+  // _.map.assertHasOnly( element, product.ElementExtendedFields );
   // _.assert( _.strIs( element.type ) || _.numberIs( element.type ) );
   // _.assert( sys.definition( element.type ) instanceof _.schema.Definition );
   // _.assert( element.name === null || _.strDefined( element.name ) );
@@ -351,7 +351,7 @@ function _elementMakeAct( element, amending )
   product.elementsArray.push( element );
   element.index = product.elementsArray.indexOf( element );
 
-  _.assertMapHasOnly( element, product.ElementExtendedFields );
+  _.map.assertHasOnly( element, product.ElementExtendedFields );
   _.assert( _.strIs( element.type ) || _.numberIs( element.type ) );
   _.assert( sys.definition( element.type ) instanceof _.schema.Definition );
   _.assert( element.name === null || _.strDefined( element.name ) );
@@ -453,7 +453,7 @@ function _elementsExportString( o )
   o.dst = [];
   if( o.structure === null )
   {
-    let o2 = _.mapOnly( o, product._elementsExportStructure.defaults );
+    let o2 = _.mapOnly_( null, o, product._elementsExportStructure.defaults );
     o.structure = product._elementsExportStructure( o2 );
   }
 
@@ -594,7 +594,7 @@ function _exportStringVector( o )
     return '';
   }
 
-  let o2 = _.mapOnly( o, Parent.prototype._exportString.defaults );
+  let o2 = _.mapOnly_( null, o, Parent.prototype._exportString.defaults );
   let result = Parent.prototype._exportString.call( this, o2 );
 
   if( o.format === 'id' )

@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = null;
-let Self = wSchemaSubtype;
+const Parent = null;
+const Self = wSchemaSubtype;
 function wSchemaSubtype( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -45,7 +45,7 @@ function form()
   let def = subtype.definition;
   let sys = def.sys;
 
-  _.assertMapHasOnly( subtype.structure, subtype.SubtypeFields );
+  _.map.assertHasOnly( subtype.structure, subtype.SubtypeFields );
 
   return subtype;
 }

@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.ProductVector;
-let Self = wSchemaProductAlternative;
+const Parent = _.schema.ProductVector;
+const Self = wSchemaProductAlternative;
 function wSchemaProductAlternative( o )
 {
   return _.workpiece.construct( Self, this, arguments );

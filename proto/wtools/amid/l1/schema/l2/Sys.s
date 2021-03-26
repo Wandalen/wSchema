@@ -5,9 +5,9 @@
 
 //
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wSchemaSys;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wSchemaSys;
 function wSchemaSys( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -1345,7 +1345,7 @@ function exportString( o )
   _.assert( _.longHas( [ 'dump', 'grammar', 'id' ], o.format ) )
 
   if( o.structure === null )
-  o.structure = sys.exportStructure( _.mapOnly( o, sys.exportStructure.defaults ) );
+  o.structure = sys.exportStructure( _.mapOnly_( null, o, sys.exportStructure.defaults ) );
   let result = `schema::${o.structure.name}`;
 
   for( let d = 0 ; d < o.structure.definitions.length ; d++ )
@@ -1377,7 +1377,7 @@ function exportString( o )
 
 exportString.defaults =
 {
-  ... _.mapBut( exportStructure.defaults, [ 'dst' ] ),
+  ... _.mapBut_( null, exportStructure.defaults, [ 'dst' ] ),
   structure : null,
   format : 'dump',
   optimizing : 1,

@@ -10,8 +10,8 @@
 //
 // }
 
-let _ = _global_.wTools;
-let Self = _.schema.predefined = _.schema.predefined || Object.create( null );
+const _ = _global_.wTools;
+const Self = _.schema.predefined = _.schema.predefined || Object.create( null );
 
 // --
 // inter

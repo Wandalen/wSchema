@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.Product;
-let Self = wSchemaProductTerminal;
+const Parent = _.schema.Product;
+const Self = wSchemaProductTerminal;
 function wSchemaProductTerminal( o )
 {
   return _.workpiece.construct( Self, this, arguments );

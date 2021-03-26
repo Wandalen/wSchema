@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.ProductScalar;
-let Self = wSchemaProductMultiplier;
+const Parent = _.schema.ProductScalar;
+const Self = wSchemaProductMultiplier;
 function wSchemaProductMultiplier( o )
 {
   return _.workpiece.construct( Self, this, arguments );

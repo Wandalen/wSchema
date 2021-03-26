@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = null;
-let Self = wSchemaDefinition;
+const Parent = null;
+const Self = wSchemaDefinition;
 function wSchemaDefinition( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -246,14 +246,14 @@ function fromFields( opts )
   _.assert( def.formed === 1 );
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( opts ) );
-  _.assertMapHasOnly( opts, def.typeToProductClass().Fields );
+  _.map.assertHasOnly( opts, def.typeToProductClass().Fields );
 
   def.opts = _.mapExtend( def.opts, opts );
 
   // def.opts = def.opts || Object.create( null );
   // if( opts )
   // _.mapExtend( def.opts, opts );
-  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
@@ -269,7 +269,7 @@ function fromFieldsTolerant( opts )
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( opts ) );
 
-  def.opts = _.mapExtend( def.opts, _.mapOnly( opts, def.typeToProductClass().Fields ) );
+  def.opts = _.mapExtend( def.opts, _.mapOnly_( null, opts, def.typeToProductClass().Fields ) );
 
   return def;
 }
@@ -366,7 +366,7 @@ function _definePrimitive( opts, kind )
   def.opts = def.opts || Object.create( null );
   // if( opts )
   // _.mapExtend( def.opts, opts );
-  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
   if( opts )
   def.fromFields( opts );
 
@@ -448,7 +448,7 @@ function _complex()
   def.opts.extend = [];
   def.opts.supplement = [];
 
-  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
@@ -468,7 +468,7 @@ function composition( opts )
   if( opts )
   def.fromFields( opts );
 
-  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
@@ -488,7 +488,7 @@ function alternative( opts )
   if( opts )
   def.fromFields( opts );
 
-  // _.assertMapHasOnly( def.opts, def.typeToProductClass().Fields );
+  // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
 }
@@ -646,7 +646,7 @@ function exportString( o )
   o = _.routineOptions( exportString, arguments );
 
   if( o.structure === null )
-  o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
+  o.structure = def.exportStructure( _.mapOnly_( null, o, def.exportStructure.defaults ) );
 
   if( product && product.formed >= 2 )
   {
@@ -655,7 +655,7 @@ function exportString( o )
   else
   {
     let result = def._longNameFromStructure( o.structure );
-    let structure = _.mapBut( o.structure, [ 'name', 'kind', 'id' ] );
+    let structure = _.mapBut_( null, o.structure, [ 'name', 'kind', 'id' ] );
     if( _.lengthOf( structure ) )
     result += '\n' + _.entity.exportStringNice( structure );
     return result;
@@ -729,7 +729,7 @@ let Kind =
   _last : 8,
 }
 
-let KindNameToId = new _.NameMapper().set( _.mapBut( Kind, { _first : null, _last : null } ) );
+let KindNameToId = new _.NameMapper().set( _.mapBut_( null, Kind, { _first : null, _last : null } ) );
 
 let KindNameToProduct =
 {

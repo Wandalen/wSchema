@@ -10,8 +10,8 @@
 //
 // }
 
-let _ = _global_.wTools;
-let Self = _.schema = _.schema || Object.create( null );
+const _ = _global_.wTools;
+const Self = _.schema = _.schema || Object.create( null );
 
 let vectorize = _.routineDefaults( null, _.vectorize, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );
 let vectorizeAll = _.routineDefaults( null, _.vectorizeAll, { vectorizingContainerAdapter : 1, unwrapingContainerAdapter : 0 } );

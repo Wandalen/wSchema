@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = null;
-let Self = wSchemaProduct;
+const Parent = null;
+const Self = wSchemaProduct;
 function wSchemaProduct( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -74,7 +74,7 @@ function form2()
   if( _.strHas( def.name, '❮' ) || _.strHas( def.name, '❯' ) )
   throw _.err( `Only universal definitions could have "❮" or "❯" in name. Illegal name of definition ${product.qualifiedName}` );
 
-  _.assertMapHasOnly( def.opts, product.Fields );
+  _.map.assertHasOnly( def.opts, product.Fields );
 
   let result = product._form2();
   _.assert( _.boolIs( result ) );
@@ -262,7 +262,7 @@ function form3()
 //     element.type = hadElement.type;
 //   }
 //
-//   let redundant = _.mapBut( element, product.ElementExtendedFields );
+//   let redundant = _.mapBut_( null, element, product.ElementExtendedFields );
 //   if( _.lengthOf( redundant ) > 0 )
 //   {
 //     redundant.type = element.type;
@@ -274,7 +274,7 @@ function form3()
 //     definition2.alias( redundant );
 //     _.assert( definition2.id >= 1 );
 //     element.type = definition2.id;
-//     _.mapDelete( element, _.mapBut( definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );
+//     _.mapDelete( element, _.mapBut_( null, definition2.typeToProductClass().Fields, product.ElementExtendedFields ) );
 //   }
 //
 //   if( element.including === undefined )
@@ -282,7 +282,7 @@ function form3()
 //   if( _.boolLike( element.including ) )
 //   element.including = !!element.including;
 //
-//   _.assertMapHasOnly( element, product.ElementExtendedFields );
+//   _.map.assertHasOnly( element, product.ElementExtendedFields );
 //   _.assert( _.strIs( element.type ) || _.numberIs( element.type ) );
 //   _.assert( sys.definition( element.type ) instanceof _.schema.Definition );
 //   _.assert( element.name === null || _.strDefined( element.name ) );
@@ -560,7 +560,7 @@ function exportStructure( o )
   o.dst.kind = def.KindNameToId.forVal( def.kind );
   o.dst.id = def.id;
 
-  _.mapExtend( o.dst, _.mapOnly( product, product.Fields ) );
+  _.mapExtend( o.dst, _.mapOnly_( null, product, product.Fields ) );
 
   if( o.compacting )
   o.dst = product.fieldsCompact( o.dst );
@@ -584,7 +584,7 @@ function exportString( o )
   o = _.routineOptions( exportString, arguments );
 
   if( o.structure === null )
-  o.structure = def.exportStructure( _.mapOnly( o, def.exportStructure.defaults ) );
+  o.structure = def.exportStructure( _.mapOnly_( null, o, def.exportStructure.defaults ) );
 
   return product._exportString( o );
 }
@@ -610,7 +610,7 @@ function _exportString( o )
   if( o.format === 'dump' )
   {
     let result = o.name ? o.name : def._longNameFromStructure( o.structure );
-    let structure = _.mapBut( o.structure, [ 'name', 'kind', 'id', 'elements' ] );
+    let structure = _.mapBut_( null, o.structure, [ 'name', 'kind', 'id', 'elements' ] );
     if( structure.subtype )
     structure.subtype = !!structure.subtype;
     if( _.lengthOf( structure ) )

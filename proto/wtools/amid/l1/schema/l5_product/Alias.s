@@ -5,12 +5,12 @@
 
 //
 
-let _ = _global_.wTools;
+const _ = _global_.wTools;
 
 //
 
-let Parent = _.schema.ProductScalar;
-let Self = wSchemaProductAlias;
+const Parent = _.schema.ProductScalar;
+const Self = wSchemaProductAlias;
 function wSchemaProductAlias( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -77,7 +77,7 @@ function _form3()
     {
       throw _.err
       (
-        `Default ${ _.entity.exportStringShort( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition`
+        `Default ${ _.entity.exportStringShallow( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition`
       );
     }
 
