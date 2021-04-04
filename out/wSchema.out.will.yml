@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wSchema.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wSchema.out.will.yml: &ref_0
+    hash: 85f6a39ec53c874199a5aebb5222e1a7
+    size: 41941
+  ../.ex.will.yml: &ref_1
     hash: 0688f74535554ce6c703fa2b81e5f567
     size: 1696
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: ef57b1bfe2ae5f5d446aaec9906c93d9
     size: 5192
 module:
@@ -16,19 +19,19 @@ module:
       description: Module to define schemas for data structures.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - tools
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wschema
-      npm.scripts: &ref_5
+      npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -762,6 +765,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -850,8 +871,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wSchema.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wSchema
@@ -859,13 +881,21 @@ module:
       description: Module to define schemas for data structures.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - tools
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wschema
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: wtest .run proto/**
+        docgen: wdocgen .build proto
     path:
       module.willfiles:
         criterion:
@@ -1551,3 +1581,6 @@ module:
       ../.im.will.yml:
         hash: ef57b1bfe2ae5f5d446aaec9906c93d9
         size: 5192
+      wSchema.out.will.yml:
+        hash: 85f6a39ec53c874199a5aebb5222e1a7
+        size: 41941
