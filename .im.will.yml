@@ -84,8 +84,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - /pro/module/wSchema/proto/wtools/amid/l1/schema/include/Mid.s
-    - /pro/module/wSchema/proto/node_modules/wschema
+    - proto/wtools/amid/l1/schema/include/Mid.s
+    - proto/node_modules/wschema
 reflector:
   reflect.proto:
     inherit: predefined.*
