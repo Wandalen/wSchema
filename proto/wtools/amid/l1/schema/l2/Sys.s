@@ -51,8 +51,8 @@ function finit()
     def.finit();
   }
 
-  _.assert( _.lengthOf( sys.definitionsMap ) === 0 );
-  _.assert( _.lengthOf( sys.definitionsArray ) === 0 );
+  _.assert( _.entity.lengthOf( sys.definitionsMap ) === 0 );
+  _.assert( _.entity.lengthOf( sys.definitionsArray ) === 0 );
 
   _.Copyable.prototype.finit.call( this );
 }
@@ -1304,7 +1304,7 @@ let grammar =
 function exportStructure( o )
 {
   let sys = this;
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routine.options_( exportStructure, arguments );
 
   if( o.dst === null )
   o.dst = Object.create( null );
@@ -1319,7 +1319,7 @@ function exportStructure( o )
     if( def.kind === def.Kind.universal )
     continue;
 
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     delete o2.dst;
     o.dst.definitions.push( def.exportStructure( o2 ) );
 
@@ -1341,7 +1341,7 @@ exportStructure.defaults =
 function exportString( o )
 {
   let sys = this;
-  o = _.routineOptions( exportString, arguments );
+  o = _.routine.options_( exportString, arguments );
   _.assert( _.longHas( [ 'dump', 'grammar', 'id' ], o.format ) )
 
   if( o.structure === null )
@@ -1353,7 +1353,7 @@ function exportString( o )
     let defStructure = o.structure.definitions[ d ];
     let def = sys.definition( defStructure.id );
 
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.structure = defStructure;
     delete o2.dst;
     let info = def.exportString( o2 );

@@ -42,7 +42,7 @@ function _form2()
 
   product._formUsing();
 
-  _.mapExtend( product, _.mapBut_( null, def.opts, { extend : null, supplement : null } ) );
+  _.props.extend( product, _.mapBut_( null, def.opts, { extend : null, supplement : null } ) );
 
   return true;
 }
@@ -173,7 +173,7 @@ function _elementsAmmend( elements, amending )
     for( let i = 0 ; i < elements.length ; i++ )
     {
       let e = elements[ i ];
-      let e2 = _.mapExtend( null, e );
+      let e2 = _.props.extend( null, e );
       /* xxx : change index? */
       product._elementMakeAct( e2, amending );
     }
@@ -257,7 +257,7 @@ function _elementMake( /* elementOptions, name, index, amending */ )
   if( _.strIs( elementOptions ) || _.numberIs( elementOptions ) || elementOptions === _.nothing || elementOptions === _.anything )
   element.type = elementOptions;
   else
-  _.mapExtend( element, elementOptions );
+  _.props.extend( element, elementOptions );
 
   if( name !== null )
   element.name = name;
@@ -315,7 +315,7 @@ function _elementMakeAct( element, amending )
   }
 
   let redundant = _.mapBut_( null, element, product.ElementExtendedFields );
-  if( _.lengthOf( redundant ) > 0 )
+  if( _.entity.lengthOf( redundant ) > 0 )
   {
     redundant.type = element.type;
     _.assert( redundant.name === undefined );
@@ -408,7 +408,7 @@ function _elementsExportStructure( o )
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( _elementsExportStructure, arguments );
+  o = _.routine.options_( _elementsExportStructure, arguments );
   _.assert( !!product.elementsArray );
 
   if( o.dst === null )
@@ -447,7 +447,7 @@ function _elementsExportString( o )
   if( o.format === 'grammar' )
   statistics = product.elementsStatistics();
 
-  o = _.routineOptions( _elementsExportString, arguments );
+  o = _.routine.options_( _elementsExportString, arguments );
 
   if( o.dst === null )
   o.dst = [];
@@ -510,13 +510,13 @@ function exportStructure( o )
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routine.options_( exportStructure, arguments );
 
   Parent.prototype.exportStructure.call( product, o );
 
   o.dst.elements = [];
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.elements = product.elementsArray;
   o2.dst = o.dst.elements;
   product._elementsExportStructure( o2 );
@@ -537,7 +537,7 @@ function _exportString( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportString, arguments );
+  _.routine.options_( _exportString, arguments );
   _.assert( o.structure !== null );
 
   // if( o.format === 'id' )
@@ -563,7 +563,7 @@ function _exportStringVector( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportStringVector, arguments );
+  _.routine.options_( _exportStringVector, arguments );
   _.assert( o.structure !== null );
 
   /*
@@ -600,7 +600,7 @@ function _exportStringVector( o )
   if( o.format === 'id' )
   return result;
 
-  let o3 = _.mapExtend( null, o2 );
+  let o3 = _.props.extend( null, o2 );
   o3.structure = product.elementsArray;
   let result2 = product._elementsExportString( o3 );
 

@@ -64,13 +64,13 @@ function _makeDefaultAct( it )
 //   let def = product.definition;
 //   let sys = def.sys;
 //
-//   o = _.routineOptions( exportStructure, arguments );
+//   o = _.routine.options_( exportStructure, arguments );
 //
 //   Parent.prototype.exportStructure.call( product, o );
 //
 //   o.dst.elements = [];
 //
-//   let o2 = _.mapExtend( null, o );
+//   let o2 = _.props.extend( null, o );
 //   o2.elements = product.elementsArray;
 //   o2.dst = o.dst.elements;
 //   product._elementsExportStructure( o2 );
@@ -91,11 +91,11 @@ function _makeDefaultAct( it )
 //   let def = product.definition;
 //   let sys = def.sys;
 //
-//   o = _.routineOptions( exportString, arguments );
+//   o = _.routine.options_( exportString, arguments );
 //
 //   let result = Parent.prototype.exportString.call( product, o );
 //
-//   let o2 = _.mapExtend( null, o );
+//   let o2 = _.props.extend( null, o );
 //   o2.structure = product.elementsArray;
 //   let result2 = product._elementsExportString( o2 );
 //   if( result2 )
@@ -117,11 +117,11 @@ function _makeDefaultAct( it )
 //   let def = product.definition;
 //   let sys = def.sys;
 //
-//   _.routineOptions( _exportString, arguments );
+//   _.routine.options_( _exportString, arguments );
 //   _.assert( o.structure !== null );
 //
 //   return product._exportStringVector( o );
-//   // let o2 = _.mapExtend( null, o );
+//   // let o2 = _.props.extend( null, o );
 //   // o2.opener = '[';
 //   // o2.closer = ']';
 //   // return product._exportStringVector( o2 );
@@ -142,9 +142,9 @@ function _exportStringVector( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportStringVector, arguments );
+  _.routine.options_( _exportStringVector, arguments );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.opener = '[';
   o2.closer = ']';
 

@@ -132,7 +132,7 @@ function form3()
 //     for( let i = 0 ; i < elements.length ; i++ )
 //     {
 //       let e = elements[ i ];
-//       let e2 = _.mapExtend( null, e );
+//       let e2 = _.props.extend( null, e );
 //       /* xxx : change index? */
 //       product._elementMakeAct( e2, amending );
 //     }
@@ -207,7 +207,7 @@ function form3()
 //   if( _.strIs( elementOptions ) || _.numberIs( elementOptions ) || elementOptions === _.nothing || elementOptions === _.anything )
 //   element.type = elementOptions;
 //   else
-//   _.mapExtend( element, elementOptions );
+//   _.props.extend( element, elementOptions );
 //
 //   if( name !== null )
 //   element.name = name;
@@ -263,7 +263,7 @@ function form3()
 //   }
 //
 //   let redundant = _.mapBut_( null, element, product.ElementExtendedFields );
-//   if( _.lengthOf( redundant ) > 0 )
+//   if( _.entity.lengthOf( redundant ) > 0 )
 //   {
 //     redundant.type = element.type;
 //     _.assert( redundant.name === undefined );
@@ -348,7 +348,7 @@ function _makeDefaultFromDefault( it )
     throw _.err( `${product.qualifiedName} does not have defined {- default -}` );
   }
 
-  it.onElementAdd({ value : _.make( product.default ) });
+  it.onElementAdd({ value : _.entity.cloneShallow( product.default ) });
 
 }
 
@@ -382,7 +382,7 @@ function _makeDefaultIteration( src )
   let product = this;
   let def = product.definition;
   let sys = def.sys;
-  let it = src ? _.mapExtend( null, src ) : Object.create( null );
+  let it = src ? _.props.extend( null, src ) : Object.create( null );
   // it.onElementAdd = null;
   _.assert( arguments.length === 0 || arguments.length === 1 );
   return it;
@@ -432,7 +432,7 @@ function _isTypeOfStructure( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( isTypeOfStructure, arguments );
+  _.routine.assertOptions( isTypeOfStructure, arguments );
 
   _.assert( o.src !== _.null );
   _.assert
@@ -465,7 +465,7 @@ function isTypeOfStructure( o )
   _.assert( def.formed >= 2 );
   _.assert( product.formed >= 2 );
   _.assert( arguments.length === 1 );
-  _.routineOptions( isTypeOfStructure, arguments );
+  _.routine.options_( isTypeOfStructure, arguments );
 
   if( o.rootSrc === _.null )
   o.rootSrc = o.src;
@@ -493,7 +493,7 @@ function _isTypeOfDefinition( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( isTypeOfDefinition, arguments );
+  _.routine.assertOptions( isTypeOfDefinition, arguments );
   _.assert( o.src !== _.null );
   _.assert
   (
@@ -523,7 +523,7 @@ function isTypeOfDefinition( o )
   _.assert( def.formed >= 2 );
   _.assert( product.formed >= 2 );
   _.assert( arguments.length === 1 );
-  _.routineOptions( isTypeOfDefinition, arguments );
+  _.routine.options_( isTypeOfDefinition, arguments );
 
   if( o.rootSrc === _.null )
   o.rootSrc = o.src;
@@ -551,7 +551,7 @@ function exportStructure( o )
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routine.options_( exportStructure, arguments );
 
   if( o.dst === null )
   o.dst = Object.create( null );
@@ -560,7 +560,7 @@ function exportStructure( o )
   o.dst.kind = def.KindNameToId.forVal( def.kind );
   o.dst.id = def.id;
 
-  _.mapExtend( o.dst, _.mapOnly_( null, product, product.Fields ) );
+  _.props.extend( o.dst, _.mapOnly_( null, product, product.Fields ) );
 
   if( o.compacting )
   o.dst = product.fieldsCompact( o.dst );
@@ -581,7 +581,7 @@ function exportString( o )
   let def = product.definition;
   let sys = def.sys;
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routine.options_( exportString, arguments );
 
   if( o.structure === null )
   o.structure = def.exportStructure( _.mapOnly_( null, o, def.exportStructure.defaults ) );
@@ -604,7 +604,7 @@ function _exportString( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( exportString, arguments );
+  _.routine.assertOptions( exportString, arguments );
   _.assert( o.structure !== null );
 
   if( o.format === 'dump' )
@@ -613,7 +613,7 @@ function _exportString( o )
     let structure = _.mapBut_( null, o.structure, [ 'name', 'kind', 'id', 'elements' ] );
     if( structure.subtype )
     structure.subtype = !!structure.subtype;
-    if( _.lengthOf( structure ) )
+    if( _.entity.lengthOf( structure ) )
     result += '\n' + _.entity.exportStringNice( structure );
     return result;
   }
@@ -686,7 +686,7 @@ function fieldsCompact( dsts )
       return;
     }
 
-    if( _.mapIs( dst ) && !_.mapKeys( dst ).length )
+    if( _.mapIs( dst ) && !_.props.keys( dst ).length )
     {
       dst = undefined;
       return;

@@ -54,7 +54,7 @@ function _containerAutoTypeGetAct()
 
   _.assert( product.formed >= 2 );
 
-  if( product.multipliers.length || ( _.lengthOf( product.elementsMap ) < product.elementsArray.length ) )
+  if( product.multipliers.length || ( _.entity.lengthOf( product.elementsMap ) < product.elementsArray.length ) )
   return 'array';
 
   for( let i = 0 ; i < product.elementsArray.length ; i++ )
@@ -144,13 +144,13 @@ function _isTypeOfStructureAct( o )
 //   let def = product.definition;
 //   let sys = def.sys;
 //
-//   o = _.routineOptions( exportStructure, arguments );
+//   o = _.routine.options_( exportStructure, arguments );
 //
 //   Parent.prototype.exportStructure.call( product, o );
 //
 //   o.dst.elements = [];
 //
-//   let o2 = _.mapExtend( null, o );
+//   let o2 = _.props.extend( null, o );
 //   o2.elements = product.elementsArray;
 //   o2.dst = o.dst.elements;
 //   product._elementsExportStructure( o2 );
@@ -171,9 +171,9 @@ function _exportStringVector( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.routineOptions( _exportStringVector, arguments );
+  _.routine.options_( _exportStringVector, arguments );
 
-  let o2 = _.mapExtend( null, o );
+  let o2 = _.props.extend( null, o );
   o2.opener = '(';
   o2.closer = ')';
 

@@ -28,7 +28,7 @@ function _form2()
   let def = product.definition;
   let sys = def.sys;
 
-  _.mapExtend( product, def.opts );
+  _.props.extend( product, def.opts );
   _.assert( _.symbolIs( product.symbol ), 'Expects field {- symbol -}' );
 
   return true;
@@ -75,7 +75,7 @@ function _exportString( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( _exportString, arguments );
+  _.routine.assertOptions( _exportString, arguments );
   _.assert( o.structure !== null );
 
   if( o.format === 'dump' || o.format === 'id' )

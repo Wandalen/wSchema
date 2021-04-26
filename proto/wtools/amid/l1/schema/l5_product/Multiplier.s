@@ -27,9 +27,9 @@ function _form2()
   let product = this;
   let def = product.definition;
   let sys = def.sys;
-  let opts = _.mapExtend( null, def.opts );
+  let opts = _.props.extend( null, def.opts );
 
-  _.mapExtend( product, def.opts );
+  _.props.extend( product, def.opts );
   _.assert
   (
     _.strDefined( product.type ) || _.numberDefined( product.type ),
@@ -162,7 +162,7 @@ function _exportString( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( _exportString, arguments );
+  _.routine.assertOptions( _exportString, arguments );
   _.assert( o.structure !== null );
 
   if( o.format === 'dump' )

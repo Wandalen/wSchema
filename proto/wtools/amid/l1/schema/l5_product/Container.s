@@ -31,7 +31,7 @@ function _form2()
   if( product.container === null )
   product.container = 'auto';
 
-  _.mapExtend( product, def.opts );
+  _.props.extend( product, def.opts );
   _.assert
   (
     _.strDefined( product.type ) || _.numberDefined( product.type ),
@@ -168,7 +168,7 @@ function _exportString( o )
   let def = product.definition;
   let sys = def.sys;
 
-  _.assertRoutineOptions( _exportString, arguments );
+  _.routine.assertOptions( _exportString, arguments );
   _.assert( o.structure !== null );
 
   if( o.format === 'dump' )
@@ -186,7 +186,7 @@ function _exportString( o )
 
   if( o.optimizing && !elementDefinition.name && elementDefinition.isComplex() )
   {
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.prefix = prefix;
     o2.postfix = postfix ? `${postfix}\n` : postfix;
     o2.name = def.name || product.id;

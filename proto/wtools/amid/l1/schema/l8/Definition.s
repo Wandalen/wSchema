@@ -248,11 +248,11 @@ function fromFields( opts )
   _.assert( _.mapIs( opts ) );
   _.map.assertHasOnly( opts, def.typeToProductClass().Fields );
 
-  def.opts = _.mapExtend( def.opts, opts );
+  def.opts = _.props.extend( def.opts, opts );
 
   // def.opts = def.opts || Object.create( null );
   // if( opts )
-  // _.mapExtend( def.opts, opts );
+  // _.props.extend( def.opts, opts );
   // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
 
   return def;
@@ -269,7 +269,7 @@ function fromFieldsTolerant( opts )
   _.assert( arguments.length === 1 );
   _.assert( _.mapIs( opts ) );
 
-  def.opts = _.mapExtend( def.opts, _.mapOnly_( null, opts, def.typeToProductClass().Fields ) );
+  def.opts = _.props.extend( def.opts, _.mapOnly_( null, opts, def.typeToProductClass().Fields ) );
 
   return def;
 }
@@ -365,7 +365,7 @@ function _definePrimitive( opts, kind )
   def.kind = kind;
   def.opts = def.opts || Object.create( null );
   // if( opts )
-  // _.mapExtend( def.opts, opts );
+  // _.props.extend( def.opts, opts );
   // _.map.assertHasOnly( def.opts, def.typeToProductClass().Fields );
   if( opts )
   def.fromFields( opts );
@@ -565,7 +565,7 @@ function label( labels )
     labels = labels2;
   }
 
-  _.mapExtend( def.labels, labels );
+  _.props.extend( def.labels, labels );
 
   return def;
 }
@@ -613,7 +613,7 @@ function exportStructure( o )
   let sys = def.sys;
   let product = def.product;
 
-  o = _.routineOptions( exportStructure, arguments );
+  o = _.routine.options_( exportStructure, arguments );
 
   if( o.dst === null )
   o.dst = Object.create( null );
@@ -643,7 +643,7 @@ function exportString( o )
   let sys = def.sys;
   let product = def.product;
 
-  o = _.routineOptions( exportString, arguments );
+  o = _.routine.options_( exportString, arguments );
 
   if( o.structure === null )
   o.structure = def.exportStructure( _.mapOnly_( null, o, def.exportStructure.defaults ) );
@@ -656,7 +656,7 @@ function exportString( o )
   {
     let result = def._longNameFromStructure( o.structure );
     let structure = _.mapBut_( null, o.structure, [ 'name', 'kind', 'id' ] );
-    if( _.lengthOf( structure ) )
+    if( _.entity.lengthOf( structure ) )
     result += '\n' + _.entity.exportStringNice( structure );
     return result;
   }

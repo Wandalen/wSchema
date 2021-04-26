@@ -447,17 +447,17 @@ function form( test )
   }
 
   test.description = 'expected number of definitions';
-  test.identical( _.lengthOf( schema.definitionsMap ), 4 );
-  test.identical( _.lengthOf( schema.definitionsArray ), 6 );
-  test.identical( _.lengthOf( schema.definitionsToForm2Array ), 0 );
-  test.identical( _.lengthOf( schema.definitionsToForm3Array ), 0 );
+  test.identical( _.entity.lengthOf( schema.definitionsMap ), 4 );
+  test.identical( _.entity.lengthOf( schema.definitionsArray ), 6 );
+  test.identical( _.entity.lengthOf( schema.definitionsToForm2Array ), 0 );
+  test.identical( _.entity.lengthOf( schema.definitionsToForm3Array ), 0 );
 
   test.description = 'no definitions left after finit';
   schema.finit();
-  test.identical( _.lengthOf( schema.definitionsMap ), 0 );
-  test.identical( _.lengthOf( schema.definitionsArray ), 0 );
-  test.identical( _.lengthOf( schema.definitionsToForm2Array ), 0 );
-  test.identical( _.lengthOf( schema.definitionsToForm3Array ), 0 );
+  test.identical( _.entity.lengthOf( schema.definitionsMap ), 0 );
+  test.identical( _.entity.lengthOf( schema.definitionsArray ), 0 );
+  test.identical( _.entity.lengthOf( schema.definitionsToForm2Array ), 0 );
+  test.identical( _.entity.lengthOf( schema.definitionsToForm3Array ), 0 );
 
 }
 
