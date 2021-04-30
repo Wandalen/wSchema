@@ -77,7 +77,7 @@ function _form3()
     {
       throw _.err
       (
-        `Default ${ _.entity.exportStringShallow( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition`
+        `Default ${ _.entity.exportStringDiagnosticShallow( defaultValue ) } of ${product.qualifiedName} is not subtype of the definition`
       );
     }
 
