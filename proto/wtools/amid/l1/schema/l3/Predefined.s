@@ -3,15 +3,8 @@
 
 'use strict';
 
-// if( typeof module !== 'undefined' )
-// {
-//
-//   require( '../IncludeBase.s' );
-//
-// }
-
 const _ = _global_.wTools;
-const Self = _.schema.predefined = _.schema.predefined || Object.create( null );
+_.schema.predefined = _.schema.predefined || Object.create( null );
 
 // --
 // inter
@@ -77,7 +70,7 @@ let Extension =
 
 }
 
-_.props.extend( Self, Extension );
+/* _.props.extend */Object.assign( _.schema.predefined, Extension );
 
 //
 
