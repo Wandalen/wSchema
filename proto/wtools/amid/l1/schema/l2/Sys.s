@@ -230,7 +230,8 @@ function definition( o )
 
   let def;
   if( o.id )
-  def = _.first( sys.definitionsArray, o );
+  def = sys.definitionsArray[ o.id - 1 ]; /* Dmytro : each definition in definitionsArray has id that bigger than index on 1 */
+  // def = _.first( sys.definitionsArray, o );
   else
   def = sys.definitionsMap[ o.name ];
 
