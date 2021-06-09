@@ -1,11 +1,11 @@
 {
   "name" : "wschema",
-  "version" : "0.3.128",
+  "version" : "0.3.129",
   "description" : "Module to define schemas for data structures.",
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/node_modules/wschema",
-  "files" : [ "proto/wtools/amid/l1/schema", "proto/node_modules" ],
+  "files" : [ "proto/wtools/amid/l1/schema", "proto/node_modules", "proto/node_modules/Tools", "proto/node_modules/wschema" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen .build proto" },
   "repository" : { "type" : "git", "url" : "https ://github.com/Wandalen/wSchema.git" },
   "bugs" :
