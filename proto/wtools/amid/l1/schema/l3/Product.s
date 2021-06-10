@@ -671,7 +671,7 @@ function fieldsCompact( dsts )
   let resource = this;
   let module = resource.module;
 
-  _.filter_( dsts, ( dst, k ) =>
+  _.filter_( null, dsts, ( dst, k ) =>
   {
 
     if( dst === null )
