@@ -1,6 +1,6 @@
 {
   "name": "wschema",
-  "version": "0.3.139",
+  "version": "0.3.140",
   "description": "Module to define schemas for data structures.",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "license": "MIT",
@@ -23,17 +23,17 @@
     "url": "https ://github.com/Wandalen/wSchema/issues"
   },
   "dependencies": {
-    "wTools": "alpha",
-    "wstringer": "alpha",
-    "wnamemapper": "alpha",
-    "wlookerextra": "alpha",
-    "wlooker": "alpha",
-    "wLogger": "alpha",
-    "wgraphbasic": "alpha",
-    "wCopyable": "alpha"
+    "wTools": "latest",
+    "wstringer": "latest",
+    "wnamemapper": "latest",
+    "wlookerextra": "latest",
+    "wlooker": "latest",
+    "wLogger": "latest",
+    "wgraphbasic": "latest",
+    "wCopyable": "latest"
   },
   "devDependencies": {
-    "wTesting": "alpha",
+    "wTesting": "latest",
     "eslint": "7.1.0"
   },
   "keywords": [
